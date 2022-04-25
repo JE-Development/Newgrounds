@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -48,6 +49,7 @@ public class AudioActivity extends AppCompatActivity {
     int delay = 1*1000;
 
     boolean error = false;
+    Space space;
 
     boolean einmal = false;
 
@@ -64,6 +66,7 @@ public class AudioActivity extends AppCompatActivity {
 
         scrollLayout = findViewById(R.id.scroll);
         originalScroll = findViewById(R.id.originalScroll);
+        space = findViewById(R.id.space);
 
         //-----------------------------------------------------------------
 
@@ -102,21 +105,17 @@ public class AudioActivity extends AppCompatActivity {
                             .userAgent(
                                     "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
                             .timeout(5000).followRedirects(true).execute().parse();
-                    Elements titles = doc.select(".entrytitle");
 
 
-                    // print all titles in main page
-
-                    // print all available links on page
-                    Elements links = doc.select("a[href]");
                     Elements ele = doc.getElementsByClass("audio-wrapper");
-                    int counter = 0;
                     for (Element l : ele) {
                         System.out.println(l.toString());
                         System.out.println("\n\n\n");
 
                         Element linkEle = l.child(0).child(0);
                         Element title = l.child(0).child(0).child(1).child(0).child(0).child(0).child(0);
+
+                        System.out.println("jason doc tester: " + title.toString());
 
                         Element icon = l.child(0).child(0).child(0).child(0).child(0);
                         String iconLink = icon.attr("abs:src");
@@ -127,15 +126,21 @@ public class AudioActivity extends AppCompatActivity {
                         Element description = l.child(0).child(0).child(1).child(0).child(0).child(1);
                         String descriptionText = !description.html().equals("") ? description.html() : " ";
 
-                        Element art = l.child(0).child(0).child(1).child(1).child(1).child(0);
-                        Element genre = l.child(0).child(0).child(1).child(1).child(1).child(1);
-                        String genreText = art.html() + " - " + genre.html();
+                        String artText = "";
+                        String genreText = "";
+                        try {
+                            Element art = l.child(0).child(0).child(1).child(1).child(1).child(0);
+                            artText = art.html();
+                            Element genre = l.child(0).child(0).child(1).child(1).child(1).child(1);
+                            genreText = artText + " - " + genre.html();
+                        }catch (IndexOutOfBoundsException e){
+                            e.printStackTrace();
+                        }
 
                         String titleString = title.html();
                         String link = linkEle.attr("abs:href");
                         System.out.println("jason doc link:" + link);
                         if(link.contains("listen")) {
-                            counter++;
                             if(linksList.contains(link)){
                                 System.out.print("----------------------------vorhanden------------------: ");
 
@@ -152,7 +157,7 @@ public class AudioActivity extends AppCompatActivity {
                     e.printStackTrace();
                     error = true;
                     Var.updateNow = true;
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -253,6 +258,7 @@ public class AudioActivity extends AppCompatActivity {
                     }
                 });
             }
+            scrollLayout.addView(space);
         }
     }
 

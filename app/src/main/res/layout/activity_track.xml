@@ -52,8 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:id="@+id/trackWave"
-            android:layout_marginHorizontal="15dp"
-            android:src="@drawable/waveSample"/>
+            android:layout_marginHorizontal="15dp" />
 
         <SeekBar
             android:layout_width="match_parent"
@@ -63,19 +62,59 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            android:layout_height="10dp"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/play"
-            android:text="play"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pause"
-            android:text="pause"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/play"
+                    android:tag="start"
+                    android:visibility="invisible"
+                    android:background="#111111"
+                    android:src="@drawable/play"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center|left"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/trackTimeLeft"
+                    android:text="00:00"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/trackTimeRight"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center|right"
+                    android:text="00:00"
+                    android:textColor="#FFFFFF" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
 
     </LinearLayout>

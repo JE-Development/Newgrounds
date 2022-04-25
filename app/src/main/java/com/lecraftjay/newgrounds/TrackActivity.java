@@ -3,13 +3,18 @@ package com.lecraftjay.newgrounds;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +25,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -27,17 +33,19 @@ public class TrackActivity extends AppCompatActivity {
 
     int pos = 0;
 
-    Button play;
-    Button pause;
+    ImageButton play;
     TextView trackTitle;
     SeekBar trackProgress;
     Handler handler = new Handler();
     Runnable runnable;
+    ImageView trackWave;
+    TextView timeLeft;
+    TextView timeRight;
     int delay = 100;
     boolean playerReady = false;
-
-
+    int trackDuration = 0;
     MediaPlayer mediaPlayer;
+    ImageView openLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +55,12 @@ public class TrackActivity extends AppCompatActivity {
         //--------------------------------------------------------------------
 
         play = findViewById(R.id.play);
-        pause = findViewById(R.id.pause);
         trackProgress = findViewById(R.id.trackProgress);
         trackTitle = findViewById(R.id.trackTitle);
+        trackWave = findViewById(R.id.trackWave);
+        timeLeft = findViewById(R.id.trackTimeLeft);
+        timeRight = findViewById(R.id.trackTimeRight);
+        openLink = findViewById(R.id.openLink);
 
         //--------------------------------------------------------------------
 
@@ -65,31 +76,42 @@ public class TrackActivity extends AppCompatActivity {
             }
         });
 
-        play.setOnClickListener(new View.OnClickListener() {
+        openLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Uri uri = Uri.parse(Var.openLink); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        trackProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                pauseAudio();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
                 playAudio();
             }
         });
 
-        pause.setOnClickListener(new View.OnClickListener() {
+        play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer.isPlaying()) {
-                    // pausing the media player if media player
-                    // is playing we are calling below line to
-                    // stop our media player.
-
-                    mediaPlayer.pause();
-
-                    // below line is to display a message
-                    // when media player is paused.
-                    Toast.makeText(TrackActivity.this, "Audio has been paused", Toast.LENGTH_SHORT).show();
-                } else {
-                    // this method is called when media
-                    // player is not playing.
-                    mediaPlayer.start();
-                    Toast.makeText(TrackActivity.this, "Audio has not played", Toast.LENGTH_SHORT).show();
+                if(play.getTag().equals("start")) {
+                    startAudio();
+                }else if(play.getTag().equals("isPlaying")){
+                    pauseAudio();
+                }else if(play.getTag().equals("isPaused")){
+                    playAudio();
                 }
             }
         });
@@ -116,7 +138,7 @@ public class TrackActivity extends AppCompatActivity {
                     for(Element l : links){
                         String html = l.html();
                         if(html.contains("\"images\":{\"listen\":{\"playing\":{\"url\":\"")){
-                            String[] splitter = html.split("\"images\":{\"listen\":{\"playing\":{\"url\":\"");
+                            String[] splitter = html.split("\"images\":\\{\"listen\":\\{\"playing\":\\{\"url\":\"");
                             char[] finder = splitter[1].toCharArray();
                             String waveLink = "";
                             for(int i = 0; i < finder.length; i++){
@@ -126,7 +148,8 @@ public class TrackActivity extends AppCompatActivity {
                                     break;
                                 }
                             }
-                            Var.waveLink = waveLink;
+                            Var.waveLink = waveLink.replace("\\", "");
+                            Var.updateWave = true;
                         }
                     }
 
@@ -166,7 +189,10 @@ public class TrackActivity extends AppCompatActivity {
 
     }
 
-    public void playAudio() {
+    public void startAudio() {
+
+        play.setTag("isPlaying");
+        play.setImageResource(R.drawable.pause);
 
         String audioUrl = Var.listenLink;
 
@@ -193,12 +219,28 @@ public class TrackActivity extends AppCompatActivity {
 
         trackProgress.setMax(mediaPlayer.getDuration());
         Toast.makeText(this, "Audio started playing.." + mediaPlayer.getDuration(), Toast.LENGTH_SHORT).show();
+        trackDuration = mediaPlayer.getDuration();
         playerReady = true;
+
+    }
+
+    public void pauseAudio(){
+        mediaPlayer.pause();
+        play.setTag("isPaused");
+        play.setImageResource(R.drawable.play);
+    }
+
+    public void playAudio(){
+        mediaPlayer.start();
+        play.setTag("isPlaying");
+        play.setImageResource(R.drawable.pause);
     }
 
     public void updateTrackProgress(){
         if(playerReady) {
             trackProgress.setProgress(mediaPlayer.getCurrentPosition());
+            timeLeft.setText(getTimeLeft(mediaPlayer.getCurrentPosition()));
+            timeRight.setText(getTimeRight(mediaPlayer.getDuration()));
         }
     }
 
@@ -223,14 +265,16 @@ public class TrackActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        handler.removeCallbacks(runnable); //stop handler when activity not visible
+        handler.removeCallbacks(runnable);
+        pauseAudio();
         super.onPause();
     }
 
     public void updateWave(){
         if(Var.updateWave){
             Var.updateWave = false;
-            Picasso.get().load(splitter[2]).into(icon);
+            Picasso.get().load(Var.waveLink).into(trackWave);
+            play.setVisibility(View.VISIBLE);
         }
     }
 
@@ -240,5 +284,48 @@ public class TrackActivity extends AppCompatActivity {
             return text;
         }
         return text;
+    }
+
+    public String getTimeLeft(int dur){
+        int sec = dur/1000;
+
+        int s = sec%60;
+        int m = sec/60;
+        String second = String.valueOf(s);
+        String minute = String.valueOf(m);
+        if(second.length() <= 1){
+            second = "0" + second;
+        }
+        if(minute.length() <= 1){
+            minute = "0" + minute;
+        }
+
+        String time = minute + ":" + second;
+        return time;
+    }
+
+    public String getTimeRight(int dur){
+        int d = dur/1000;
+
+        String left = timeLeft.getText().toString();
+        String[] splitter = left.split(":");
+        int min1 = Integer.parseInt(splitter[0]);
+        int sec1 = Integer.parseInt(splitter[1]);
+        int second1 = min1*60+sec1;
+        int sum = d-second1;
+
+        int s = sum%60;
+        int m = sum/60;
+        String second = String.valueOf(s);
+        String minute = String.valueOf(m);
+        if(second.length() <= 1){
+            second = "0" + second;
+        }
+        if(minute.length() <= 1){
+            minute = "0" + minute;
+        }
+
+        String time = minute + ":" + second;
+        return time;
     }
 }
