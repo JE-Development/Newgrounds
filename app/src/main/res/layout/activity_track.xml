@@ -21,22 +21,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
-                android:textSize="30dp"
+                android:textSize="23dp"
                 android:layout_weight="1"
+                android:id="@+id/trackTitle"
                 android:layout_marginLeft="10dp"
                 android:gravity="center|left"
                 android:text="default text"/>
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_weight="0"
                 android:id="@+id/download"
-                android:src="@drawable/down"/>
+                android:src="@drawable/download_icon"/>
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:layout_weight="0"
                 android:id="@+id/openLink"
                 android:src="@drawable/open_link"/>
@@ -46,6 +47,13 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/trackWave"
+            android:layout_marginHorizontal="15dp"
+            android:src="@drawable/waveSample"/>
 
         <SeekBar
             android:layout_width="match_parent"

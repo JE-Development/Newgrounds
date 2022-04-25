@@ -229,6 +229,7 @@ public class AudioActivity extends AppCompatActivity {
                 try {
                     view.setTag(splitter[0]);
                     cardText.setText(trim(splitter[1], 28));
+                    cardText.setTag(splitter[1]);
                     Picasso.get().load(splitter[2]).into(icon);
                     creator.setText(splitter[3]);
                     description.setText(trim(splitter[4], 40));
@@ -245,6 +246,8 @@ public class AudioActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         TextView openLink = view.findViewById(R.id.cardText);
+                        TextView title = view.findViewById(R.id.cardText);
+                        Var.currentTitle = (String) title.getTag();
                         Var.openLink = (String) view.getTag();
                         startActivity(new Intent(AudioActivity.this, TrackActivity.class));
                     }

@@ -1,15 +1,20 @@
 package com.lecraftjay.newgrounds;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,6 +29,7 @@ public class TrackActivity extends AppCompatActivity {
 
     Button play;
     Button pause;
+    TextView trackTitle;
     SeekBar trackProgress;
     Handler handler = new Handler();
     Runnable runnable;
@@ -43,8 +49,21 @@ public class TrackActivity extends AppCompatActivity {
         play = findViewById(R.id.play);
         pause = findViewById(R.id.pause);
         trackProgress = findViewById(R.id.trackProgress);
+        trackTitle = findViewById(R.id.trackTitle);
 
         //--------------------------------------------------------------------
+
+        ActionBar actionBar = getSupportActionBar();
+        String titleBarLoading = "<font color='#ffc400'>" + actionBar.getTitle() + "</font>";
+        actionBar.setTitle(Html.fromHtml(titleBarLoading));
+
+        trackTitle.setText(trim(Var.currentTitle, 28));
+        trackTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TrackActivity.this, Var.currentTitle, Toast.LENGTH_LONG).show();
+            }
+        });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +112,24 @@ public class TrackActivity extends AppCompatActivity {
 
                     // print all available links on page
                     Elements links = doc.select("script");
+
+                    for(Element l : links){
+                        String html = l.html();
+                        if(html.contains("\"images\":{\"listen\":{\"playing\":{\"url\":\"")){
+                            String[] splitter = html.split("\"images\":{\"listen\":{\"playing\":{\"url\":\"");
+                            char[] finder = splitter[1].toCharArray();
+                            String waveLink = "";
+                            for(int i = 0; i < finder.length; i++){
+                                if(finder[i] != '?'){
+                                    waveLink = waveLink + finder[i];
+                                }else{
+                                    break;
+                                }
+                            }
+                            Var.waveLink = waveLink;
+                        }
+                    }
+
                     int counter = 0;
                     for (Element l : links) {
                         String html = l.html();
@@ -174,6 +211,7 @@ public class TrackActivity extends AppCompatActivity {
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
                 updateTrackProgress();
+                updateWave();
 
                 handler.postDelayed(runnable, delay);
             }
@@ -187,5 +225,20 @@ public class TrackActivity extends AppCompatActivity {
     protected void onPause() {
         handler.removeCallbacks(runnable); //stop handler when activity not visible
         super.onPause();
+    }
+
+    public void updateWave(){
+        if(Var.updateWave){
+            Var.updateWave = false;
+            Picasso.get().load(splitter[2]).into(icon);
+        }
+    }
+
+    public String trim(String text, int index){
+        if(text.length() > index){
+            text = text.substring(0,index) + "...";
+            return text;
+        }
+        return text;
     }
 }
