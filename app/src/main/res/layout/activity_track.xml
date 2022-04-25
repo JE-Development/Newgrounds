@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".TrackActivity">
 
     <LinearLayout
@@ -12,33 +13,62 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/play"
-                android:text="play"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/pause"
-                android:text="pause"/>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <SeekBar
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/trackProgress"/>
+                android:textColor="#FFFFFF"
+                android:textSize="30dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:gravity="center|left"
+                android:text="default text"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:id="@+id/download"
+                android:src="@drawable/down"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:id="@+id/openLink"
+                android:src="@drawable/open_link"/>
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/seekbar_design"
+            android:id="@+id/trackProgress"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/play"
+            android:text="play"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pause"
+            android:text="pause"/>
+
 
     </LinearLayout>
 

@@ -4,7 +4,8 @@ class Var {
 
    static String openLink = "";
    static String listenLink = "";
-   static String trackTitle = "{no title found};;;{no title found}";
+   static String trackTitle = "{no link};;;{no title found};;;{no icon link};;;" +
+           "{no creator found};;;{no description};;;{no genre}";
    static boolean updateNow = true;
    static boolean einmal1 = false;
 

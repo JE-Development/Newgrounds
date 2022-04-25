@@ -13,27 +13,89 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             app:cardElevation="5dp"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            app:cardBackgroundColor="#cccccc"
+            app:cardBackgroundColor="#242424"
             tools:ignore="MissingConstraints">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/cardText"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textSize="15dp"
-                    android:text="platzhalter"/>
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_weight="0">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/iconCard"
+                            android:src="@drawable/logo"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/cardText"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textSize="16dp"
+                            android:textColor="@color/orange"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/cardCreator"
+                            android:gravity="center"
+                            android:textSize="15dp"
+                            android:layout_weight="1"
+                            android:textColor="#FFFFFF"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/cardGenre"
+                            android:gravity="center"
+                            android:textSize="15dp"
+                            android:layout_weight="1"
+                            android:textColor="#858585"
+                            android:text=""/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/cardDescription"
+                            android:gravity="center|left"
+                            android:textSize="15dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:textColor="#bdbdbd"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
