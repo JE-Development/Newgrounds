@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
+            android:name=".FeedbackActivity"
+            android:exported="false" />
+        <activity
             android:name=".CommunityActivity"
             android:exported="false" />
         <activity

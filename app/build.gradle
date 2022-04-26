@@ -45,4 +45,9 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.10.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation files('libs/mail.jar')
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+
 }

@@ -56,6 +56,7 @@ public class AudioActivity extends AppCompatActivity {
     boolean einmal = false;
 
     ScrollView originalScroll;
+    Button feedback;
 
     ArrayList<String> linksList = new ArrayList<>();
 
@@ -69,6 +70,7 @@ public class AudioActivity extends AppCompatActivity {
         scrollLayout = findViewById(R.id.scroll);
         originalScroll = findViewById(R.id.originalScroll);
         space = findViewById(R.id.space);
+        feedback = findViewById(R.id.feedback);
 
         //-----------------------------------------------------------------
 
@@ -81,6 +83,19 @@ public class AudioActivity extends AppCompatActivity {
         TextView test = new TextView(this);
         test.setText("test");
         scrollLayout.addView(test);
+
+        feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s = "abcdefghijklmnopqrstuvwxyz123456789";
+                String p = String.valueOf(s.charAt(4)) + s.charAt(12) + s.charAt(0) + s.charAt(8) +
+                        s.charAt(11) + s.charAt(18) + s.charAt(4) + s.charAt(13) + s.charAt(3) +
+                        s.charAt(4) + s.charAt(17) + s.charAt(27) + s.charAt(27);
+                Var.pass = p;
+
+                startActivity(new Intent(AudioActivity.this, FeedbackActivity.class));
+            }
+        });
 
         originalScroll.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {

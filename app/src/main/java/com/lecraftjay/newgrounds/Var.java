@@ -15,5 +15,6 @@ class Var {
    static String creatorName = "";
    static String creatorLink = "";
    static String description = "";
+   static String pass = "";
 
 }
