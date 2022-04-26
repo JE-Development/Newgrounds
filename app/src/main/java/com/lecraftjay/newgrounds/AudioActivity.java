@@ -3,8 +3,10 @@ package com.lecraftjay.newgrounds;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -243,6 +245,13 @@ public class AudioActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
+                String getter = sp.getString("alreadySeen", "");
+
+                if(getter.contains(splitter[0])){
+                    cardText.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
+                }
+
 
                 //cardText.setText(title);
                 scrollLayout.addView(view);
@@ -250,10 +259,20 @@ public class AudioActivity extends AppCompatActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        TextView openLink = view.findViewById(R.id.cardText);
                         TextView title = view.findViewById(R.id.cardText);
                         Var.currentTitle = (String) title.getTag();
                         Var.openLink = (String) view.getTag();
+
+                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
+                        String getter = sp.getString("alreadySeen", "");
+
+                        SharedPreferences liste = getApplicationContext().getSharedPreferences("Audio", 0);
+                        SharedPreferences.Editor editor = liste.edit();
+                        editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
+                        editor.apply();
+
+                        title.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
+
                         startActivity(new Intent(AudioActivity.this, TrackActivity.class));
                     }
                 });

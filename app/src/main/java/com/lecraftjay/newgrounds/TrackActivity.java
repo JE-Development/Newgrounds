@@ -52,6 +52,7 @@ public class TrackActivity extends AppCompatActivity {
     CircleImageView creatorIcon;
     TextView creatorName;
     LinearLayout creatorLink;
+    TextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class TrackActivity extends AppCompatActivity {
         creatorName = findViewById(R.id.creatorName);
         creatorLink = findViewById(R.id.creatorLayoutLink);
         creatorIcon = findViewById(R.id.creatorIcon);
+        description = findViewById(R.id.trackDescription);
 
         //--------------------------------------------------------------------
 
@@ -151,6 +153,16 @@ public class TrackActivity extends AppCompatActivity {
                     // print all available links on page
                     Elements links = doc.select("script");
                     Elements creator = doc.getElementsByClass("pod");
+                    Elements description = doc.getElementsByClass("pod");
+
+                    for(Element l : description){
+                        Elements desc = l.getElementsByClass("pod-body ql-body");
+                        String test = desc.toString();
+                        if(test.contains("pod-body ql-body")) {
+                            Var.description = desc.html();
+                        }
+                    }
+
                     for(Element l : creator){
                         String tester = l.child(0).html();
                         if(tester.contains("class=\"user\"")){
@@ -314,6 +326,7 @@ public class TrackActivity extends AppCompatActivity {
             creatorLink.setTag(Var.creatorLink);
             creatorName.setText(Var.creatorName);
             Picasso.get().load(Var.creatorIconLink).into(creatorIcon);
+            description.setText(Html.fromHtml(Var.description));
         }
     }
 

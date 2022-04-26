@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="orange">#FFFFc400</color>
+    <color name="audioSeen">#FF6F00</color>
+    <color name="cardBackground">#FF242424</color>
 </resources>
