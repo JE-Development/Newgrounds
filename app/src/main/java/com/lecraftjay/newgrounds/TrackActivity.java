@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,6 +29,8 @@ import org.jsoup.select.Elements;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TrackActivity extends AppCompatActivity {
 
@@ -46,6 +49,9 @@ public class TrackActivity extends AppCompatActivity {
     int trackDuration = 0;
     MediaPlayer mediaPlayer;
     ImageView openLink;
+    CircleImageView creatorIcon;
+    TextView creatorName;
+    LinearLayout creatorLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,9 @@ public class TrackActivity extends AppCompatActivity {
         timeLeft = findViewById(R.id.trackTimeLeft);
         timeRight = findViewById(R.id.trackTimeRight);
         openLink = findViewById(R.id.openLink);
+        creatorName = findViewById(R.id.creatorName);
+        creatorLink = findViewById(R.id.creatorLayoutLink);
+        creatorIcon = findViewById(R.id.creatorIcon);
 
         //--------------------------------------------------------------------
 
@@ -73,6 +82,13 @@ public class TrackActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TrackActivity.this, Var.currentTitle, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        creatorLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TrackActivity.this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -134,6 +150,23 @@ public class TrackActivity extends AppCompatActivity {
 
                     // print all available links on page
                     Elements links = doc.select("script");
+                    Elements creator = doc.getElementsByClass("pod");
+                    for(Element l : creator){
+                        String tester = l.child(0).html();
+                        if(tester.contains("class=\"user\"")){
+                            Elements creatorLink = l.getElementsByClass("item-icon");
+                            Elements creatorName = l.select("svg");
+                            Elements creatorIcon = l.select("image");
+
+                            String cl = creatorLink.attr("abs:href");
+                            String cn = creatorName.attr("alt");
+                            String ci = creatorIcon.attr("abs:href");
+
+                            Var.creatorLink = cl;
+                            Var.creatorName = cn;
+                            Var.creatorIconLink = ci;
+                        }
+                    }
 
                     for(Element l : links){
                         String html = l.html();
@@ -225,7 +258,9 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void pauseAudio(){
-        mediaPlayer.pause();
+        if(mediaPlayer != null) {
+            mediaPlayer.pause();
+        }
         play.setTag("isPaused");
         play.setImageResource(R.drawable.play);
     }
@@ -253,7 +288,7 @@ public class TrackActivity extends AppCompatActivity {
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
                 updateTrackProgress();
-                updateWave();
+                updateOneTime();
 
                 handler.postDelayed(runnable, delay);
             }
@@ -270,11 +305,15 @@ public class TrackActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    public void updateWave(){
+    public void updateOneTime(){
         if(Var.updateWave){
             Var.updateWave = false;
             Picasso.get().load(Var.waveLink).into(trackWave);
             play.setVisibility(View.VISIBLE);
+
+            creatorLink.setTag(Var.creatorLink);
+            creatorName.setText(Var.creatorName);
+            Picasso.get().load(Var.creatorIconLink).into(creatorIcon);
         }
     }
 

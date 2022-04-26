@@ -263,7 +263,7 @@ public class AudioActivity extends AppCompatActivity {
     }
 
     public void moreTracks(){
-        pos += 25;
+        pos += 30;
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {

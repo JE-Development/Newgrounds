@@ -11,5 +11,8 @@ class Var {
    static String currentTitle = "default Title";
    static String waveLink = "";
    static boolean updateWave = false;
+   static String creatorIconLink = "";
+   static String creatorName = "";
+   static String creatorLink = "";
 
 }
