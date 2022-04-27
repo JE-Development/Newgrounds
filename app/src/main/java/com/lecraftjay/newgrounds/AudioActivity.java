@@ -87,11 +87,6 @@ public class AudioActivity extends AppCompatActivity {
         feedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = "abcdefghijklmnopqrstuvwxyz123456789";
-                String p = String.valueOf(s.charAt(4)) + s.charAt(12) + s.charAt(0) + s.charAt(8) +
-                        s.charAt(11) + s.charAt(18) + s.charAt(4) + s.charAt(13) + s.charAt(3) +
-                        s.charAt(4) + s.charAt(17) + s.charAt(27) + s.charAt(27);
-                Var.pass = p;
 
                 startActivity(new Intent(AudioActivity.this, FeedbackActivity.class));
             }

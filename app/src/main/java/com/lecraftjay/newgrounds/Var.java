@@ -16,5 +16,7 @@ class Var {
    static String creatorLink = "";
    static String description = "";
    static String pass = "";
+   static String toEmail = "";
+   static int clickStat = 0;
 
 }

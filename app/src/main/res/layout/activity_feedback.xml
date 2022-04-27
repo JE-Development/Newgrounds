@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
+        android:id="@+id/feedbackRoot"
         android:orientation="vertical">
 
         <EditText
@@ -38,6 +39,39 @@
             android:id="@+id/feedbackSend"
             android:text="send"/>
 
+
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/orange"
+                android:id="@+id/feedbackService"
+                android:textSize="30dp"
+                android:visibility="invisible"
+                android:text="This Service was closed"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/orange"
+                android:id="@+id/feedbackReason"
+                android:textSize="20dp"
+                android:visibility="invisible"
+                android:text="Reason: no reason"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
