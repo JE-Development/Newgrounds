@@ -1,5 +1,7 @@
 package com.lecraftjay.newgrounds;
 
+import android.media.MediaPlayer;
+
 class Var {
 
    static String openLink = "";
@@ -18,5 +20,8 @@ class Var {
    static String pass = "";
    static String toEmail = "";
    static int clickStat = 0;
+   static MediaPlayer mediaPlayer;
+   static boolean allowBackgroundPlaying = false;
+   static String whatsNew = "";
 
 }

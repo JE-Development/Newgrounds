@@ -61,6 +61,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
+            <Switch
+                android:id="@+id/trackBackgroundSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play this audio in background"
+                android:textColor="#FFFFFF"
+                android:textSize="20dp"
+                android:layout_margin="10dp"
+                android:theme="@style/switchStyle"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -6,5 +6,17 @@
         <item name="android:progressTint">#FFFFFF</item>
         <item name="android:thumbTint">@color/orange</item>
     </style>
+    <style name="switchStyle" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#46bdbf</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f10000
+        </item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#00ff00</item>
+    </style>
+
 
 </resources>

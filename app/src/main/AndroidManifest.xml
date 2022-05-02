@@ -12,6 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
+        <activity
+            android:name=".NewFeaturesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StatsActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.parse.SERVER_URL"
@@ -22,7 +28,6 @@
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
-
 
         <activity
             android:name=".FeedbackActivity"
@@ -36,10 +41,6 @@
         <activity
             android:name=".MovieActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.login.MovieActivity"
-            android:exported="false"
-            android:label="@string/title_activity_movie" />
         <activity
             android:name=".GamesActivity"
             android:exported="false" />

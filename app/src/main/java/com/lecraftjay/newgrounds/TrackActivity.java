@@ -2,8 +2,17 @@ package com.lecraftjay.newgrounds;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +57,13 @@ public class TrackActivity extends AppCompatActivity {
     int delay = 100;
     boolean playerReady = false;
     int trackDuration = 0;
-    MediaPlayer mediaPlayer;
     ImageView openLink;
     CircleImageView creatorIcon;
     TextView creatorName;
     LinearLayout creatorLink;
     TextView description;
+    Switch backgroundSwitch;
+    Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +83,11 @@ public class TrackActivity extends AppCompatActivity {
         creatorLink = findViewById(R.id.creatorLayoutLink);
         creatorIcon = findViewById(R.id.creatorIcon);
         description = findViewById(R.id.trackDescription);
+        backgroundSwitch = findViewById(R.id.trackBackgroundSwitch);
 
         //--------------------------------------------------------------------
+
+        backgroundSwitch.setChecked(Var.allowBackgroundPlaying);
 
         ActionBar actionBar = getSupportActionBar();
         String titleBarLoading = "<font color='#ffc400'>" + actionBar.getTitle() + "</font>";
@@ -84,6 +98,13 @@ public class TrackActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TrackActivity.this, Var.currentTitle, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        backgroundSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Var.allowBackgroundPlaying = backgroundSwitch.isChecked();
             }
         });
 
@@ -116,7 +137,7 @@ public class TrackActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.seekTo(seekBar.getProgress());
+                Var.mediaPlayer.seekTo(seekBar.getProgress());
                 playAudio();
             }
         });
@@ -241,53 +262,50 @@ public class TrackActivity extends AppCompatActivity {
 
         String audioUrl = Var.listenLink;
 
-        // initializing media player
-        mediaPlayer = new MediaPlayer();
+        if(Var.mediaPlayer == null) {
+            Var.mediaPlayer = new MediaPlayer();
+        }else{
+            Var.mediaPlayer.stop();
+            Var.mediaPlayer = new MediaPlayer();
+        }
 
-        // below line is use to set the audio
-        // stream type for our media player.
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        // below line is use to set our
-        // url to our media player.
         try {
-            mediaPlayer.setDataSource(audioUrl);
-            // below line is use to prepare
-            // and start our media player.
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            Var.mediaPlayer.setDataSource(audioUrl);
+            Var.mediaPlayer.prepare();
+            Var.mediaPlayer.start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // below line is use to display a toast message.
 
-        trackProgress.setMax(mediaPlayer.getDuration());
-        Toast.makeText(this, "Audio started playing.." + mediaPlayer.getDuration(), Toast.LENGTH_SHORT).show();
-        trackDuration = mediaPlayer.getDuration();
+        trackProgress.setMax(Var.mediaPlayer.getDuration());
+        Toast.makeText(this, "Audio started playing.." + Var.mediaPlayer.getDuration(), Toast.LENGTH_SHORT).show();
+        trackDuration = Var.mediaPlayer.getDuration();
         playerReady = true;
 
     }
 
     public void pauseAudio(){
-        if(mediaPlayer != null) {
-            mediaPlayer.pause();
+        if(Var.mediaPlayer != null) {
+            Var.mediaPlayer.pause();
         }
         play.setTag("isPaused");
         play.setImageResource(R.drawable.play);
     }
 
     public void playAudio(){
-        mediaPlayer.start();
+        Var.mediaPlayer.start();
         play.setTag("isPlaying");
         play.setImageResource(R.drawable.pause);
     }
 
     public void updateTrackProgress(){
         if(playerReady) {
-            trackProgress.setProgress(mediaPlayer.getCurrentPosition());
-            timeLeft.setText(getTimeLeft(mediaPlayer.getCurrentPosition()));
-            timeRight.setText(getTimeRight(mediaPlayer.getDuration()));
+            trackProgress.setProgress(Var.mediaPlayer.getCurrentPosition());
+            timeLeft.setText(getTimeLeft(Var.mediaPlayer.getCurrentPosition()));
+            timeRight.setText(getTimeRight(Var.mediaPlayer.getDuration()));
         }
     }
 
@@ -313,7 +331,9 @@ public class TrackActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         handler.removeCallbacks(runnable);
-        pauseAudio();
+        if(!Var.allowBackgroundPlaying) {
+            pauseAudio();
+        }
         super.onPause();
     }
 
