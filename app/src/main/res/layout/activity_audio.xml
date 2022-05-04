@@ -18,6 +18,12 @@
             android:id="@+id/feedback"
             android:text="Report Bug / Give Feedback"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/audioDevStatus"
+            android:text="Watch development status"/>
+
         <ScrollView
             android:id="@+id/originalScroll"
             android:layout_width="match_parent"

@@ -57,6 +57,7 @@ public class AudioActivity extends AppCompatActivity {
 
     ScrollView originalScroll;
     Button feedback;
+    Button devStatus;
 
     ArrayList<String> linksList = new ArrayList<>();
 
@@ -71,6 +72,7 @@ public class AudioActivity extends AppCompatActivity {
         originalScroll = findViewById(R.id.originalScroll);
         space = findViewById(R.id.space);
         feedback = findViewById(R.id.feedback);
+        devStatus = findViewById(R.id.audioDevStatus);
 
         //-----------------------------------------------------------------
 
@@ -89,6 +91,13 @@ public class AudioActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 startActivity(new Intent(AudioActivity.this, FeedbackActivity.class));
+            }
+        });
+
+        devStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AudioActivity.this, DevStatusActivity.class));
             }
         });
 

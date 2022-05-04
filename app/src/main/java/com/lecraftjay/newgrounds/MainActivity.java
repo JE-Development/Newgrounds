@@ -139,39 +139,35 @@ public class MainActivity extends AppCompatActivity {
                     }else{
 
                         ParseQuery<ParseObject> query = ParseQuery.getQuery("Infos");
-                        query.whereEqualTo("InfoHeadline", "newUpdateContent");
+                        query.whereEqualTo("InfoHeadline", "devStatus");
                         query.getFirstInBackground(new GetCallback<ParseObject>() {
                             public void done(ParseObject info, ParseException e) {
                                 if (e == null) {
-                                    String infoID = info.getString("InfoContent");
-                                    SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
-                                    String getter = sp1.getString("updateVersionCode", "0");
-                                    if(getter.equals(infoID)){
-                                        startActivity(new Intent(MainActivity.this, AudioActivity.class));
-                                        finish();
-                                    }else{
-                                        Var.whatsNew = info.getString("InfoContent2").replace("\\n", "\n");
-
-                                        SharedPreferences version = getApplicationContext().getSharedPreferences("Info", 0);
-                                        SharedPreferences.Editor editor = version.edit();
-                                        editor.putString("updateVersionCode", infoID);
-                                        editor.apply();
-
-                                        startActivity(new Intent(MainActivity.this, NewFeaturesActivity.class));
-                                        finish();
-                                    }
-
-
+                                    Var.devStatus = info.getString("InfoContent").replace("\\n", "\n");
                                 } else {
-                                    closed.setVisibility(View.VISIBLE);
-                                    closed.setText("No connection to BackEnd!Possible issues: no Internet connection, server not exist anymore, wifi issues, code issues");
-                                    root.removeAllViews();
+
                                 }
                             }
                         });
 
-                        startActivity(new Intent(MainActivity.this, AudioActivity.class));
-                        finish();
+                        SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
+                        String getter = sp1.getString("updateVersionCode", "0");
+
+                        String updateCode = "2";
+
+                        if(getter.equals(updateCode)){
+                            startActivity(new Intent(MainActivity.this, AudioActivity.class));
+                            finish();
+                        }else{
+                            SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                            SharedPreferences.Editor editor = spe.edit();
+                            editor.putString("updateVersionCode", updateCode);
+                            editor.apply();
+
+                            startActivity(new Intent(MainActivity.this, NewFeaturesActivity.class));
+                            finish();
+                        }
+
                     }
                 } else {
                     closed.setVisibility(View.VISIBLE);

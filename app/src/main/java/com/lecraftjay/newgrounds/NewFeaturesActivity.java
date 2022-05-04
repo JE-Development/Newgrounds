@@ -25,7 +25,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText(Var.whatsNew);
+        whatsNew.setText("- watch development status");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

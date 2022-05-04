@@ -22,6 +22,6 @@ class Var {
    static int clickStat = 0;
    static MediaPlayer mediaPlayer;
    static boolean allowBackgroundPlaying = false;
-   static String whatsNew = "";
+   static String devStatus = "";
 
 }
