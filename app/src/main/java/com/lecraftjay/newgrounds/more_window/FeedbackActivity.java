@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.more_window;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,13 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.classes.SendMailTask;
+import com.lecraftjay.newgrounds.classes.Var;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FeedbackActivity extends AppCompatActivity {

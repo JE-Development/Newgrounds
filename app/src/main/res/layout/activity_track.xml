@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".TrackActivity">
+    tools:context=".more_window.audio.TrackActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                         android:gravity="center|left"
                         android:layout_marginLeft="10dp"
                         android:id="@+id/trackTimeLeft"
-                        android:text="00:00"/>
+                        android:text="00:00 / 00:00"/>
 
                 </RelativeLayout>
 

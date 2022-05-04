@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.more_window;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Switch;
+
+import com.lecraftjay.newgrounds.R;
 
 public class StatsActivity extends AppCompatActivity {
 

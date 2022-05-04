@@ -19,14 +19,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_movie"
+                android:orientation="vertical"
                 android:layout_weight="1">
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/movie"
-                    android:src="@drawable/movie"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/movie"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/movie"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="13dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center|bottom"
+                        android:text="Movies"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -36,12 +51,27 @@
                 android:background="#2e93ff"
                 android:layout_weight="1">
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/games"
-                    android:src="@drawable/game"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/games"
+                        android:src="@drawable/game"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="13dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center|bottom"
+                        android:text="Games"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -51,12 +81,27 @@
                 android:background="#76d134"
                 android:layout_weight="1">
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/audio"
-                    android:src="@drawable/audio"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/audio"
+                        android:src="@drawable/audio"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="13dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center|bottom"
+                        android:text="Audio"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -66,12 +111,27 @@
                 android:background="#ff47b2"
                 android:layout_weight="1">
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/art"
-                    android:src="@drawable/image"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/art"
+                        android:src="@drawable/image"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="13dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center|bottom"
+                        android:text="Art"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -81,12 +141,28 @@
                 android:background="@drawable/border_community"
                 android:layout_weight="1">
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/community"
-                    android:src="@drawable/community"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/community"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/community"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="13dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginRight="6dp"
+                        android:gravity="center|bottom"
+                        android:text="Community"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 

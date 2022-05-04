@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.classes;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

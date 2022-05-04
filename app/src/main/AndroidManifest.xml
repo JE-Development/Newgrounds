@@ -13,13 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
-            android:name=".DevStatusActivity"
+            android:name=".more_window.DevStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".NewFeaturesActivity"
+            android:name=".more_window.NewFeaturesActivity"
             android:exported="false" />
         <activity
-            android:name=".StatsActivity"
+            android:name=".more_window.StatsActivity"
             android:exported="false" />
 
         <meta-data
@@ -33,25 +33,25 @@
             android:value="@string/back4app_client_key" />
 
         <activity
-            android:name=".FeedbackActivity"
+            android:name=".more_window.FeedbackActivity"
             android:exported="false" />
         <activity
-            android:name=".CommunityActivity"
+            android:name=".nav_window.CommunityActivity"
             android:exported="false" />
         <activity
-            android:name=".ArtActivity"
+            android:name=".nav_window.ArtActivity"
             android:exported="false" />
         <activity
-            android:name=".MovieActivity"
+            android:name=".nav_window.MovieActivity"
             android:exported="false" />
         <activity
-            android:name=".GamesActivity"
+            android:name=".nav_window.GamesActivity"
             android:exported="false" />
         <activity
-            android:name=".AudioActivity"
+            android:name=".nav_window.AudioActivity"
             android:exported="false" />
         <activity
-            android:name=".TrackActivity"
+            android:name=".more_window.audio.TrackActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

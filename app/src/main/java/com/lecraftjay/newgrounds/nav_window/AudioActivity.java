@@ -1,33 +1,29 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.nav_window;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.lecraftjay.newgrounds.more_window.DevStatusActivity;
+import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
+import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
+import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -35,7 +31,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -107,7 +102,6 @@ public class AudioActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (originalScroll.getChildAt(0).getBottom() <= (originalScroll.getHeight() + originalScroll.getScrollY())) {
                             if(einmal == false) {
-                                System.out.println("jason more tracks");
                                 moreTracks();
                                 einmal = true;
                             }
@@ -130,13 +124,9 @@ public class AudioActivity extends AppCompatActivity {
 
                     Elements ele = doc.getElementsByClass("audio-wrapper");
                     for (Element l : ele) {
-                        System.out.println(l.toString());
-                        System.out.println("\n\n\n");
 
                         Element linkEle = l.child(0).child(0);
                         Element title = l.child(0).child(0).child(1).child(0).child(0).child(0).child(0);
-
-                        System.out.println("jason doc tester: " + title.toString());
 
                         Element icon = l.child(0).child(0).child(0).child(0).child(0);
                         String iconLink = icon.attr("abs:src");
@@ -160,10 +150,8 @@ public class AudioActivity extends AppCompatActivity {
 
                         String titleString = title.html();
                         String link = linkEle.attr("abs:href");
-                        System.out.println("jason doc link:" + link);
                         if(link.contains("listen")) {
                             if(linksList.contains(link)){
-                                System.out.print("----------------------------vorhanden------------------: ");
 
                             }else {
                                 String toAdd = link + ";;;" + titleString + ";;;" + iconLink + ";;;" +
@@ -172,7 +160,6 @@ public class AudioActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    //System.out.println(doc.toString());
 
                 }catch (SocketTimeoutException e){
                     e.printStackTrace();
@@ -249,7 +236,6 @@ public class AudioActivity extends AppCompatActivity {
                 TextView genre = view.findViewById(R.id.cardGenre);
 
                 String title = linksList.get(i);
-                System.out.println("jason doc saved title: " + title);
                 String[] splitter = title.split(";;;");
 
                 try {
@@ -312,19 +298,11 @@ public class AudioActivity extends AppCompatActivity {
                             .timeout(5000).followRedirects(true).execute().parse();
                     Elements titles = doc.select(".entrytitle");
 
-                    // print all titles in main page
-                    for (Element e : titles) {
-                        System.out.println("text: " + e.text());
-                        System.out.println("html: " + e.html());
-                    }
-
                     // print all available links on page
                     Elements links = doc.select("a[href]");
                     Elements ele = doc.getElementsByClass("audio-wrapper");
                     int counter = 0;
                     for (Element l : ele) {
-                        System.out.println(l.toString());
-                        System.out.println("\n\n\n");
 
                         Element linkEle = l.child(0).child(0);
                         Element title = l.child(0).child(0).child(1).child(0).child(0).child(0).child(0);
@@ -347,7 +325,6 @@ public class AudioActivity extends AppCompatActivity {
                         if(link.contains("listen")) {
                             counter++;
                             if(linksList.contains(link)){
-                                System.out.print("----------------------------vorhanden------------------: ");
 
                             }else {
                                 String toAdd = link + ";;;" + titleString + ";;;" + iconLink + ";;;" +
@@ -356,7 +333,6 @@ public class AudioActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    //System.out.println(doc.toString());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -380,9 +356,6 @@ public class AudioActivity extends AppCompatActivity {
                     Elements l = doc.select("title");
                     String html = l.html();
                     Var.trackTitle = html;
-                    System.out.println("jason doc title: " + html);
-
-                    //System.out.println("jason doc data: " + doc.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -408,6 +381,7 @@ public class AudioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AudioActivity.this, GamesActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -416,6 +390,7 @@ public class AudioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AudioActivity.this, MovieActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -424,6 +399,7 @@ public class AudioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AudioActivity.this, ArtActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -432,6 +408,7 @@ public class AudioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AudioActivity.this, CommunityActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });

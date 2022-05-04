@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.nav_window;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-public class ArtActivity extends AppCompatActivity {
+import com.lecraftjay.newgrounds.R;
+
+public class GamesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_art);
+        setContentView(R.layout.activity_games);
         
         setNavigation();
     }
@@ -24,10 +26,11 @@ public class ArtActivity extends AppCompatActivity {
         ImageView art = findViewById(R.id.art);
         ImageView community = findViewById(R.id.games);
 
-        games.setOnClickListener(new View.OnClickListener() {
+        audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ArtActivity.this, GamesActivity.class));
+                startActivity(new Intent(GamesActivity.this, AudioActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -35,15 +38,17 @@ public class ArtActivity extends AppCompatActivity {
         movie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ArtActivity.this, MovieActivity.class));
+                startActivity(new Intent(GamesActivity.this, MovieActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
 
-        audio.setOnClickListener(new View.OnClickListener() {
+        art.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ArtActivity.this, AudioActivity.class));
+                startActivity(new Intent(GamesActivity.this, ArtActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
@@ -51,7 +56,8 @@ public class ArtActivity extends AppCompatActivity {
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ArtActivity.this, CommunityActivity.class));
+                startActivity(new Intent(GamesActivity.this, CommunityActivity.class));
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });

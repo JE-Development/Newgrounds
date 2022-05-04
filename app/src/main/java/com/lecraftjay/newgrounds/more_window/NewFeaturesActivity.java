@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.more_window;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.nav_window.AudioActivity;
 
 public class NewFeaturesActivity extends AppCompatActivity {
 

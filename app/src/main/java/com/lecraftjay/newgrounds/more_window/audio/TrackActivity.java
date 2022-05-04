@@ -1,18 +1,11 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.more_window.audio;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,23 +13,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -234,18 +226,14 @@ public class TrackActivity extends AppCompatActivity {
                                     createdLink = createdLink + htmlChar[i];
                                 }
                             }
-                            System.out.println("jason doc createdLink: " + createdLink);
                             Var.listenLink = createdLink;
                         }
                         String link = l.attr("abs:href");
                         if(link.contains("listen")) {
                             counter++;
-                            System.out.println("jason doc linkFound" + counter + ": " + link);
 
                         }
                     }
-                    System.out.println("jason doc link: " + Var.openLink);
-                    //System.out.println("jason doc data: " + doc.toString());
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -281,7 +269,6 @@ public class TrackActivity extends AppCompatActivity {
         }
 
         trackProgress.setMax(Var.mediaPlayer.getDuration());
-        Toast.makeText(this, "Audio started playing.." + Var.mediaPlayer.getDuration(), Toast.LENGTH_SHORT).show();
         trackDuration = Var.mediaPlayer.getDuration();
         playerReady = true;
 
@@ -303,8 +290,25 @@ public class TrackActivity extends AppCompatActivity {
 
     public void updateTrackProgress(){
         if(playerReady) {
+            int dur = Var.mediaPlayer.getDuration();
+            dur = dur / 1000;
+            int m = dur/60;
+            int s = dur%60;
+
+            String min = String.valueOf(m);
+            String sec = String.valueOf(s);
+            if(min.length() <= 1){
+                min = "0" + min;
+            }
+            if(sec.length() <= 1){
+                sec = "0" + sec;
+            }
+
+            String time = min + ":" + sec;
+
+
             trackProgress.setProgress(Var.mediaPlayer.getCurrentPosition());
-            timeLeft.setText(getTimeLeft(Var.mediaPlayer.getCurrentPosition()));
+            timeLeft.setText(getTimeLeft(Var.mediaPlayer.getCurrentPosition()) + " / " + time);
             timeRight.setText(getTimeRight(Var.mediaPlayer.getDuration()));
         }
     }
@@ -335,17 +339,31 @@ public class TrackActivity extends AppCompatActivity {
             pauseAudio();
         }
         super.onPause();
+
+        Var.description = "";
+        Var.creatorLink = "";
+        Var.creatorIconLink = "";
+        Var.creatorName = "";
+        Var.waveLink = "";
+
     }
 
     public void updateOneTime(){
         if(Var.updateWave){
+
             Var.updateWave = false;
             Picasso.get().load(Var.waveLink).into(trackWave);
             play.setVisibility(View.VISIBLE);
-
             creatorLink.setTag(Var.creatorLink);
             creatorName.setText(Var.creatorName);
-            Picasso.get().load(Var.creatorIconLink).into(creatorIcon);
+            try {
+                Picasso.get().load(Var.creatorIconLink).into(creatorIcon);
+            }catch (Exception e){
+                e.printStackTrace();
+                creatorName.setText("{error in user}");
+                creatorName.setTextSize(18);
+                creatorName.setTextColor(Color.rgb(255,50,50));
+            }
             description.setText(Html.fromHtml(Var.description));
         }
     }
@@ -359,10 +377,11 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public String getTimeLeft(int dur){
-        int sec = dur/1000;
+        int zeit = dur/1000;
 
-        int s = sec%60;
-        int m = sec/60;
+        int s = zeit%60;
+        int m = zeit/60;
+
         String second = String.valueOf(s);
         String minute = String.valueOf(m);
         if(second.length() <= 1){
@@ -379,7 +398,8 @@ public class TrackActivity extends AppCompatActivity {
     public String getTimeRight(int dur){
         int d = dur/1000;
 
-        String left = timeLeft.getText().toString();
+
+        String left = timeLeft.getText().toString().substring(0, timeLeft.getText().toString().indexOf(" "));
         String[] splitter = left.split(":");
         int min1 = Integer.parseInt(splitter[0]);
         int sec1 = Integer.parseInt(splitter[1]);

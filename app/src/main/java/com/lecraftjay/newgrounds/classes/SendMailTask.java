@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds;
+package com.lecraftjay.newgrounds.classes;
 
 
 import java.util.List;
@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.lecraftjay.newgrounds.classes.GMail;
 
 public class SendMailTask extends AsyncTask {
 
