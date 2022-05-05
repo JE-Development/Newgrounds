@@ -39,7 +39,7 @@
                     android:id="@+id/openLink"
                     android:src="@drawable/open_link"/>
 
-            </LinearLayout>
+            </LinearLayout>>
 
             <Space
                 android:layout_width="match_parent"

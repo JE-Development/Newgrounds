@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
+            android:name=".more_window.art.ArtContentActivity"
+            android:exported="false" />
+        <activity
             android:name=".more_window.DevStatusActivity"
             android:exported="false" />
         <activity

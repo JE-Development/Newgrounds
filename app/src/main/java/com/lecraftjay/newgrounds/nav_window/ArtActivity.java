@@ -6,11 +6,13 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.fonts.SystemFonts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.art.ArtContentActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.squareup.picasso.Picasso;
 
@@ -37,10 +40,14 @@ public class ArtActivity extends AppCompatActivity {
     LinearLayout root;
     ScrollView scrollLayout;
 
+    int pos = 0;
+
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 1*1000;
     Space space;
+    boolean einmal = false;
+
 
     ArrayList<String> artContent = new ArrayList<>();
 
@@ -59,17 +66,38 @@ public class ArtActivity extends AppCompatActivity {
 
         Var.updateNow = false;
 
-        getContent("https://www.newgrounds.com/art");
+        scrollLayout.getViewTreeObserver()
+                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (scrollLayout.getChildAt(0).getBottom() <= (scrollLayout.getHeight() + scrollLayout.getScrollY())) {
+                            if(einmal == false) {
+                                getContent("https://www.newgrounds.com/art/featured?offset=;;;pos;;;&amp;inner=1", true);
+                                einmal = true;
+                            }
+                        } else {
+                            einmal = false;
+                        }
+                    }
+                });
+
+        getContent("https://www.newgrounds.com/art", false);
 
         setNavigation();
     }
 
-    public void getContent(String url){
+    public void getContent(String url, boolean useAdvanced){
+        if(useAdvanced){
+            pos += 30;
+        }
+
+        String newLink = url.replace(";;;pos;;;", String.valueOf(pos));
+
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
                     Document doc = (Document) Jsoup
-                            .connect(url)
+                            .connect(newLink)
                             .userAgent(
                                     "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
                             .timeout(5000).followRedirects(true).execute().parse();
@@ -94,7 +122,7 @@ public class ArtActivity extends AppCompatActivity {
                         String sCreator = creator.html();
 
                         if(sLink.contains("art")) {
-                            if(artContent.contains(link)){
+                            if(artContent.contains(sLink)){
 
                             }else {
                                 String toAdd = sLink + ";;;" + sTitle + ";;;" + sImgLink + ";;;" + sCreator;
@@ -118,8 +146,8 @@ public class ArtActivity extends AppCompatActivity {
     }
 
     public void update(){
-        System.out.println("jason art child: " + root.getChildCount() + "   " + artContent.size());
-        if(root.getChildCount() < artContent.size() || Var.updateNow) {
+        System.out.println("jason art child: " + root.getChildCount()*2 + "   " + artContent.size());
+        if(root.getChildCount()*2 < artContent.size() || Var.updateNow) {
             root.removeAllViews();
             for (int i = 0; i < artContent.size(); i++) {
                 View rowView = LayoutInflater.from(ArtActivity.this).inflate(R.layout.row_layout, null);
@@ -134,7 +162,7 @@ public class ArtActivity extends AppCompatActivity {
                 String[] splitter = title.split(";;;");
 
                 try {
-                    view.setTag(splitter[0]);
+                    cardTitle.setTag(title);
                     cardTitle.setText(trim(splitter[1], 12));
                     Picasso.get().load(splitter[2]).into(image);
                     user.setText(splitter[3]);
@@ -156,7 +184,7 @@ public class ArtActivity extends AppCompatActivity {
                     String[] splitter1 = title1.split(";;;");
 
                     try {
-                        view1.setTag(splitter1[0]);
+                        cardTitle1.setTag(splitter[0]);
                         cardTitle1.setText(trim(splitter1[1], 12));
                         Picasso.get().load(splitter1[2]).into(image1);
                         user1.setText(splitter1[3]);
@@ -170,14 +198,16 @@ public class ArtActivity extends AppCompatActivity {
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        TextView title = view.findViewById(R.id.cardText);
-                        Var.currentTitle = (String) title.getTag();
-                        Var.openLink = (String) view.getTag();
+                    public void onClick(View v) {
+                        TextView title = (TextView) v.findViewById(R.id.artTitle);
+                        Var.artInfo = (String) title.getTag();
+                        String[] split = Var.artInfo.split(";;;");
+                        Var.artOpenLink = split[0];
 
                         title.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
 
-                        startActivity(new Intent(ArtActivity.this, TrackActivity.class));
+                        startActivity(new Intent(ArtActivity.this, ArtContentActivity.class));
+
                     }
                 });
             }

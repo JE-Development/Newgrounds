@@ -341,35 +341,6 @@ public class AudioActivity extends AppCompatActivity {
         t.start();
     }
 
-    public String getTitle(String link) {
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Document doc = (Document) Jsoup
-                            .connect(link)
-                            .userAgent(
-                                    "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
-                            .timeout(5000).followRedirects(true).execute().parse();
-                    Elements titles = doc.select(".entrytitle");
-
-                    // print all available links on page
-                    Elements l = doc.select("title");
-                    String html = l.html();
-                    Var.trackTitle = html;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if(Var.einmal1 == false) {
-                    Var.updateNow = true;
-                    Var.einmal1 = true;
-                }
-            }
-        });
-        t.start();
-
-        return Var.trackTitle;
-    }
-
     public void setNavigation(){
         ImageView games = findViewById(R.id.games);
         ImageView movie = findViewById(R.id.movie);

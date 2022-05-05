@@ -23,5 +23,7 @@ public class Var {
    public static MediaPlayer mediaPlayer;
    public static boolean allowBackgroundPlaying = false;
    public static String devStatus = "";
+   public static String artInfo = "{no link};;;{no title found};;;{no icon link};;;{no creator found}";
+   public static String artOpenLink = "";
 
 }
