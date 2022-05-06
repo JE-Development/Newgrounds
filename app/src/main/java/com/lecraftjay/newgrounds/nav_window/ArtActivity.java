@@ -170,6 +170,13 @@ public class ArtActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
+                String getter = sp.getString("alreadySeen", "");
+
+                if(getter.contains(splitter[0])){
+                    cardTitle.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
+                }
+
 
                 row.addView(view);
 
@@ -184,7 +191,7 @@ public class ArtActivity extends AppCompatActivity {
                     String[] splitter1 = title1.split(";;;");
 
                     try {
-                        cardTitle1.setTag(splitter[0]);
+                        cardTitle1.setTag(splitter1[0]);
                         cardTitle1.setText(trim(splitter1[1], 12));
                         Picasso.get().load(splitter1[2]).into(image1);
                         user1.setText(splitter1[3]);
@@ -192,8 +199,38 @@ public class ArtActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Art", 0);
+                    String getter1 = sp1.getString("alreadySeen", "");
+
+                    if(getter1.contains(splitter1[0])){
+                        cardTitle1.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
+                    }
+
                     row.addView(view1);
                     root.addView(rowView);
+
+                    view1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TextView title = (TextView) v.findViewById(R.id.artTitle);
+                            Var.artInfo = (String) title.getTag();
+                            String[] split = Var.artInfo.split(";;;");
+                            Var.artOpenLink = split[0];
+
+                            SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
+                            String getter = sp.getString("alreadySeen", "");
+
+                            SharedPreferences liste = getApplicationContext().getSharedPreferences("Art", 0);
+                            SharedPreferences.Editor editor = liste.edit();
+                            editor.putString("alreadySeen", getter + ";;;" + Var.artOpenLink);
+                            editor.apply();
+
+                            title.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
+
+                            startActivity(new Intent(ArtActivity.this, ArtContentActivity.class));
+
+                        }
+                    });
                 }
 
                 view.setOnClickListener(new View.OnClickListener() {
@@ -204,12 +241,21 @@ public class ArtActivity extends AppCompatActivity {
                         String[] split = Var.artInfo.split(";;;");
                         Var.artOpenLink = split[0];
 
+                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
+                        String getter = sp.getString("alreadySeen", "");
+
+                        SharedPreferences liste = getApplicationContext().getSharedPreferences("Art", 0);
+                        SharedPreferences.Editor editor = liste.edit();
+                        editor.putString("alreadySeen", getter + ";;;" + Var.artOpenLink);
+                        editor.apply();
+
                         title.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
 
                         startActivity(new Intent(ArtActivity.this, ArtContentActivity.class));
 
                     }
                 });
+
             }
             root.addView(space);
         }

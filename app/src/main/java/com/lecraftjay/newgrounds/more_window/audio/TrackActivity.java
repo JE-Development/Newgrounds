@@ -151,6 +151,7 @@ public class TrackActivity extends AppCompatActivity {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
+                    System.out.println("jason open: " + Var.openLink);
                     Document doc = (Document) Jsoup
                             .connect(Var.openLink)
                             .userAgent(
@@ -208,8 +209,23 @@ public class TrackActivity extends AppCompatActivity {
                             }
                             Var.waveLink = waveLink.replace("\\", "");
                             Var.updateWave = true;
+                        }else if(html.contains("listen.completed.png\"},\"playing\":{\"url\":\"\\/\\/")){
+                            String[] splitter = html.split("\"playing\":\\{\"url\":\"");
+                            char[] finder = splitter[2].toCharArray();
+                            String waveLink = "";
+                            for(int i = 0; i < finder.length; i++){
+                                if(finder[i] != '\"'){
+                                    waveLink = waveLink + finder[i];
+                                }else{
+                                    break;
+                                }
+                            }
+                            Var.waveLink = "https://" + waveLink.replace("\\", "").replace("//", "");
+                            Var.updateWave = true;
                         }
                     }
+
+                    System.out.println("jason track: " + Var.waveLink);
 
                     int counter = 0;
                     for (Element l : links) {
@@ -283,9 +299,13 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void playAudio(){
-        Var.mediaPlayer.start();
-        play.setTag("isPlaying");
-        play.setImageResource(R.drawable.pause);
+        if(Var.mediaPlayer != null) {
+            Var.mediaPlayer.start();
+            play.setTag("isPlaying");
+            play.setImageResource(R.drawable.pause);
+        }else{
+            startAudio();
+        }
     }
 
     public void updateTrackProgress(){

@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds.nav_window;
+package com.lecraftjay.newgrounds.more_window.audio;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,25 +8,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
-import com.lecraftjay.newgrounds.more_window.audio.SearchAudioActivity;
-import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.nav_window.AudioActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -39,65 +35,46 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AudioActivity extends AppCompatActivity {
+public class SearchAudioActivity extends AppCompatActivity {
 
-    LinearLayout scrollLayout;
-    int pos = 0;
+    EditText searchText;
+    Button searchButton;
+    ScrollView scroll;
+    LinearLayout layout;
+    Space space;
+
+    ArrayList<String> audioSearchList = new ArrayList<>();
+
+    int pos = 1;
+    boolean einmal = false;
 
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 1*1000;
 
-    boolean error = false;
-    Space space;
-
-    boolean einmal = false;
-
-    ScrollView originalScroll;
-    Button feedback;
-
-    
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_audio);
+        setContentView(R.layout.activity_search_audio);
 
-        //-----------------------------------------------------------------
+        //---------------------------------------------------------
 
-        scrollLayout = findViewById(R.id.scroll);
-        originalScroll = findViewById(R.id.originalScroll);
-        space = findViewById(R.id.space);
-        feedback = findViewById(R.id.feedback);
+        searchText = findViewById(R.id.searchText);
+        searchButton = findViewById(R.id.searchButton);
+        scroll = findViewById(R.id.searchScroll);
+        layout = findViewById(R.id.searchLayout);
+        space = findViewById(R.id.searchSpace);
 
-        //-----------------------------------------------------------------
+        //---------------------------------------------------------
 
-        ActionBar actionBar = getSupportActionBar();
-        String titleBarLoading = "<font color='#ffff00'>" + actionBar.getTitle() + "</font>";
-        actionBar.setTitle(Html.fromHtml(titleBarLoading));
-
-        setNavigation();
-
-        TextView test = new TextView(this);
-        test.setText("test");
-        scrollLayout.addView(test);
-
-        feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(new Intent(AudioActivity.this, FeedbackActivity.class));
-            }
-        });
-
-        originalScroll.getViewTreeObserver()
+        scroll.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                     @Override
                     public void onScrollChanged() {
-                        if (originalScroll.getChildAt(0).getBottom() <= (originalScroll.getHeight() + originalScroll.getScrollY())) {
+                        if (scroll.getChildAt(0).getBottom() <= (scroll.getHeight() + scroll.getScrollY())) {
                             if(einmal == false) {
-                                pos += 30;
-                                getContent("https://www.newgrounds.com/audio/featured?offset=" + pos + "&amp;inner=1");
+                                pos ++;
+                                getContent("https://www.newgrounds.com/search/conduct/audio?suitabilities=etma&terms=djvi&page=" + pos);
                                 einmal = true;
                             }
                         } else {
@@ -106,15 +83,21 @@ public class AudioActivity extends AppCompatActivity {
                     }
                 });
 
-        getContent("https://www.newgrounds.com/audio");
-
-
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout.removeAllViews();
+                audioSearchList.clear();
+                layout.addView(space);
+                getContent("https://www.newgrounds.com/search/conduct/audio?suitabilities=etma&c=3&terms="
+                        + searchText.getText().toString());
+            }
+        });
     }
 
     public void getContent(String urlLink){
         Thread t = new Thread(new Runnable() {
             public void run() {
-                error = false;
                 try {
                     Document doc = (Document) Jsoup
                             .connect(urlLink)
@@ -130,19 +113,19 @@ public class AudioActivity extends AppCompatActivity {
                         Elements creatorText = l.select("strong");
                         Elements desc = l.getElementsByClass("detail-description");
                         Elements genre = l.select("dl");
-                        Elements title = l.select("h4");
                         Elements url = l.select("a");
 
                         String sIconLink = "";
                         String sCreatorText = creatorText.html();
                         String sDescriptionText = desc.html();
                         String sGenreText = "";
-                        String sTitleString = title.html();
+                        String sTitleString = "";
                         String sLink = url.attr("abs:href");
 
                         for(Element e : iconLink){
                             Elements iLink = iconLink.select("img");
                             sIconLink = iLink.attr("abs:src");
+                            sTitleString = iLink.attr("alt");
                         }
 
                         for(Element e : genre){
@@ -151,19 +134,18 @@ public class AudioActivity extends AppCompatActivity {
 
 
                         if(sLink.contains("listen")) {
-                            if(Var.audioLinksList.contains(sLink)){
+                            if(audioSearchList.contains(sLink)){
 
                             }else {
                                 String toAdd = sLink + ";;;" + sTitleString + ";;;" + sIconLink + ";;;" +
                                         sCreatorText + ";;;" + sDescriptionText + ";;;" + sGenreText;
-                                Var.audioLinksList.add(toAdd);
+                                audioSearchList.add(toAdd);
                             }
                         }
                     }
 
                 }catch (SocketTimeoutException e){
                     e.printStackTrace();
-                    error = true;
                     Var.updateNow = true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -174,9 +156,6 @@ public class AudioActivity extends AppCompatActivity {
         });
         t.start();
     }
-
-
-
 
     @Override
     protected void onResume() {
@@ -200,30 +179,20 @@ public class AudioActivity extends AppCompatActivity {
         super.onPause();
     }
 
-
-
-
-
     public void update(){
-        if(scrollLayout.getChildCount() < Var.audioLinksList.size() || Var.updateNow) {
+        if(layout.getChildCount() < audioSearchList.size() || Var.updateNow) {
             ActionBar actionBar = getSupportActionBar();
             String titleBarError = "<font color='#ff0000'>" + actionBar.getTitle() + "</font>";
             String titleBarSuccess = "<font color='#00ff00'>" + actionBar.getTitle() + "</font>";
 
-            if(error){
-                actionBar.setTitle(Html.fromHtml(titleBarError));
-            }else{
-                actionBar.setTitle(Html.fromHtml(titleBarSuccess));
-            }
-
             Var.updateNow = false;
-            scrollLayout.removeAllViews();
-            for (int i = 0; i < Var.audioLinksList.size(); i++) {
+            layout.removeAllViews();
+            for (int i = 0; i < audioSearchList.size(); i++) {
                 /*TextView text = new TextView(MainActivity.this);
-                text.setText(Var.audioLinksList.get(i));
+                text.setText(audioSearchList.get(i));
                 scrollLayout.addView(text);*/
 
-                View view = LayoutInflater.from(AudioActivity.this).inflate(R.layout.track_layout, null);
+                View view = LayoutInflater.from(SearchAudioActivity.this).inflate(R.layout.track_layout, null);
                 //CardView card = view.findViewById(R.id.cardView);
                 TextView cardText = view.findViewById(R.id.cardText);
                 CircleImageView icon = view.findViewById(R.id.iconCard);
@@ -231,7 +200,7 @@ public class AudioActivity extends AppCompatActivity {
                 TextView description = view.findViewById(R.id.cardDescription);
                 TextView genre = view.findViewById(R.id.cardGenre);
 
-                String title = Var.audioLinksList.get(i);
+                String title = audioSearchList.get(i);
                 String[] splitter = title.split(";;;");
 
                 try {
@@ -250,12 +219,12 @@ public class AudioActivity extends AppCompatActivity {
                 String getter = sp.getString("alreadySeen", "");
 
                 if(getter.contains(splitter[0])){
-                    cardText.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
+                    cardText.setTextColor(ContextCompat.getColor(SearchAudioActivity.this, R.color.audioSeen));
                 }
 
 
                 //cardText.setText(title);
-                scrollLayout.addView(view);
+                layout.addView(view);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -272,58 +241,14 @@ public class AudioActivity extends AppCompatActivity {
                         editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
                         editor.apply();
 
-                        title.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
+                        title.setTextColor(ContextCompat.getColor(SearchAudioActivity.this, R.color.audioSeen));
 
-                        startActivity(new Intent(AudioActivity.this, TrackActivity.class));
+                        startActivity(new Intent(SearchAudioActivity.this, TrackActivity.class));
                     }
                 });
             }
-            scrollLayout.addView(space);
+            layout.addView(space);
         }
-    }
-
-    public void setNavigation(){
-        ImageView games = findViewById(R.id.games);
-        ImageView movie = findViewById(R.id.movie);
-        ImageView audio = findViewById(R.id.audio);
-        ImageView art = findViewById(R.id.art);
-        ImageView community = findViewById(R.id.games);
-
-        games.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, GamesActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            }
-        });
-
-        movie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, MovieActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            }
-        });
-
-        art.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, ArtActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            }
-        });
-
-        community.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, CommunityActivity.class));
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
-            }
-        });
     }
 
     public String trim(String text, int index){
@@ -333,21 +258,4 @@ public class AudioActivity extends AppCompatActivity {
         }
         return text;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.searchMenu:
-                startActivity(new Intent(AudioActivity.this, SearchAudioActivity.class));
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

@@ -2,8 +2,11 @@ package com.lecraftjay.newgrounds.classes;
 
 import android.media.MediaPlayer;
 
+import java.util.ArrayList;
+
 public class Var {
 
+   public static ArrayList<String> audioLinksList = new ArrayList<>();
    public static String openLink = "";
    public static String listenLink = "";
    public static String trackTitle = "{no link};;;{no title found};;;{no icon link};;;" +
@@ -25,5 +28,13 @@ public class Var {
    public static String devStatus = "";
    public static String artInfo = "{no link};;;{no title found};;;{no icon link};;;{no creator found}";
    public static String artOpenLink = "";
+   public static boolean artUpdateOnce = false;
+   public static String artCreator = "";
+   public static String artDescription = "";
+   public static String artImage = "";
+   public static String artTitle = "";
+   public static String artCreatorLink = "";
+   public static String artCreatorImage = "";
+   public static String artContentLink = "";
 
 }

@@ -30,7 +30,7 @@
                     android:id="@+id/trackTitle"
                     android:layout_marginLeft="10dp"
                     android:gravity="center|left"
-                    android:text="default text"/>
+                    android:text=""/>
 
                 <ImageView
                     android:layout_width="40dp"
