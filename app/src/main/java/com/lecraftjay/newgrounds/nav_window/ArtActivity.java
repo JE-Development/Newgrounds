@@ -153,6 +153,15 @@ public class ArtActivity extends AppCompatActivity {
                 View rowView = LayoutInflater.from(ArtActivity.this).inflate(R.layout.row_layout, null);
                 LinearLayout row = rowView.findViewById(R.id.artRow);
 
+                LinearLayout l = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1.0f
+                );
+                l.setLayoutParams(param);
+
                 View view = LayoutInflater.from(ArtActivity.this).inflate(R.layout.art_card_layout, null);
                 TextView cardTitle = view.findViewById(R.id.artTitle);
                 ImageView image = view.findViewById(R.id.artImage);
@@ -177,10 +186,19 @@ public class ArtActivity extends AppCompatActivity {
                     cardTitle.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
                 }
 
-
-                row.addView(view);
+                l.addView(view);
+                row.addView(l);
 
                 if(i++ < artContent.size()) {
+
+                    LinearLayout l1 = new LinearLayout(this);
+
+                    LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            1.0f
+                    );
+                    l1.setLayoutParams(param1);
 
                     View view1 = LayoutInflater.from(ArtActivity.this).inflate(R.layout.art_card_layout, null);
                     TextView cardTitle1 = view1.findViewById(R.id.artTitle);
@@ -189,6 +207,7 @@ public class ArtActivity extends AppCompatActivity {
 
                     String title1 = artContent.get(i);
                     String[] splitter1 = title1.split(";;;");
+
 
                     try {
                         cardTitle1.setTag(splitter1[0]);
@@ -206,7 +225,8 @@ public class ArtActivity extends AppCompatActivity {
                         cardTitle1.setTextColor(ContextCompat.getColor(ArtActivity.this, R.color.audioSeen));
                     }
 
-                    row.addView(view1);
+                    l1.addView(view1);
+                    row.addView(l1);
                     root.addView(rowView);
 
                     view1.setOnClickListener(new View.OnClickListener() {
