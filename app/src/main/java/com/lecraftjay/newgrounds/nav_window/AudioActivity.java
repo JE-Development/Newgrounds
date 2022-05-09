@@ -25,6 +25,13 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.more_window.audio.SearchAudioActivity;
@@ -62,6 +69,7 @@ public class AudioActivity extends AppCompatActivity {
 
     ScrollView originalScroll;
     Button feedback;
+    AdView ad;
 
     
 
@@ -76,8 +84,51 @@ public class AudioActivity extends AppCompatActivity {
         originalScroll = findViewById(R.id.originalScroll);
         space = findViewById(R.id.space);
         feedback = findViewById(R.id.feedback);
+        ad = findViewById(R.id.adView);
 
         //-----------------------------------------------------------------
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        ad.loadAd(adRequest);
+
+        ad.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+
+
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
 
         ActionBar actionBar = getSupportActionBar();
         String titleBarLoading = "<font color='#ffff00'>" + actionBar.getTitle() + "</font>";
@@ -381,7 +432,7 @@ public class AudioActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String z = cat[which];
                 pos = 0;
-                category not working
+                //category not working
                 int id = getGenreId(z);
                 categoryLink = "https://www.newgrounds.com/audio/featured?type=1&interval=all&sort=date&genre=50&suitabilities=etma";
                 getContent(categoryLink);
@@ -407,7 +458,7 @@ public class AudioActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
-        getMenuInflater().inflate(R.menu.filter, menu);
+        //getMenuInflater().inflate(R.menu.filter, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -28,8 +28,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- you can search now audios\n" +
-                "- the \"art\" page is ready to use");
+        whatsNew.setText("- the \"movie\" page is ready to use");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
