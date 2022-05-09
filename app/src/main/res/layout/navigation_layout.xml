@@ -20,6 +20,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/border_movie"
                 android:orientation="vertical"
+                android:id="@+id/movie"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -29,7 +30,6 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/movie"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/movie"/>
 
@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#2e93ff"
+                android:id="@+id/games"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -60,7 +61,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginBottom="10dp"
-                        android:id="@+id/games"
                         android:src="@drawable/game"/>
 
                     <TextView
@@ -79,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#76d134"
+                android:id="@+id/audio"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -90,7 +91,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginBottom="10dp"
-                        android:id="@+id/audio"
                         android:src="@drawable/audio"/>
 
                     <TextView
@@ -109,6 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ff47b2"
+                android:id="@+id/art"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -120,7 +121,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginBottom="10dp"
-                        android:id="@+id/art"
                         android:src="@drawable/image"/>
 
                     <TextView
@@ -139,6 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_community"
+                android:id="@+id/community"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -149,7 +150,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:id="@+id/community"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/community"/>
 

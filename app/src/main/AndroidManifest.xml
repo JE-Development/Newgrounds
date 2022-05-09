@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
+            android:name=".more_window.movie.MovieContentActivity"
+            android:exported="false" />
+        <activity
             android:name=".more_window.audio.SearchAudioActivity"
             android:exported="false" />
         <activity

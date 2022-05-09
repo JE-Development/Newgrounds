@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.lecraftjay.newgrounds.R;
 
@@ -20,11 +21,11 @@ public class CommunityActivity extends AppCompatActivity {
     }
 
     public void setNavigation(){
-        ImageView games = findViewById(R.id.games);
-        ImageView movie = findViewById(R.id.movie);
-        ImageView audio = findViewById(R.id.audio);
-        ImageView art = findViewById(R.id.art);
-        ImageView community = findViewById(R.id.games);
+        LinearLayout games = findViewById(R.id.games);
+        LinearLayout movie = findViewById(R.id.movie);
+        LinearLayout audio = findViewById(R.id.audio);
+        LinearLayout art = findViewById(R.id.art);
+        LinearLayout community = findViewById(R.id.games);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override

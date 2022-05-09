@@ -8,6 +8,8 @@ public class Var {
 
    public static ArrayList<String> audioLinksList = new ArrayList<>();
    public static String openLink = "";
+   public static boolean einmal = false;
+   public static String movieOpenLink = "";
    public static String listenLink = "";
    public static String trackTitle = "{no link};;;{no title found};;;{no icon link};;;" +
            "{no creator found};;;{no description};;;{no genre}";
@@ -36,5 +38,15 @@ public class Var {
    public static String artCreatorLink = "";
    public static String artCreatorImage = "";
    public static String artContentLink = "";
+   public static String movieInfo = "{no link};;;{no title found};;;{no icon link};;;{no creator found}";
+   public static String movieUpdateOnce = "";
+   public static String movieCreator = "";
+   public static String movieDescription = "";
+   public static String movieImage = "";
+   public static String movieTitle = "";
+   public static String movieCreatorLink = "";
+   public static String movieCreatorImage = "";
+   public static String movieContentLink = "";
+   public static String movieVideoLink = "";
 
 }

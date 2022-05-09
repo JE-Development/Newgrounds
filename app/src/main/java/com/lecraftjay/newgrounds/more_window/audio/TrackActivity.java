@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class TrackActivity extends AppCompatActivity {
     LinearLayout creatorLink;
     TextView description;
     Switch backgroundSwitch;
-    Notification notification;
+    ProgressBar playProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class TrackActivity extends AppCompatActivity {
         creatorIcon = findViewById(R.id.creatorIcon);
         description = findViewById(R.id.trackDescription);
         backgroundSwitch = findViewById(R.id.trackBackgroundSwitch);
+        playProgress = findViewById(R.id.trackPlayProgress);
 
         //--------------------------------------------------------------------
 
@@ -85,7 +87,7 @@ public class TrackActivity extends AppCompatActivity {
         String titleBarLoading = "<font color='#ffc400'>" + actionBar.getTitle() + "</font>";
         actionBar.setTitle(Html.fromHtml(titleBarLoading));
 
-        trackTitle.setText(trim(Var.currentTitle, 28));
+        trackTitle.setText(Html.fromHtml(trim(Var.currentTitle, 28)));
         trackTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,6 +262,7 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void startAudio() {
+        playProgress.setVisibility(View.VISIBLE);
 
         play.setTag("isPlaying");
         play.setImageResource(R.drawable.pause);
@@ -273,21 +276,41 @@ public class TrackActivity extends AppCompatActivity {
             Var.mediaPlayer = new MediaPlayer();
         }
 
-        Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        try {
-            Var.mediaPlayer.setDataSource(audioUrl);
-            Var.mediaPlayer.prepare();
+                try {
+                    Var.mediaPlayer.setDataSource(audioUrl);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Var.einmal = true;
+            }
+        });
+        t.start();
+
+
+    }
+
+    public void startPlayer(){
+        if(Var.einmal){
+            Var.einmal = false;
+
+            try {
+                Var.mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Var.mediaPlayer.start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            trackProgress.setMax(Var.mediaPlayer.getDuration());
+            trackDuration = Var.mediaPlayer.getDuration();
+            playerReady = true;
+
+            playProgress.setVisibility(View.INVISIBLE);
         }
-
-        trackProgress.setMax(Var.mediaPlayer.getDuration());
-        trackDuration = Var.mediaPlayer.getDuration();
-        playerReady = true;
-
     }
 
     public void pauseAudio(){
@@ -343,6 +366,7 @@ public class TrackActivity extends AppCompatActivity {
             public void run() {
                 updateTrackProgress();
                 updateOneTime();
+                startPlayer();
 
                 handler.postDelayed(runnable, delay);
             }

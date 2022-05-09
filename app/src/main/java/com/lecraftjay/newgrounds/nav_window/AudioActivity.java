@@ -1,9 +1,11 @@
 package com.lecraftjay.newgrounds.nav_window;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
@@ -44,9 +47,13 @@ public class AudioActivity extends AppCompatActivity {
     LinearLayout scrollLayout;
     int pos = 0;
 
+    ArrayList<String> category = new ArrayList<>();
+
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 1*1000;
+
+    String categoryLink = "---";
 
     boolean error = false;
     Space space;
@@ -96,9 +103,15 @@ public class AudioActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (originalScroll.getChildAt(0).getBottom() <= (originalScroll.getHeight() + originalScroll.getScrollY())) {
                             if(einmal == false) {
-                                pos += 30;
-                                getContent("https://www.newgrounds.com/audio/featured?offset=" + pos + "&amp;inner=1");
-                                einmal = true;
+                                if(categoryLink.equals("---")) {
+                                    pos += 30;
+                                    getContent("https://www.newgrounds.com/audio/featured?offset=" + pos + "&amp;inner=1");
+                                    einmal = true;
+                                }else{
+                                    pos += 30;
+                                    getContent(categoryLink + "&offset=30&inner=1");
+                                    einmal = true;
+                                }
                             }
                         } else {
                             einmal = false;
@@ -124,6 +137,26 @@ public class AudioActivity extends AppCompatActivity {
 
 
                     Elements ele = doc.getElementsByClass("audio-wrapper");
+                    Elements select = doc.getElementsByClass("select-wrapper");
+
+                    int c = 0;
+                    for(Element l : select){
+                        Element s = l.child(0);
+                        System.out.println("jason debug 1");
+                        if(c == 2){
+                            System.out.println("jason debug 2");
+                            Elements cat = l.select("option");
+                            for(Element e : cat){
+                                System.out.println("jason debug 3");
+                                String v = e.attr("value");
+                                String t = e.html();
+                                String fin = v + ";" + t;
+                                category.add(fin.replace("&amp;", "&"));
+                            }
+                        }
+                        c++;
+                    }
+
                     for (Element l : ele) {
 
                         Elements iconLink = l.getElementsByClass("item-icon");
@@ -283,11 +316,11 @@ public class AudioActivity extends AppCompatActivity {
     }
 
     public void setNavigation(){
-        ImageView games = findViewById(R.id.games);
-        ImageView movie = findViewById(R.id.movie);
-        ImageView audio = findViewById(R.id.audio);
-        ImageView art = findViewById(R.id.art);
-        ImageView community = findViewById(R.id.games);
+        LinearLayout games = findViewById(R.id.games);
+        LinearLayout movie = findViewById(R.id.movie);
+        LinearLayout audio = findViewById(R.id.audio);
+        LinearLayout art = findViewById(R.id.art);
+        LinearLayout community = findViewById(R.id.games);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,9 +367,47 @@ public class AudioActivity extends AppCompatActivity {
         return text;
     }
 
+    public void pickCategory(){
+        String[] cat = new String[category.size()];
+        for(int i = 0; i < cat.length; i++){
+            String[] put = category.get(i).split(";");
+            cat[i] = put[1];
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Genre");
+        builder.setItems(cat, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String z = cat[which];
+                pos = 0;
+                category not working
+                int id = getGenreId(z);
+                categoryLink = "https://www.newgrounds.com/audio/featured?type=1&interval=all&sort=date&genre=50&suitabilities=etma";
+                getContent(categoryLink);
+            }
+        });
+        builder.show();
+    }
+
+    public int getGenreId(String flag){
+        for(int i = 0; i < category.size(); i++){
+            String[] split = category.get(i).split(";");
+            int id = Integer.parseInt(split[0]);
+            String name = split[1];
+            if(name.equals(flag)){
+                return id;
+            }
+        }
+        return 0;
+    }
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.filter, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -345,6 +416,10 @@ public class AudioActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.searchMenu:
                 startActivity(new Intent(AudioActivity.this, SearchAudioActivity.class));
+                break;
+            case R.id.filterMenu:
+                pickCategory();
+                break;
 
         }
         return super.onOptionsItemSelected(item);

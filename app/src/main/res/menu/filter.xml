@@ -5,9 +5,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/searchMenu"
+        android:id="@+id/filterMenu"
         android:orderInCategory="100"
-        android:icon="@drawable/search"
+        android:icon="@drawable/filter"
         app:showAsAction="ifRoom"
-        android:title="search" />
+        android:title="filter" />
 </menu>

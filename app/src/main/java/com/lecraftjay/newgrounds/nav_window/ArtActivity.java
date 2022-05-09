@@ -146,7 +146,6 @@ public class ArtActivity extends AppCompatActivity {
     }
 
     public void update(){
-        System.out.println("jason art child: " + root.getChildCount()*2 + "   " + artContent.size());
         if(root.getChildCount()*2 < artContent.size() || Var.updateNow) {
             root.removeAllViews();
             for (int i = 0; i < artContent.size(); i++) {
@@ -325,11 +324,11 @@ public class ArtActivity extends AppCompatActivity {
 
 
     public void setNavigation(){
-        ImageView games = findViewById(R.id.games);
-        ImageView movie = findViewById(R.id.movie);
-        ImageView audio = findViewById(R.id.audio);
-        ImageView art = findViewById(R.id.art);
-        ImageView community = findViewById(R.id.games);
+        LinearLayout games = findViewById(R.id.games);
+        LinearLayout movie = findViewById(R.id.movie);
+        LinearLayout audio = findViewById(R.id.audio);
+        LinearLayout art = findViewById(R.id.art);
+        LinearLayout community = findViewById(R.id.games);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
