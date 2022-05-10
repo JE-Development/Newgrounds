@@ -85,7 +85,7 @@ public class MovieActivity extends AppCompatActivity {
 
     public void getContent(String url, boolean useAdvanced){
         if(useAdvanced){
-            pos += 30;
+            pos += 20;
         }
 
         String newLink = url.replace(";;;pos;;;", String.valueOf(pos));
@@ -224,7 +224,7 @@ public class MovieActivity extends AppCompatActivity {
 
                         SharedPreferences liste = getApplicationContext().getSharedPreferences("Movie", 0);
                         SharedPreferences.Editor editor = liste.edit();
-                        editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
+                        editor.putString("alreadySeen", getter + ";;;" + Var.movieOpenLink);
                         editor.apply();
 
                         title.setTextColor(ContextCompat.getColor(MovieActivity.this, R.color.audioSeen));
@@ -250,7 +250,7 @@ public class MovieActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.games);
+        LinearLayout community = findViewById(R.id.community);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override

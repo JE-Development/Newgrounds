@@ -371,7 +371,7 @@ public class AudioActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.games);
+        LinearLayout community = findViewById(R.id.community);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,7 +434,9 @@ public class AudioActivity extends AppCompatActivity {
                 pos = 0;
                 //category not working
                 int id = getGenreId(z);
-                categoryLink = "https://www.newgrounds.com/audio/featured?type=1&interval=all&sort=date&genre=50&suitabilities=etma";
+                categoryLink = "https://www.newgrounds.com/audio/featured?type=1&interval=all&sort=date&genre=" + id + "&suitabilities=etma";
+                scrollLayout.removeAllViews();
+                Var.audioLinksList.clear();
                 getContent(categoryLink);
             }
         });
@@ -458,7 +460,7 @@ public class AudioActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
-        //getMenuInflater().inflate(R.menu.filter, menu);
+        getMenuInflater().inflate(R.menu.filter, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

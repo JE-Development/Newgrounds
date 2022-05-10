@@ -43,6 +43,8 @@ public class SearchAudioActivity extends AppCompatActivity {
     LinearLayout layout;
     Space space;
 
+    String toSearch = "";
+
     ArrayList<String> audioSearchList = new ArrayList<>();
 
     int pos = 1;
@@ -74,7 +76,7 @@ public class SearchAudioActivity extends AppCompatActivity {
                         if (scroll.getChildAt(0).getBottom() <= (scroll.getHeight() + scroll.getScrollY())) {
                             if(einmal == false) {
                                 pos ++;
-                                getContent("https://www.newgrounds.com/search/conduct/audio?suitabilities=etma&terms=djvi&page=" + pos);
+                                getContent("https://www.newgrounds.com/search/conduct/audio?suitabilities=etma&terms=" + toSearch + "&page=" + pos);
                                 einmal = true;
                             }
                         } else {
@@ -91,6 +93,7 @@ public class SearchAudioActivity extends AppCompatActivity {
                 layout.addView(space);
                 getContent("https://www.newgrounds.com/search/conduct/audio?suitabilities=etma&c=3&terms="
                         + searchText.getText().toString());
+                toSearch = searchText.getText().toString();
             }
         });
     }

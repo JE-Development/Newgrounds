@@ -328,7 +328,7 @@ public class ArtActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.games);
+        LinearLayout community = findViewById(R.id.community);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
