@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
+            android:name=".more_window.UserActivity"
+            android:exported="false" />
+        <activity
             android:name=".more_window.movie.MovieContentActivity"
             android:exported="false" />
         <activity
@@ -74,8 +77,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3904729559747077~7281686461"/>
-
+            android:value="ca-app-pub-3904729559747077~7281686461" />
     </application>
 
 </manifest>
