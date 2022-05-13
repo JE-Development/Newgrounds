@@ -28,7 +28,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- the \"movie\" page is ready to use");
+        whatsNew.setText("- there are now categories");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

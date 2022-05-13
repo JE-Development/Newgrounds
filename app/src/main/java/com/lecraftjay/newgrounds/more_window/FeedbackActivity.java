@@ -54,32 +54,5 @@ public class FeedbackActivity extends AppCompatActivity {
                 new SendMailTask(FeedbackActivity.this).execute("mail.sender.je@gmail.com", Var.pass, Arrays.asList(emails), "Bug/Feedback", text);
             }
         });
-
-        Parse.initialize(new Parse.Configuration.Builder(this)
-                .applicationId(getString(R.string.back4app_app_id))
-                // if defined
-                .clientKey(getString(R.string.back4app_client_key))
-                .server(getString(R.string.back4app_server_url))
-                .build()
-        );
-
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("AppControl");
-        query.whereEqualTo("ControlName", "Feedback");
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            public void done(ParseObject control, ParseException e) {
-                if (e == null) {
-                    boolean stopService = control.getBoolean("StopService");
-                    String reas = control.getString("Reason");
-                    if(stopService){
-                        closed.setVisibility(View.VISIBLE);
-                        reason.setVisibility(View.VISIBLE);
-                        reason.setText("Reason: " + reas);
-                        root.removeAllViews();
-                    }
-                } else {
-                    Toast.makeText(FeedbackActivity.this, "No Connection to BackEnd", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 }
