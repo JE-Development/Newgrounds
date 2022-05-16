@@ -28,7 +28,8 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- there are now categories");
+        whatsNew.setText("- the \"games\" category is ready to use\n" +
+                "- you can now support me on patreon");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
