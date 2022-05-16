@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -70,6 +71,7 @@ public class AudioActivity extends AppCompatActivity {
     ScrollView originalScroll;
     Button feedback;
     AdView ad;
+    Button patreon;
 
     
 
@@ -85,6 +87,7 @@ public class AudioActivity extends AppCompatActivity {
         space = findViewById(R.id.space);
         feedback = findViewById(R.id.feedback);
         ad = findViewById(R.id.adView);
+        patreon = findViewById(R.id.patreon);
 
         //-----------------------------------------------------------------
 
@@ -117,6 +120,15 @@ public class AudioActivity extends AppCompatActivity {
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
+            }
+        });
+
+        patreon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.patreon.com/lcj_development");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
             }
         });
 

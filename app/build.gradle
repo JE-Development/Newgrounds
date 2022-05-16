@@ -2,6 +2,10 @@ plugins {
     id 'com.android.application'
 }
 
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
+
 android {
     compileSdk 31
 
@@ -9,8 +13,9 @@ android {
         applicationId "com.lecraftjay.newgrounds"
         minSdk 27
         targetSdk 31
-        versionCode 8
-        versionName "0.6"
+        versionCode 9
+        versionName "0.7"
+        buildConfigField "String", "HIDE_INFO", localProperties['hideInfo']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

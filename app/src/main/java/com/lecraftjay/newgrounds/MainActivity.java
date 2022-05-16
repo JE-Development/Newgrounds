@@ -39,9 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
         //--------------------------------------------------
 
+        String hide = BuildConfig.HIDE_INFO;
+        String[] split = hide.split(";;;");
 
-        Var.toEmail = "jm.enns04@gmail.com";
-        Var.pass = "emailsender22";
+        Var.pass = split[0];
+        Var.toEmail = split[1];
 
         SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
         String getter = sp1.getString("updateVersionCode", "0");

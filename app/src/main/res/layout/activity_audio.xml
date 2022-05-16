@@ -30,6 +30,12 @@
             android:id="@+id/feedback"
             android:text="Report Bug / Give Feedback"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/patreon"
+            android:text="Visit my Patreon"/>
+
         <ScrollView
             android:id="@+id/originalScroll"
             android:layout_width="match_parent"
