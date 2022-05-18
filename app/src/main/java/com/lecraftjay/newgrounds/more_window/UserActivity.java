@@ -186,6 +186,7 @@ public class UserActivity extends AppCompatActivity {
                 String[] splitter = Var.userButton.get(i).split(";;;");
                 head.setText(splitter[1]);
                 val.setText(splitter[2]);
+                view.setTag(splitter[0]);
                 if(splitter[1].equals("AUDIO") || splitter[1].equals("ART") || splitter[1].equals("GAMES") || splitter[1].equals("MOVIES")){
                     head.setTextColor(getResources().getColor(R.color.orange));
                     val.setTextColor(getResources().getColor(R.color.orange));
@@ -193,11 +194,13 @@ public class UserActivity extends AppCompatActivity {
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            open user content activity
+                            TextView title = v.findViewById(R.id.moduleTitle);
+                            Var.userContentTitle = title.getText().toString();
+                            Var.userContentLink = v.getTag().toString();
+                            startActivity(new Intent(UserActivity.this, UserContentActivity.class));
                         }
                     });
                 }
-                view.setTag(splitter[0]);
                 headerInfo.addView(view);
             }
 

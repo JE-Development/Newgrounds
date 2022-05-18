@@ -47,5 +47,7 @@ public class Var {
    public static ArrayList<String> userButton = new ArrayList<>();
    public static ArrayList<String> userBioLinks = new ArrayList<>();
    public static String userBio = "";
+   public static String userContentTitle = "";
+   public static String userContentLink = "";
 
 }

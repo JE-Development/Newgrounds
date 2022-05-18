@@ -39,8 +39,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/movieImage"
-                        android:src="@drawable/logo"/>
+                        android:id="@+id/movieImage"/>
 
                 </LinearLayout>
 
@@ -63,8 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:id="@+id/movieCreator"
-                        android:text="title"/>
+                        android:id="@+id/movieCreator"/>
 
                 </LinearLayout>
 

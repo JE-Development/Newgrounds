@@ -91,7 +91,12 @@ public class AudioActivity extends AppCompatActivity {
 
         //-----------------------------------------------------------------
 
-        MobileAds.initialize(this);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
         AdRequest adRequest = new AdRequest.Builder().build();
         ad.loadAd(adRequest);
 
@@ -130,15 +135,6 @@ public class AudioActivity extends AppCompatActivity {
                 Uri uri = Uri.parse("https://www.patreon.com/lcj_development");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-            }
-        });
-
-
-
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-
             }
         });
 

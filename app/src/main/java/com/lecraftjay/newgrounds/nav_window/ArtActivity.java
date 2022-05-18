@@ -48,7 +48,6 @@ public class ArtActivity extends AppCompatActivity {
     Space space;
     boolean einmal = false;
 
-
     ArrayList<String> artContent = new ArrayList<>();
 
     @Override

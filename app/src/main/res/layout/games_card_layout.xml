@@ -39,8 +39,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/gamesImage"
-                        android:src="@drawable/logo"/>
+                        android:id="@+id/gamesImage"/>
 
                 </LinearLayout>
 
@@ -64,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
                         android:id="@+id/gamesCreator"
-                        android:text="title"/>
+                        android:text=""/>
 
                 </LinearLayout>
 
