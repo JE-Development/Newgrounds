@@ -44,5 +44,8 @@ public class Var {
    public static String userName = "";
    public static String userIcon = "";
    public static boolean userUpdateOne = false;
+   public static ArrayList<String> userButton = new ArrayList<>();
+   public static ArrayList<String> userBioLinks = new ArrayList<>();
+   public static String userBio = "";
 
 }

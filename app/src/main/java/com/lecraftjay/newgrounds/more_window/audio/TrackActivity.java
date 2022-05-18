@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Notification;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -84,7 +85,20 @@ public class TrackActivity extends AppCompatActivity {
 
         //--------------------------------------------------------------------
 
-        backgroundSwitch.setChecked(Var.allowBackgroundPlaying);
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("Settings", 0);
+        String getter = sp.getString("loop", "false");
+        loop.setTag(getter);
+        if(getter.equals("true")){
+            loop.setImageResource(R.drawable.loop_green);
+            if(Var.mediaPlayer != null){
+                Var.mediaPlayer.setLooping(true);
+            }
+        }
+
+        SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Settings", 0);
+        String getter1 = sp1.getString("backgroundPlaying", "false");
+        backgroundSwitch.setChecked(getter1.equals("true") ? true : false);
+        Var.allowBackgroundPlaying = getter1.equals("true") ? true : false;
 
         ActionBar actionBar = getSupportActionBar();
         String titleBarLoading = "<font color='#ffc400'>" + actionBar.getTitle() + "</font>";
@@ -98,10 +112,41 @@ public class TrackActivity extends AppCompatActivity {
             }
         });
 
+        loop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loop.getTag().equals("false")){
+                    loop.setTag("true");
+                    loop.setImageResource(R.drawable.loop_green);
+                    if(Var.mediaPlayer != null){
+                        Var.mediaPlayer.setLooping(true);
+                    }
+                    SharedPreferences s = getApplicationContext().getSharedPreferences("Settings", 0);
+                    SharedPreferences.Editor editor = s.edit();
+                    editor.putString("loop", "true");
+                    editor.apply();
+                }else if(loop.getTag().equals("true")){
+                    loop.setTag("false");
+                    loop.setImageResource(R.drawable.loop_red);
+                    if(Var.mediaPlayer != null){
+                        Var.mediaPlayer.setLooping(false);
+                    }
+                    SharedPreferences s = getApplicationContext().getSharedPreferences("Settings", 0);
+                    SharedPreferences.Editor editor = s.edit();
+                    editor.putString("loop", "false");
+                    editor.apply();
+                }
+            }
+        });
+
         backgroundSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Var.allowBackgroundPlaying = backgroundSwitch.isChecked();
+                SharedPreferences s = getApplicationContext().getSharedPreferences("Settings", 0);
+                SharedPreferences.Editor editor = s.edit();
+                editor.putString("backgroundPlaying", String.valueOf(backgroundSwitch.isChecked()));
+                editor.apply();
             }
         });
 
@@ -279,6 +324,8 @@ public class TrackActivity extends AppCompatActivity {
             Var.mediaPlayer.stop();
             Var.mediaPlayer = new MediaPlayer();
         }
+
+        Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
 
         Thread t = new Thread(new Runnable() {
             public void run() {

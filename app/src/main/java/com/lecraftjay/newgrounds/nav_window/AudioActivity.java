@@ -91,6 +91,7 @@ public class AudioActivity extends AppCompatActivity {
 
         //-----------------------------------------------------------------
 
+        MobileAds.initialize(this);
         AdRequest adRequest = new AdRequest.Builder().build();
         ad.loadAd(adRequest);
 

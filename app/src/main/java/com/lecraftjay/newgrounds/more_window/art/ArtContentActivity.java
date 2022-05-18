@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.UserActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.squareup.picasso.Picasso;
 
@@ -61,7 +62,8 @@ public class ArtContentActivity extends AppCompatActivity {
         creatorLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ArtContentActivity.this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
+                Var.userLink = v.getTag().toString();
+                startActivity(new Intent(ArtContentActivity.this, UserActivity.class));
             }
         });
 
