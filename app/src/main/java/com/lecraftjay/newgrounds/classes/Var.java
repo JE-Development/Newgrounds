@@ -39,5 +39,10 @@ public class Var {
    public static String artCreatorImage = "";
    public static String movieTitle = "";
    public static String gamesTitle = "";
+   public static String userLink = "";
+   public static String userBanner = "";
+   public static String userName = "";
+   public static String userIcon = "";
+   public static boolean userUpdateOne = false;
 
 }

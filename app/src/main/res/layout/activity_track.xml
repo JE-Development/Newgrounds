@@ -116,6 +116,16 @@
                         android:background="#111111"
                         android:src="@drawable/play"/>
 
+                    <ImageButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/loop"
+                        android:tag="start"
+                        android:layout_marginLeft="200dp"
+                        android:visibility="invisible"
+                        android:background="#111111"
+                        android:src="@drawable/loop"/>
+
                 </RelativeLayout>
 
                 <RelativeLayout

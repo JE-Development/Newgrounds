@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.UserActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -40,6 +41,7 @@ public class TrackActivity extends AppCompatActivity {
     int pos = 0;
 
     ImageButton play;
+    ImageButton loop;
     TextView trackTitle;
     SeekBar trackProgress;
     Handler handler = new Handler();
@@ -66,6 +68,7 @@ public class TrackActivity extends AppCompatActivity {
         //--------------------------------------------------------------------
 
         play = findViewById(R.id.play);
+        loop = findViewById(R.id.loop);
         trackProgress = findViewById(R.id.trackProgress);
         trackTitle = findViewById(R.id.trackTitle);
         trackWave = findViewById(R.id.trackWave);
@@ -105,7 +108,8 @@ public class TrackActivity extends AppCompatActivity {
         creatorLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TrackActivity.this, v.getTag().toString(), Toast.LENGTH_SHORT).show();
+                Var.userLink = v.getTag().toString();
+                startActivity(new Intent(TrackActivity.this, UserActivity.class));
             }
         });
 
@@ -398,6 +402,7 @@ public class TrackActivity extends AppCompatActivity {
             Var.updateWave = false;
             Picasso.get().load(Var.waveLink).into(trackWave);
             play.setVisibility(View.VISIBLE);
+            loop.setVisibility(View.VISIBLE);
             creatorLink.setTag(Var.creatorLink);
             creatorName.setText(Var.creatorName);
             try {
