@@ -49,5 +49,6 @@ public class Var {
    public static String userBio = "";
    public static String userContentTitle = "";
    public static String userContentLink = "";
+   public static String playlistName = "";
 
 }

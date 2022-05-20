@@ -1,9 +1,11 @@
 package com.lecraftjay.newgrounds.more_window.audio;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Notification;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -60,6 +62,11 @@ public class TrackActivity extends AppCompatActivity {
     TextView description;
     Switch backgroundSwitch;
     ProgressBar playProgress;
+    LinearLayout playlist;
+    LinearLayout like;
+    ImageView playlistIcon;
+    ImageView likeIcon;
+    String trackName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,10 @@ public class TrackActivity extends AppCompatActivity {
         description = findViewById(R.id.trackDescription);
         backgroundSwitch = findViewById(R.id.trackBackgroundSwitch);
         playProgress = findViewById(R.id.trackPlayProgress);
+        playlist = findViewById(R.id.trackPlaylist);
+        like = findViewById(R.id.trackLike);
+        playlistIcon = findViewById(R.id.trackPlaylistIcon);
+        likeIcon = findViewById(R.id.trackLikeIcon);
 
         //--------------------------------------------------------------------
 
@@ -109,6 +120,66 @@ public class TrackActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TrackActivity.this, Var.currentTitle, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(playlistIcon.getTag().toString().equals("false")) {
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                    String getter = sp.getString("allPlaylist", "null");
+                    String[] pl = getter.split(";;;");
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TrackActivity.this);
+                    builder.setTitle("Choose a playlist");
+                    builder.setItems(pl, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String z = pl[which];
+
+                            SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                            String getter = sp.getString(z, "null");
+                            if(getter.equals("null")){
+                                String fin = Var.openLink + ";" + Var.currentTitle;
+
+                                SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                SharedPreferences.Editor editor = sh.edit();
+                                editor.putString(z, fin);
+                                editor.apply();
+                            }else{
+                                String fin = Var.openLink + ";" + Var.currentTitle + ";;;" + getter;
+
+                                SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                SharedPreferences.Editor editor = sh.edit();
+                                editor.putString(z, fin);
+                                editor.apply();
+                            }
+
+                            playlistIcon.setImageResource(R.drawable.playlist_add_check);
+                            playlistIcon.setTag("true");
+
+                        }
+                    });
+                    builder.show();
+                }else{
+                    playlistIcon.setImageResource(R.drawable.playlist_add);
+                    playlistIcon.setTag("false");
+                }
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(likeIcon.getTag().toString().equals("false")) {
+                    likeIcon.setImageResource(R.drawable.like_filled);
+                    likeIcon.setTag("true");
+                }else{
+                    likeIcon.setImageResource(R.drawable.like);
+                    likeIcon.setTag("false");
+                }
             }
         });
 

@@ -243,7 +243,7 @@ public class GamesActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.community);
+        LinearLayout community = findViewById(R.id.profile);
 
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,7 +275,7 @@ public class GamesActivity extends AppCompatActivity {
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GamesActivity.this, CommunityActivity.class));
+                startActivity(new Intent(GamesActivity.this, ProfileActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }

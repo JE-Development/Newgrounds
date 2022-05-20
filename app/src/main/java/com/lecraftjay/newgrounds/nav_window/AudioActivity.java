@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -380,7 +377,7 @@ public class AudioActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.community);
+        LinearLayout community = findViewById(R.id.profile);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,7 +409,7 @@ public class AudioActivity extends AppCompatActivity {
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, CommunityActivity.class));
+                startActivity(new Intent(AudioActivity.this, ProfileActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }

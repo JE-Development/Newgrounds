@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity
+            android:name=".more_window.profile.PlaylistTrackActivity"
+            android:exported="false" />
+        <activity
+            android:name=".more_window.profile.PlaylistActivity"
+            android:exported="false" />
+        <activity
             android:name=".more_window.UserContentActivity"
             android:exported="false" />
         <activity
@@ -40,7 +46,7 @@
             android:name=".more_window.FeedbackActivity"
             android:exported="false" />
         <activity
-            android:name=".nav_window.CommunityActivity"
+            android:name=".nav_window.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".nav_window.ArtActivity"

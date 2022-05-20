@@ -76,8 +76,6 @@ public class UserContentActivity extends AppCompatActivity {
 
         title.setText(Var.userContentTitle);
 
-        am ende des scrolls wird falscher content angezeigt
-
         originalScroll.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
                     @Override
@@ -104,12 +102,10 @@ public class UserContentActivity extends AppCompatActivity {
 
         if(useAdvanced){
             pos ++;
-            newLink = Var.userLink + "?page=" + pos;
+            newLink = Var.userLink + urlLink + "?page=" + pos;
         }else{
             newLink = Var.userLink + urlLink;
         }
-
-
 
         Thread t = new Thread(new Runnable() {
             public void run() {

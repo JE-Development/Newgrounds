@@ -1,6 +1,5 @@
 package com.lecraftjay.newgrounds.nav_window;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -9,7 +8,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,8 +19,6 @@ import android.widget.TextView;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
-import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
-import com.lecraftjay.newgrounds.more_window.movie.MovieContentActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -32,8 +28,6 @@ import org.jsoup.select.Elements;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -250,7 +244,7 @@ public class MovieActivity extends AppCompatActivity {
         LinearLayout movie = findViewById(R.id.movie);
         LinearLayout audio = findViewById(R.id.audio);
         LinearLayout art = findViewById(R.id.art);
-        LinearLayout community = findViewById(R.id.community);
+        LinearLayout community = findViewById(R.id.profile);
 
         games.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,7 +276,7 @@ public class MovieActivity extends AppCompatActivity {
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MovieActivity.this, CommunityActivity.class));
+                startActivity(new Intent(MovieActivity.this, ProfileActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }

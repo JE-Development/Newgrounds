@@ -139,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_community"
-                android:id="@+id/community"
+                android:id="@+id/profile"
                 android:layout_weight="1">
 
                 <RelativeLayout
@@ -160,7 +160,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="6dp"
                         android:gravity="center|bottom"
-                        android:text="Community"/>
+                        android:text="Profile"/>
 
                 </RelativeLayout>
 

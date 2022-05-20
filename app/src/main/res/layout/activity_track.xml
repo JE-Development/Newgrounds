@@ -160,8 +160,47 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="45dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#1b1b1b"
+                        android:id="@+id/trackPlaylist"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/trackPlaylistIcon"
+                            android:tag="false"
+                            android:src="@drawable/playlist_add"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#111111"
+                        android:id="@+id/trackLike"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/trackLikeIcon"
+                            android:tag="false"
+                            android:src="@drawable/like"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:layout_marginTop="60dp">
+                    android:layout_marginTop="100dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -198,7 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="140dp"
+                        android:layout_marginTop="180dp"
                         android:id="@+id/trackDescription"
                         android:text=""/>
 
