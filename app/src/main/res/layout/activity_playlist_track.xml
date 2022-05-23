@@ -22,6 +22,12 @@
             android:id="@+id/playlistTrackTitle"
             android:text="title"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="hold for remove a track"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

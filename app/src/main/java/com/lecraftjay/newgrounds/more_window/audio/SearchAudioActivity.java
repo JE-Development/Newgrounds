@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.UserContentActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
 import com.squareup.picasso.Picasso;
 
@@ -214,6 +216,7 @@ public class SearchAudioActivity extends AppCompatActivity {
                     creator.setText(splitter[3]);
                     description.setText(trim(splitter[4], 40));
                     genre.setText(splitter[5]);
+                    icon.setTag(splitter[2]);
                 }catch (ArrayIndexOutOfBoundsException e){
                     e.printStackTrace();
                 }
@@ -233,8 +236,16 @@ public class SearchAudioActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         TextView title = view.findViewById(R.id.cardText);
+                        TextView genre = view.findViewById(R.id.cardGenre);
+                        TextView desc = view.findViewById(R.id.cardDescription);
+                        TextView creator = view.findViewById(R.id.cardCreator);
+                        ImageView icon = view.findViewById(R.id.iconCard);
                         Var.currentTitle = (String) title.getTag();
                         Var.openLink = (String) view.getTag();
+                        Var.trackGenre = genre.getText().toString();
+                        Var.trackDescription = desc.getText().toString();
+                        Var.trackCreator = creator.getText().toString();
+                        Var.trackIcon = icon.getTag().toString();
 
                         SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
                         String getter = sp.getString("alreadySeen", "");

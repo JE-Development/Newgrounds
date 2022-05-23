@@ -50,5 +50,9 @@ public class Var {
    public static String userContentTitle = "";
    public static String userContentLink = "";
    public static String playlistName = "";
+   public static String trackCreator = "---";
+   public static String trackGenre = "---";
+   public static String trackDescription = "---";
+   public static String trackIcon = "";
 
 }

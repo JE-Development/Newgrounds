@@ -67,6 +67,7 @@ public class TrackActivity extends AppCompatActivity {
     ImageView playlistIcon;
     ImageView likeIcon;
     String trackName = "";
+    String playlistName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,8 @@ public class TrackActivity extends AppCompatActivity {
             }
         });
 
+        getTrackInPlaylist();
+
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,42 +133,74 @@ public class TrackActivity extends AppCompatActivity {
 
                     SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
                     String getter = sp.getString("allPlaylist", "null");
-                    String[] pl = getter.split(";;;");
+                    if(!getter.equals("null")) {
+                        String[] pl = getter.split(";;;");
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(TrackActivity.this);
-                    builder.setTitle("Choose a playlist");
-                    builder.setItems(pl, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String z = pl[which];
+                        AlertDialog.Builder builder = new AlertDialog.Builder(TrackActivity.this);
+                        builder.setTitle("Choose a playlist");
+                        builder.setItems(pl, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String z = pl[which];
 
-                            SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
-                            String getter = sp.getString(z, "null");
-                            if(getter.equals("null")){
-                                String fin = Var.openLink + ";" + Var.currentTitle;
+                                playlistName = z;
 
-                                SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
-                                SharedPreferences.Editor editor = sh.edit();
-                                editor.putString(z, fin);
-                                editor.apply();
-                            }else{
-                                String fin = Var.openLink + ";" + Var.currentTitle + ";;;" + getter;
+                                SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                String getter = sp.getString(z, "null");
+                                if (getter.equals("null")) {
+                                    String fin = Var.openLink + ";" + Var.currentTitle + ";" + Var.trackCreator + ";"
+                                            + Var.trackGenre + ";" + Var.trackDescription + ";" + Var.trackIcon;
 
-                                SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
-                                SharedPreferences.Editor editor = sh.edit();
-                                editor.putString(z, fin);
-                                editor.apply();
+                                    SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                    SharedPreferences.Editor editor = sh.edit();
+                                    editor.putString(z, fin);
+                                    editor.apply();
+                                } else {
+                                    String fin = Var.openLink + ";" + Var.currentTitle + ";" + Var.trackCreator + ";"
+                                            + Var.trackGenre + ";" + Var.trackDescription + ";" + Var.trackIcon + ";;;" + getter;
+
+                                    SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                    SharedPreferences.Editor editor = sh.edit();
+                                    editor.putString(z, fin);
+                                    editor.apply();
+                                }
+
+                                playlistIcon.setImageResource(R.drawable.playlist_add_check);
+                                playlistIcon.setTag("true");
+
                             }
-
-                            playlistIcon.setImageResource(R.drawable.playlist_add_check);
-                            playlistIcon.setTag("true");
-
-                        }
-                    });
-                    builder.show();
+                        });
+                        builder.show();
+                    }else{
+                        Toast.makeText(TrackActivity.this, "there is no playlist", Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     playlistIcon.setImageResource(R.drawable.playlist_add);
                     playlistIcon.setTag("false");
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                    String getter = sp.getString(playlistName, "null");
+
+                    String[] splitter = getter.split(";;;");
+                    for(int i = 0; i < splitter.length; i++){
+                        String[] split = splitter[i].split(";");
+                        for(int j = 0; j < split.length; j++){
+                            if(Var.openLink.contains(split[0])){
+                                String s = getter.replace(splitter[i], "");
+                                s = s.replace(";;;;;;", ";;;");
+                                if(s.charAt(0) == ';'){
+                                    s = s.substring(3, s.length());
+                                }
+                                if(s.charAt(s.length()-1) == ';'){
+                                    s = s.substring(0, s.length()-3);
+                                }
+                                SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                                SharedPreferences.Editor editor = sh.edit();
+                                editor.putString(playlistName, s);
+                                editor.apply();
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -512,6 +547,13 @@ public class TrackActivity extends AppCompatActivity {
         Var.creatorName = "";
         Var.waveLink = "";
 
+        Var.currentTitle = "";
+        Var.openLink = "";
+        Var.trackGenre = "";
+        Var.trackDescription = "";
+        Var.trackCreator = "";
+        Var.trackIcon = "";
+
     }
 
     public void updateOneTime(){
@@ -532,6 +574,29 @@ public class TrackActivity extends AppCompatActivity {
                 creatorName.setTextColor(Color.rgb(255,50,50));
             }
             description.setText(Html.fromHtml(Var.description));
+        }
+    }
+
+    public void getTrackInPlaylist(){
+        SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
+        String get = shared.getString("allPlaylist", "null");
+        if(!get.equals("null")){
+            String[] split = get.split(";;;");
+            for(int i = 0; i < split.length; i++){
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                String getter = sp.getString(split[i], "null");
+                if(!getter.equals("null")){
+                    String[] splitter = getter.split(";;;");
+                    for(int j = 0; j < splitter.length; j++){
+                        String[] spl = splitter[j].split(";");
+                        if(Var.openLink.contains(spl[i])){
+                            playlistIcon.setImageResource(R.drawable.playlist_add_check);
+                            playlistIcon.setTag("true");
+                            playlistName = split[i];
+                        }
+                    }
+                }
+            }
         }
     }
 

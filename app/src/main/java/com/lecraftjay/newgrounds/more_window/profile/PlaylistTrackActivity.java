@@ -1,14 +1,17 @@
 package com.lecraftjay.newgrounds.more_window.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.UserContentActivity;
+import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 
@@ -62,7 +67,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
             for(int i = 0; i < splitter.length; i++){
                 String[] split = splitter[i].split(";");
-                String name = split[1];
+                System.out.println("jason pt: " + Arrays.toString(split));
 
                 View view = LayoutInflater.from(PlaylistTrackActivity.this).inflate(R.layout.track_layout, null);
                 //CardView card = view.findViewById(R.id.cardView);
@@ -71,7 +76,18 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 TextView description = view.findViewById(R.id.cardDescription);
                 TextView genre = view.findViewById(R.id.cardGenre);
 
-                cardText.setText(Html.fromHtml(trim(name, 28)));
+                try {
+                    cardText.setText(Html.fromHtml(trim(split[1], 28)));
+                    Picasso.get().load(split[5]).into(icon);
+                    description.setText(trim(split[4], 40));
+                    genre.setText(split[3]);
+                    icon.setTag(split[5]);
+
+                    cardText.setTag(split[1]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 view.setTag(split[0]);
 
                 view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -84,7 +100,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         TextView text = v.findViewById(R.id.cardText);
-                                        String toDelete = v.getTag().toString() + ";" + text.getText().toString();
+                                        String toDelete = getAllInfos(v.getTag().toString());
                                         String s = getter.replace(toDelete, "");
                                         s = s.replace(";;;;;;", ";;;");
                                         if(s.charAt(0) == ';'){
@@ -113,6 +129,35 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                     }
                 });
 
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView title = v.findViewById(R.id.cardText);
+                        TextView genre = v.findViewById(R.id.cardGenre);
+                        TextView desc = v.findViewById(R.id.cardDescription);
+                        TextView creator = v.findViewById(R.id.cardCreator);
+                        ImageView icon = v.findViewById(R.id.iconCard);
+                        Var.currentTitle = (String) title.getTag();
+                        Var.openLink = (String) v.getTag();
+                        Var.trackGenre = genre.getText().toString();
+                        Var.trackDescription = desc.getText().toString();
+                        Var.trackCreator = creator.getText().toString();
+                        Var.trackIcon = icon.getTag().toString();
+
+                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
+                        String getter = sp.getString("alreadySeen", "");
+
+                        SharedPreferences liste = getApplicationContext().getSharedPreferences("Audio", 0);
+                        SharedPreferences.Editor editor = liste.edit();
+                        editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
+                        editor.apply();
+
+                        title.setTextColor(ContextCompat.getColor(PlaylistTrackActivity.this, R.color.audioSeen));
+
+                        startActivity(new Intent(PlaylistTrackActivity.this, TrackActivity.class));
+                    }
+                });
+
                 scrollLayout.addView(view);
             }
         }else{
@@ -127,5 +172,21 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             return text;
         }
         return text;
+    }
+
+    public String getAllInfos(String link){
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+        String getter = sp.getString(Var.playlistName, "null");
+
+        String[] splitter = getter.split(";;;");
+        for(int i = 0; i < splitter.length; i++){
+            String[] split = splitter[i].split(";");
+            for(int j = 0; j < split.length; j++){
+                if(split[0].equals(link)){
+                    return splitter[i];
+                }
+            }
+        }
+        return "-;-;-;-;-;-";
     }
 }

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -329,6 +330,7 @@ public class AudioActivity extends AppCompatActivity {
                     cardText.setText(Html.fromHtml(trim(splitter[1], 28)));
                     cardText.setTag(splitter[1]);
                     Picasso.get().load(splitter[2]).into(icon);
+                    icon.setTag(splitter[2]);
                     creator.setText(splitter[3]);
                     description.setText(trim(splitter[4], 40));
                     genre.setText(splitter[5]);
@@ -351,8 +353,16 @@ public class AudioActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         TextView title = view.findViewById(R.id.cardText);
+                        TextView genre = view.findViewById(R.id.cardGenre);
+                        TextView desc = view.findViewById(R.id.cardDescription);
+                        TextView creator = view.findViewById(R.id.cardCreator);
+                        ImageView icon = view.findViewById(R.id.iconCard);
                         Var.currentTitle = (String) title.getTag();
                         Var.openLink = (String) view.getTag();
+                        Var.trackGenre = genre.getText().toString();
+                        Var.trackDescription = desc.getText().toString();
+                        Var.trackCreator = creator.getText().toString();
+                        Var.trackIcon = icon.getTag().toString();
 
                         SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
                         String getter = sp.getString("alreadySeen", "");
