@@ -23,6 +23,7 @@ import com.lecraftjay.newgrounds.more_window.UserContentActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,6 +33,8 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     TextView title;
     LinearLayout scrollLayout;
     ScrollView originalScroll;
+
+    ArrayList<String> linkList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }
 
                 view.setTag(split[0]);
+                linkList.add(split[0]);
 
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

@@ -52,23 +52,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"/>
 
-                <LinearLayout
+                <ProgressBar
+                    android:id="@+id/space"
+                    style="?android:attr/progressBarStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:id="@+id/space"/>
+                    android:layout_marginBottom="60dp"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

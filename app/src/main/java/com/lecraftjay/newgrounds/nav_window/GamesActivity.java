@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public class GamesActivity extends AppCompatActivity {
 
     LinearLayout root;
     ScrollView scrollLayout;
-    Space space;
+    ProgressBar space;
 
     Handler handler = new Handler();
     Runnable runnable;
@@ -65,6 +66,7 @@ public class GamesActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (scrollLayout.getChildAt(0).getBottom() <= (scrollLayout.getHeight() + scrollLayout.getScrollY())) {
                             if(einmal == false) {
+                                space.setVisibility(View.VISIBLE);
                                 getContent("https://www.newgrounds.com/games/featured?offset=;;;pos;;;&amp;inner=1", true);
                                 einmal = true;
                             }
@@ -146,6 +148,7 @@ public class GamesActivity extends AppCompatActivity {
 
             Var.updateNow = false;
             root.removeAllViews();
+            space.setVisibility(View.INVISIBLE);
             for (int i = 0; i < gamesContent.size(); i++) {
 
                 View view = LayoutInflater.from(GamesActivity.this).inflate(R.layout.games_card_layout, null);

@@ -7,43 +7,71 @@
     android:background="#000000"
     tools:context=".more_window.profile.PlaylistTrackActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:textColor="@color/orange"
-            android:gravity="center"
-            android:id="@+id/playlistTrackTitle"
-            android:text="title"/>
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:text="hold for remove a track"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textColor="@color/orange"
+                android:gravity="center"
+                android:id="@+id/playlistTrackTitle"
+                android:text="title"/>
 
-        <ScrollView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:text="hold for remove a track"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/playlistTrackOriginalScroll">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/playlistTrackScrollLayout"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+                    <include layout="@layout/track_layout"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/playlistTrackOriginalScroll">
+            android:layout_height="match_parent"
+            android:gravity="bottom">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/playlistTrackScrollLayout"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
+                <include layout="@layout/player_playlist_layout"/>
 
             </LinearLayout>
 
-        </ScrollView>
+        </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

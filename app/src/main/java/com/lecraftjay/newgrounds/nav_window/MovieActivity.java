@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class MovieActivity extends AppCompatActivity {
 
     LinearLayout root;
     ScrollView scrollLayout;
-    Space space;
+    ProgressBar space;
 
     boolean einmal = false;
 
@@ -65,6 +66,7 @@ public class MovieActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (scrollLayout.getChildAt(0).getBottom() <= (scrollLayout.getHeight() + scrollLayout.getScrollY())) {
                             if(einmal == false) {
+                                space.setVisibility(View.VISIBLE);
                                 getContent("https://www.newgrounds.com/movie/featured?offset=;;;pos;;;&amp;inner=1", true);
                                 einmal = true;
                             }
@@ -176,6 +178,7 @@ public class MovieActivity extends AppCompatActivity {
 
             Var.updateNow = false;
             root.removeAllViews();
+            space.setVisibility(View.INVISIBLE);
             for (int i = 0; i < movieContent.size(); i++) {
 
                 View view = LayoutInflater.from(MovieActivity.this).inflate(R.layout.movie_card_layout, null);

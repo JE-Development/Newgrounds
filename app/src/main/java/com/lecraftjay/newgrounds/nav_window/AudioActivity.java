@@ -20,6 +20,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -62,7 +63,7 @@ public class AudioActivity extends AppCompatActivity {
     String categoryLink = "---";
 
     boolean error = false;
-    Space space;
+    ProgressBar space;
 
     boolean einmal = false;
 
@@ -161,6 +162,7 @@ public class AudioActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (originalScroll.getChildAt(0).getBottom() <= (originalScroll.getHeight() + originalScroll.getScrollY())) {
                             if(einmal == false) {
+                                space.setVisibility(View.VISIBLE);
                                 if(categoryLink.equals("---")) {
                                     pos += 30;
                                     getContent("https://www.newgrounds.com/audio/featured?offset=" + pos + "&amp;inner=1");
@@ -242,7 +244,15 @@ public class AudioActivity extends AppCompatActivity {
 
 
                         if(sLink.contains("listen")) {
-                            if(Var.audioLinksList.contains(sLink)){
+                            boolean con = false;
+                            for(int i = 0; i < Var.audioLinksList.size(); i++){
+                                String[] splitter = Var.audioLinksList.get(i).split(";;;");
+                                String li = splitter[0];
+                                if(li.equals(sLink)){
+                                    con = true;
+                                }
+                            }
+                            if(con){
 
                             }else {
                                 String toAdd = sLink + ";;;" + sTitleString + ";;;" + sIconLink + ";;;" +
@@ -309,6 +319,7 @@ public class AudioActivity extends AppCompatActivity {
 
             Var.updateNow = false;
             scrollLayout.removeAllViews();
+            space.setVisibility(View.INVISIBLE);
             for (int i = 0; i < Var.audioLinksList.size(); i++) {
                 /*TextView text = new TextView(MainActivity.this);
                 text.setText(Var.audioLinksList.get(i));
@@ -359,6 +370,7 @@ public class AudioActivity extends AppCompatActivity {
                         ImageView icon = view.findViewById(R.id.iconCard);
                         Var.currentTitle = (String) title.getTag();
                         Var.openLink = (String) view.getTag();
+                        System.out.println("jason check: " + Var.openLink);
                         Var.trackGenre = genre.getText().toString();
                         Var.trackDescription = desc.getText().toString();
                         Var.trackCreator = creator.getText().toString();

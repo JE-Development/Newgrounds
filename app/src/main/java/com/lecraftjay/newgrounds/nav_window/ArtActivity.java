@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class ArtActivity extends AppCompatActivity {
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 1*1000;
-    Space space;
+    ProgressBar space;
     boolean einmal = false;
 
     ArrayList<String> artContent = new ArrayList<>();
@@ -65,6 +66,7 @@ public class ArtActivity extends AppCompatActivity {
                     public void onScrollChanged() {
                         if (scrollLayout.getChildAt(0).getBottom() <= (scrollLayout.getHeight() + scrollLayout.getScrollY())) {
                             if(einmal == false) {
+                                space.setVisibility(View.VISIBLE);
                                 getContent("https://www.newgrounds.com/art/featured?offset=;;;pos;;;&amp;inner=1", true);
                                 einmal = true;
                             }
@@ -141,6 +143,7 @@ public class ArtActivity extends AppCompatActivity {
     public void update(){
         if(root.getChildCount()*2 < artContent.size() || Var.updateNow) {
             root.removeAllViews();
+            space.setVisibility(View.INVISIBLE);
             for (int i = 0; i < artContent.size(); i++) {
                 View rowView = LayoutInflater.from(ArtActivity.this).inflate(R.layout.row_layout, null);
                 LinearLayout row = rowView.findViewById(R.id.artRow);

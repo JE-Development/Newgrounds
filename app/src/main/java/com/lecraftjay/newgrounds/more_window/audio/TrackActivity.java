@@ -563,6 +563,7 @@ public class TrackActivity extends AppCompatActivity {
             Picasso.get().load(Var.waveLink).into(trackWave);
             play.setVisibility(View.VISIBLE);
             loop.setVisibility(View.VISIBLE);
+            playProgress.setVisibility(View.INVISIBLE);
             creatorLink.setTag(Var.creatorLink);
             creatorName.setText(Var.creatorName);
             try {
