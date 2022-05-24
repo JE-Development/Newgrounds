@@ -7,10 +7,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -23,6 +26,7 @@ import com.lecraftjay.newgrounds.more_window.UserContentActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,6 +37,14 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     TextView title;
     LinearLayout scrollLayout;
     ScrollView originalScroll;
+
+    ImageButton play;
+    ImageButton next;
+    ImageButton prev;
+    ImageButton shuffle;
+    ImageButton loop;
+
+    String audioUrl = "";
 
     ArrayList<String> linkList = new ArrayList<>();
 
@@ -46,10 +58,74 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         title = findViewById(R.id.playlistTrackTitle);
         scrollLayout = findViewById(R.id.playlistTrackScrollLayout);
         originalScroll = findViewById(R.id.playlistTrackOriginalScroll);
+        play = findViewById(R.id.playPlaylist);
+        next = findViewById(R.id.nextPlaylist);
+        prev = findViewById(R.id.previousPlaylist);
+        shuffle = findViewById(R.id.shufflePlaylist);
+        loop = findViewById(R.id.loopPlaylist);
 
         //------------------------------------------------------------
 
         title.setText(Var.playlistName);
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(play.getTag().toString().equals("start")){
+                    play.setImageResource(R.drawable.pause);
+                    play.setTag("isPlaying");
+                    startAudio();
+                }else if(play.getTag().toString().equals("isPlaying")){
+                    play.setImageResource(R.drawable.play);
+                    play.setTag("isPaused");
+                    //pauseAudio();
+                }else if(play.getTag().toString().equals("isPaused")){
+                    play.setImageResource(R.drawable.pause);
+                    play.setTag("isPlaying");
+                    //playAudio();
+                }
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(shuffle.getTag().toString().equals("random")){
+                    shuffle.setImageResource(R.drawable.right);
+                    shuffle.setTag("normal");
+                }else{
+                    shuffle.setImageResource(R.drawable.shuffle);
+                    shuffle.setTag("random");
+                }
+            }
+        });
+
+        loop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loop.getTag().toString().equals("false")){
+                    loop.setImageResource(R.drawable.loop_green);
+                    loop.setTag("true");
+                }else{
+                    loop.setImageResource(R.drawable.loop_red);
+                    loop.setTag("false");
+                }
+            }
+        });
 
         setAudioInPlaylist();
     }
@@ -192,5 +268,40 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             }
         }
         return "-;-;-;-;-;-";
+    }
+
+    public void startAudio() {
+
+        if(linkList.size() >= 1){
+            audioUrl = linkList.get(0);
+        }
+
+        if(Var.mediaPlayer == null) {
+            Var.mediaPlayer = new MediaPlayer();
+        }else{
+            Var.mediaPlayer.stop();
+            Var.mediaPlayer = new MediaPlayer();
+        }
+
+        Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
+
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                try {
+                    Var.mediaPlayer.setDataSource(audioUrl);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Var.einmal = true;
+            }
+        });
+        t.start();
+
+        when you press play there is no sound. player not working
+
+
     }
 }

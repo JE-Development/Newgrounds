@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:text="hold for remove a playlist"/>
+            android:text="hold to remove a playlist"/>
 
         <ScrollView
             android:layout_width="match_parent"
