@@ -17,6 +17,12 @@ import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.art.ArtContentActivity;
@@ -36,6 +42,8 @@ public class ArtActivity extends AppCompatActivity {
     ScrollView scrollLayout;
 
     int pos = 0;
+
+    int adCounter = 0;
 
     Handler handler = new Handler();
     Runnable runnable;
@@ -59,6 +67,13 @@ public class ArtActivity extends AppCompatActivity {
         //-------------------------------------------------------------------
 
         Var.updateNow = false;
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
 
         scrollLayout.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -183,6 +198,17 @@ public class ArtActivity extends AppCompatActivity {
 
                 l.addView(view);
                 row.addView(l);
+
+                if(adCounter >= 4){
+                    adCounter = 0;
+                    AdView ad = new AdView(this);
+                    ad.setAdUnitId("ca-app-pub-3904729559747077/2409595162");
+                    ad.setAdSize(AdSize.BANNER);
+                    root.addView(ad);
+                    AdRequest request = new AdRequest.Builder().build();
+                    ad.loadAd(request);
+                }
+                adCounter++;
 
                 if(i++ < artContent.size()) {
 

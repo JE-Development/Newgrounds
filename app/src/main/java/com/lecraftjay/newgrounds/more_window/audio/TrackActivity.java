@@ -91,9 +91,9 @@ public class TrackActivity extends AppCompatActivity {
         backgroundSwitch = findViewById(R.id.trackBackgroundSwitch);
         playProgress = findViewById(R.id.trackPlayProgress);
         playlist = findViewById(R.id.trackPlaylist);
-        like = findViewById(R.id.trackLike);
+        //like = findViewById(R.id.trackLike);
         playlistIcon = findViewById(R.id.trackPlaylistIcon);
-        likeIcon = findViewById(R.id.trackLikeIcon);
+        //likeIcon = findViewById(R.id.trackLikeIcon);
 
         //--------------------------------------------------------------------
 
@@ -111,6 +111,14 @@ public class TrackActivity extends AppCompatActivity {
         String getter1 = sp1.getString("backgroundPlaying", "false");
         backgroundSwitch.setChecked(getter1.equals("true") ? true : false);
         Var.allowBackgroundPlaying = getter1.equals("true") ? true : false;
+
+        if(Var.openFromPlaylist){
+            backgroundSwitch.setChecked(true);
+            Var.allowBackgroundPlaying = true;
+            backgroundSwitch.setEnabled(false);
+
+            //wenn man audio welches in einer playlist from trackLayout startet spielt es nicht im playlistlayout
+        }
 
         ActionBar actionBar = getSupportActionBar();
         String titleBarLoading = "<font color='#ffc400'>" + actionBar.getTitle() + "</font>";
@@ -172,7 +180,8 @@ public class TrackActivity extends AppCompatActivity {
                         });
                         builder.show();
                     }else{
-                        Toast.makeText(TrackActivity.this, "there is no playlist", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(TrackActivity.this, "there is no playlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TrackActivity.this, "This feature is in progress", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     playlistIcon.setImageResource(R.drawable.playlist_add);
@@ -205,7 +214,7 @@ public class TrackActivity extends AppCompatActivity {
             }
         });
 
-        like.setOnClickListener(new View.OnClickListener() {
+        /*like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(likeIcon.getTag().toString().equals("false")) {
@@ -216,7 +225,7 @@ public class TrackActivity extends AppCompatActivity {
                     likeIcon.setTag("false");
                 }
             }
-        });
+        });*/
 
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -417,6 +426,9 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     public void startAudio() {
+        if(Var.openFromPlaylist){
+            Var.externalStart = true;
+        }
         playProgress.setVisibility(View.VISIBLE);
 
         play.setTag("isPlaying");

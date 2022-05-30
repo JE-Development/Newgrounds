@@ -54,5 +54,7 @@ public class Var {
    public static String trackGenre = "---";
    public static String trackDescription = "---";
    public static String trackIcon = "";
+   public static boolean externalStart = false;
+   public static boolean openFromPlaylist = false;
 
 }

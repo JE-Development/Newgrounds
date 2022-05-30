@@ -101,7 +101,7 @@ public class UserContentActivity extends AppCompatActivity {
     public void getContent(String urlLink, boolean useAdvanced){
 
         if(useAdvanced){
-            pos ++;
+            pos++;
             newLink = Var.userLink + urlLink + "?page=" + pos;
         }else{
             newLink = Var.userLink + urlLink;
@@ -369,131 +369,44 @@ public class UserContentActivity extends AppCompatActivity {
                 scrollLayout.addView(space);
             }
         } else if(Var.userContentTitle.equals("ART")){
-            if (scrollLayout.getChildCount() * 2 < artContent.size() || Var.updateNow) {
+            if(scrollLayout.getChildCount() < artContent.size() || Var.updateNow) {
+
+                Var.updateNow = false;
                 scrollLayout.removeAllViews();
                 for (int i = 0; i < artContent.size(); i++) {
-                    View rowView = LayoutInflater.from(UserContentActivity.this).inflate(R.layout.row_layout, null);
-                    LinearLayout row = rowView.findViewById(R.id.artRow);
 
-                    LinearLayout l = new LinearLayout(this);
-
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            1.0f
-                    );
-                    l.setLayoutParams(param);
-
-                    View view = LayoutInflater.from(UserContentActivity.this).inflate(R.layout.art_card_layout, null);
-                    TextView cardTitle = view.findViewById(R.id.artTitle);
-                    ImageView image = view.findViewById(R.id.artImage);
-                    TextView user = view.findViewById(R.id.artCreator);
+                    View view = LayoutInflater.from(UserContentActivity.this).inflate(R.layout.movie_card_layout, null);
+                    TextView cardTitle = view.findViewById(R.id.movieTitle);
+                    ImageView image = view.findViewById(R.id.movieImage);
+                    TextView user = view.findViewById(R.id.movieCreator);
 
                     String title = artContent.get(i);
                     String[] splitter = title.split(";;;");
 
                     try {
-                        cardTitle.setTag(title);
-                        cardTitle.setText(trim(splitter[1], 12));
+                        cardTitle.setTag(splitter[0]);
+                        cardTitle.setText(trim(splitter[1], 25));
                         Picasso.get().load(splitter[2]).into(image);
                         user.setText(splitter[3]);
-                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }catch (ArrayIndexOutOfBoundsException e){
                         e.printStackTrace();
                     }
 
-                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Movie", 0);
                     String getter = sp.getString("alreadySeen", "");
 
-                    if (getter.contains(splitter[0])) {
+                    if(getter.contains(splitter[0])){
                         cardTitle.setTextColor(ContextCompat.getColor(UserContentActivity.this, R.color.audioSeen));
                     }
 
-                    l.addView(view);
-                    row.addView(l);
 
-
-                    if (i++ < artContent.size()) {
-
-                        LinearLayout l1 = new LinearLayout(this);
-
-                        LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                1.0f
-                        );
-                        l1.setLayoutParams(param1);
-
-                        View view1 = LayoutInflater.from(UserContentActivity.this).inflate(R.layout.art_card_layout, null);
-                        TextView cardTitle1 = view1.findViewById(R.id.artTitle);
-                        ImageView image1 = view1.findViewById(R.id.artImage);
-                        TextView user1 = view1.findViewById(R.id.artCreator);
-
-                        String title1 = "{error};;;{error};;;{error};;;{error}";
-                        boolean err = false;
-                        try{
-                            title1 = artContent.get(i);
-                        }catch (Exception e){
-                            err = true;
-                            e.printStackTrace();
-                        }
-                        String[] splitter1 = title1.split(";;;");
-
-
-                        try {
-                            cardTitle1.setTag(splitter1[0]);
-                            cardTitle1.setText(trim(splitter1[1], 12));
-                            Picasso.get().load(splitter1[2]).into(image1);
-                            user1.setText(splitter1[3]);
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            e.printStackTrace();
-                        }
-
-                        SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Art", 0);
-                        String getter1 = sp1.getString("alreadySeen", "");
-
-                        if (getter1.contains(splitter1[0])) {
-                            cardTitle1.setTextColor(ContextCompat.getColor(UserContentActivity.this, R.color.audioSeen));
-                        }
-
-
-                        if(err){
-                            TextView t = new TextView(this);
-                            l1.addView(t);
-                        }else{
-                            l1.addView(view1);
-                        }
-
-                        row.addView(l1);
-                        scrollLayout.addView(rowView);
-
-                        view1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                TextView title = (TextView) v.findViewById(R.id.artTitle);
-                                Var.artInfo = (String) title.getTag();
-                                String[] split = Var.artInfo.split(";;;");
-                                Var.artOpenLink = split[0];
-
-                                SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
-                                String getter = sp.getString("alreadySeen", "");
-
-                                SharedPreferences liste = getApplicationContext().getSharedPreferences("Art", 0);
-                                SharedPreferences.Editor editor = liste.edit();
-                                editor.putString("alreadySeen", getter + ";;;" + Var.artOpenLink);
-                                editor.apply();
-
-                                title.setTextColor(ContextCompat.getColor(UserContentActivity.this, R.color.audioSeen));
-
-                                startActivity(new Intent(UserContentActivity.this, ArtContentActivity.class));
-
-                            }
-                        });
-                    }
+                    //cardText.setText(title);
+                    scrollLayout.addView(view);
 
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            TextView title = (TextView) v.findViewById(R.id.artTitle);
+                            TextView title = (TextView) v.findViewById(R.id.movieTitle);
                             Var.artInfo = (String) title.getTag();
                             String[] split = Var.artInfo.split(";;;");
                             Var.artOpenLink = split[0];
@@ -512,7 +425,6 @@ public class UserContentActivity extends AppCompatActivity {
 
                         }
                     });
-
                 }
                 scrollLayout.addView(space);
             }

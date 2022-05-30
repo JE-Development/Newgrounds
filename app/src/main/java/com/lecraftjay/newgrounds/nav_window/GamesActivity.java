@@ -18,6 +18,12 @@ import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
@@ -41,6 +47,7 @@ public class GamesActivity extends AppCompatActivity {
     int delay = 1*1000;
 
     int pos = 0;
+    int adCounter = 0;
     ArrayList<String> gamesContent = new ArrayList<>();
 
     boolean einmal = false;
@@ -57,6 +64,13 @@ public class GamesActivity extends AppCompatActivity {
         space = findViewById(R.id.gamesSpace);
 
         //-------------------------------------------------------------------
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
 
         getContent("https://www.newgrounds.com/games", false);
 
@@ -174,6 +188,17 @@ public class GamesActivity extends AppCompatActivity {
                 if(getter.contains(splitter[0])){
                     cardTitle.setTextColor(ContextCompat.getColor(GamesActivity.this, R.color.audioSeen));
                 }
+
+                if(adCounter >= 3){
+                    adCounter = 0;
+                    AdView ad = new AdView(this);
+                    ad.setAdUnitId("ca-app-pub-3904729559747077/5483562637");
+                    ad.setAdSize(AdSize.BANNER);
+                    root.addView(ad);
+                    AdRequest request = new AdRequest.Builder().build();
+                    ad.loadAd(request);
+                }
+                adCounter++;
 
 
                 //cardText.setText(title);

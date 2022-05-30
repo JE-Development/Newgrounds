@@ -1,22 +1,27 @@
 package com.lecraftjay.newgrounds.more_window.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +31,15 @@ import com.lecraftjay.newgrounds.more_window.UserContentActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -43,6 +54,23 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     ImageButton prev;
     ImageButton shuffle;
     ImageButton loop;
+    SeekBar trackProgress;
+    LinearLayout controlLayout;
+    ProgressBar controlProgress;
+    ArrayList<String> sortLink = new ArrayList<>();
+    ArrayList<String> siteLink = new ArrayList<>();
+
+    int delay = 100;
+    Handler handler = new Handler();
+    Runnable runnable;
+
+    int trackPos = 0;
+    int trackDuration = 0;
+
+    boolean einmal = false;
+    boolean playerReady = false;
+    boolean trackReady = false;
+    boolean einmal1 = true;
 
     String audioUrl = "";
 
@@ -63,10 +91,31 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         prev = findViewById(R.id.previousPlaylist);
         shuffle = findViewById(R.id.shufflePlaylist);
         loop = findViewById(R.id.loopPlaylist);
+        trackProgress = findViewById(R.id.trackProgressPlaylist);
+        controlLayout = findViewById(R.id.audioControllerLayoutPlaylist);
+        controlProgress = findViewById(R.id.controlProgressPlaylist);
 
         //------------------------------------------------------------
 
         title.setText(Var.playlistName);
+
+        trackProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                pauseAudio();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Var.mediaPlayer.seekTo(seekBar.getProgress());
+                playAudio();
+            }
+        });
 
         play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +127,11 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }else if(play.getTag().toString().equals("isPlaying")){
                     play.setImageResource(R.drawable.play);
                     play.setTag("isPaused");
-                    //pauseAudio();
+                    pauseAudio();
                 }else if(play.getTag().toString().equals("isPaused")){
                     play.setImageResource(R.drawable.pause);
                     play.setTag("isPlaying");
-                    //playAudio();
+                    playAudio();
                 }
             }
         });
@@ -90,14 +139,30 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int check = trackPos;
+                check++;
+                if(check < linkList.size()){
+                    trackPos++;
+                    startAudio();
+                }else{
+                    if(shuffle.getTag().toString().equals("random")) {
+                        Collections.shuffle(linkList);
+                    }else{
+                        //sortArrayList();
+                    }
+                    trackPos = 0;
+                    startAudio();
+                }
             }
         });
 
         prev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(trackPos > 0){
+                    trackPos--;
+                    startAudio();
+                }
             }
         });
 
@@ -107,9 +172,11 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 if(shuffle.getTag().toString().equals("random")){
                     shuffle.setImageResource(R.drawable.right);
                     shuffle.setTag("normal");
+                    sortArrayList();
                 }else{
                     shuffle.setImageResource(R.drawable.shuffle);
                     shuffle.setTag("random");
+                    Collections.shuffle(linkList);
                 }
             }
         });
@@ -146,7 +213,6 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
             for(int i = 0; i < splitter.length; i++){
                 String[] split = splitter[i].split(";");
-                System.out.println("jason pt: " + Arrays.toString(split));
 
                 View view = LayoutInflater.from(PlaylistTrackActivity.this).inflate(R.layout.track_layout, null);
                 //CardView card = view.findViewById(R.id.cardView);
@@ -168,7 +234,6 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }
 
                 view.setTag(split[0]);
-                linkList.add(split[0]);
 
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -224,15 +289,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                         Var.trackCreator = creator.getText().toString();
                         Var.trackIcon = icon.getTag().toString();
 
-                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
-                        String getter = sp.getString("alreadySeen", "");
-
-                        SharedPreferences liste = getApplicationContext().getSharedPreferences("Audio", 0);
-                        SharedPreferences.Editor editor = liste.edit();
-                        editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
-                        editor.apply();
-
-                        title.setTextColor(ContextCompat.getColor(PlaylistTrackActivity.this, R.color.audioSeen));
+                        Var.openFromPlaylist = true;
 
                         startActivity(new Intent(PlaylistTrackActivity.this, TrackActivity.class));
                     }
@@ -240,6 +297,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
                 scrollLayout.addView(view);
             }
+            getAllLinks();
         }else{
             Toast.makeText(this, "no audio in playlist", Toast.LENGTH_SHORT).show();
         }
@@ -273,7 +331,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     public void startAudio() {
 
         if(linkList.size() >= 1){
-            audioUrl = linkList.get(0);
+            String[] split = linkList.get(trackPos).split(";;;");
+            audioUrl = split[0];
+            getPlayingCard(split[1]);
         }
 
         if(Var.mediaPlayer == null) {
@@ -295,13 +355,219 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Var.einmal = true;
+                einmal = true;
             }
         });
         t.start();
 
-        when you press play there is no sound. player not working
+        //when you press play there is no sound. player not working
 
 
+    }
+
+    public void startPlayer(){
+        if(einmal){
+            einmal = false;
+
+            try {
+                Var.mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Var.mediaPlayer.start();
+
+            trackProgress.setMax(Var.mediaPlayer.getDuration());
+            trackDuration = Var.mediaPlayer.getDuration();
+            playerReady = true;
+        }
+    }
+
+    public void updateTrackProgress(){
+        if(playerReady) {
+            int dur = Var.mediaPlayer.getDuration();
+            dur = dur / 1000;
+            int m = dur/60;
+            int s = dur%60;
+
+            String min = String.valueOf(m);
+            String sec = String.valueOf(s);
+            if(min.length() <= 1){
+                min = "0" + min;
+            }
+            if(sec.length() <= 1){
+                sec = "0" + sec;
+            }
+
+            String time = min + ":" + sec;
+
+
+            trackProgress.setProgress(Var.mediaPlayer.getCurrentPosition());
+            //timeLeft.setText(getTimeLeft(Var.mediaPlayer.getCurrentPosition()) + " / " + time);
+            //timeRight.setText(getTimeRight(Var.mediaPlayer.getDuration()));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        //start handler as activity become visible
+
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                startPlayer();
+                updateTrackProgress();
+                updateAudioController();
+                checkPlayer();
+
+                handler.postDelayed(runnable, delay);
+            }
+        }, delay);
+
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(runnable);
+        if(!Var.allowBackgroundPlaying) {
+            //pauseAudio();
+        }
+        super.onPause();
+
+    }
+
+    public void checkPlayer(){
+        if(Var.externalStart){
+            if(einmal1){
+                einmal1 = false;
+
+                try {
+                    Var.mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Var.mediaPlayer.start();
+
+                trackProgress.setMax(Var.mediaPlayer.getDuration());
+                trackDuration = Var.mediaPlayer.getDuration();
+                playerReady = true;
+            }
+        }
+    }
+
+    public void updateAudioController(){
+        if(trackReady && scrollLayout.getChildCount() == linkList.size()){
+            trackReady = false;
+            controlLayout.setVisibility(View.VISIBLE);
+            controlProgress.setVisibility(View.INVISIBLE);
+            if(shuffle.getTag().toString().equals("random")){
+                Collections.shuffle(linkList);
+            }else{
+                sortArrayList();
+            }
+        }
+    }
+
+    public void getTrack(String url){
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    System.out.println("jason open: " + Var.openLink);
+                    Document doc = (Document) Jsoup
+                            .connect(url)
+                            .userAgent(
+                                    "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
+                            .timeout(5000).followRedirects(true).execute().parse();
+                    Elements titles = doc.select(".entrytitle");
+
+                    // print all titles in main page
+                    for (Element e : titles) {
+
+                    }
+
+                    // print all available links on page
+                    Elements links = doc.select("script");
+
+                    int counter = 0;
+                    for (Element l : links) {
+                        String html = l.html();
+                        if(html.contains("var embed_controller")){
+                            html = html.replace("var embed_controller = new embedController([{\"url\":\"", "");
+                            char[] htmlChar = html.toCharArray();
+                            String createdLink = "";
+                            for(int i = 0; i < htmlChar.length; i++){
+                                if(htmlChar[i] == '?'){
+                                    createdLink = createdLink.replace("\\", "");
+                                    break;
+                                }else{
+                                    createdLink = createdLink + htmlChar[i];
+                                }
+                            }
+                            linkList.add(createdLink + ";;;" + url);
+                        }
+                        String link = l.attr("abs:href");
+                        if(link.contains("listen")) {
+                            counter++;
+
+                        }
+                    }
+
+                    trackReady = true;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void pauseAudio(){
+        if(Var.mediaPlayer != null) {
+            Var.mediaPlayer.pause();
+        }
+    }
+
+    public void playAudio(){
+        if(Var.mediaPlayer != null) {
+            Var.mediaPlayer.start();
+        }else{
+            startAudio();
+        }
+    }
+
+    public void getPlayingCard(String url){
+        for(int i = 0; i < scrollLayout.getChildCount(); i++){
+            View v = scrollLayout.getChildAt(i);
+            CardView card = v.findViewById(R.id.cardView);
+            String link = v.getTag().toString();
+            if(link.equals(url)) {
+                card.getBackground().setTint(Color.rgb(0, 80, 0));
+            }else{
+                card.getBackground().setTint(Color.parseColor("#111111"));
+            }
+        }
+    }
+
+    public void getAllLinks(){
+        for(int i = 0; i < scrollLayout.getChildCount(); i++){
+            View v = scrollLayout.getChildAt(i);
+            String link = v.getTag().toString();
+            siteLink.add(link);
+            getTrack(link);
+        }
+    }
+
+    public void sortArrayList(){
+        System.out.println("jason sort vorher: " + linkList.toString());
+        for(int i = 0; i < siteLink.size(); i++){
+            for(int j = 0; j < linkList.size(); j++){
+                String[] split = linkList.get(j).split(";;;");
+                String link = split[1];
+                if(siteLink.get(i).equals(link)){
+                    sortLink.add(linkList.get(j));
+                }
+            }
+        }
+        linkList = sortLink;
     }
 }

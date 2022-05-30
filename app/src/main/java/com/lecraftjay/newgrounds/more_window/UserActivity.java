@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class UserActivity extends AppCompatActivity {
     TextView content;
     LinearLayout linksLayout;
     ImageView openLink;
+    ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class UserActivity extends AppCompatActivity {
         content = findViewById(R.id.userContent);
         linksLayout = findViewById(R.id.userLinksLayout);
         openLink = findViewById(R.id.userOpenLink);
+        progress = findViewById(R.id.userProgress);
 
         //------------------------------------------------------------
 
@@ -174,6 +177,7 @@ public class UserActivity extends AppCompatActivity {
     public void updateOneTime(){
         if(Var.userUpdateOne){
             Var.userUpdateOne = false;
+            progress.setVisibility(View.INVISIBLE);
 
             Picasso.get().load(Var.userBanner).into(banner);
             Picasso.get().load(Var.userIcon).into(icon);

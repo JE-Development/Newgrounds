@@ -177,7 +177,7 @@
                             android:src="@drawable/playlist_add"/>
 
                     </LinearLayout>
-
+<!--
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -193,7 +193,7 @@
                             android:src="@drawable/like"/>
 
                     </LinearLayout>
-
+/-->
                 </LinearLayout>
 
                 <LinearLayout

@@ -20,11 +20,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/userProgress"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_marginTop="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="170dp"
                     android:id="@+id/userBanner"
                     android:src="@drawable/banner"/>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

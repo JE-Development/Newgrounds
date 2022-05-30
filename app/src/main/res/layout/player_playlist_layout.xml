@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/seekbar_design"
-                    android:id="@+id/trackProgress"/>
+                    android:id="@+id/trackProgressPlaylist"/>
 
             </LinearLayout>
 

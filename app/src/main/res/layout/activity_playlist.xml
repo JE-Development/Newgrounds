@@ -17,14 +17,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/playlistNew"
+            android:enabled="false"
             android:text="create new playlist"/>
 
-        <TextView
+        <!-- <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:text="hold to remove a playlist"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFF00"
+            android:text="The playlist feature is in beta. Errors could occur"/>
+!-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This feature is in progress"
+            android:textColor="#FFFF00"/>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

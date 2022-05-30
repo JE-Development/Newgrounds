@@ -26,12 +26,17 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
+import com.lecraftjay.newgrounds.classes.AppOpenManager;
 import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.more_window.audio.SearchAudioActivity;
@@ -62,6 +67,8 @@ public class AudioActivity extends AppCompatActivity {
 
     String categoryLink = "---";
 
+    int adCounter = 0;
+
     boolean error = false;
     ProgressBar space;
 
@@ -90,6 +97,7 @@ public class AudioActivity extends AppCompatActivity {
 
         //-----------------------------------------------------------------
 
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -98,6 +106,25 @@ public class AudioActivity extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         ad.loadAd(adRequest);
+
+        AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                    @Override
+                    public void onNativeAdLoaded(NativeAd NativeAd) {
+                        // Show the ad.
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
 
         ad.setAdListener(new AdListener() {
             @Override
@@ -127,6 +154,7 @@ public class AudioActivity extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
+
 
         patreon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,6 +383,18 @@ public class AudioActivity extends AppCompatActivity {
                 if(getter.contains(splitter[0])){
                     cardText.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
                 }
+
+                if(adCounter >= 8){
+                    adCounter = 0;
+                    AdView ad = new AdView(this);
+                    //ad.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+                    ad.setAdUnitId("ca-app-pub-3904729559747077/5829965422");
+                    ad.setAdSize(AdSize.BANNER);
+                    scrollLayout.addView(ad);
+                    AdRequest request = new AdRequest.Builder().build();
+                    ad.loadAd(request);
+                }
+                adCounter++;
 
 
                 //cardText.setText(title);

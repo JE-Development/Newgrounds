@@ -28,8 +28,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- the \"games\" category is ready to use\n" +
-                "- you can now support me on patreon");
+        whatsNew.setText("- there is now a user window. When you click on a user (in the track or art window) a window will open where are all information about the user");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
