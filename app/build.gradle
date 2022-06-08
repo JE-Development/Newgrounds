@@ -13,8 +13,8 @@ android {
         applicationId "com.lecraftjay.newgrounds"
         minSdk 27
         targetSdk 31
-        versionCode 10
-        versionName "0.8"
+        versionCode 12
+        versionName "0.8.2"
         buildConfigField "String", "HIDE_INFO", localProperties['hideInfo']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -55,6 +55,12 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.parse-community.Parse-SDK-Android:parse:1.26.0'
+    implementation 'com.google.ads.mediation:vungle:6.11.0.0'
+    implementation 'com.google.ads.mediation:ironsource:7.2.1.1.0'
+    implementation 'com.google.ads.mediation:chartboost:8.4.3.0'
+    implementation 'com.google.ads.mediation:applovin:11.4.0.0'
+    implementation 'com.google.ads.mediation:adcolony:4.7.1.0'
+
 
     implementation files('libs/mail.jar')
     implementation files('libs/activation.jar')

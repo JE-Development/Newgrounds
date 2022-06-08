@@ -7,139 +7,154 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints"
+        android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The orange text is clickable"
+            android:id="@+id/clickInfo"
+            android:visibility="invisible"
+            android:textColor="#FFFFFF"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/userProgress"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_marginTop="200dp"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:id="@+id/userBanner"
-                    android:src="@drawable/banner"/>
+                    <ProgressBar
+                        android:id="@+id/userProgress"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_marginTop="200dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"
+                        android:id="@+id/userBanner"
+                        android:src="@drawable/banner"/>
 
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="130dp"
+                        android:gravity="center_vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:id="@+id/userIcon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/orange"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/userName"
+                            android:textSize="25dp"
+                            android:text=""/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="right">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="0"
+                                android:visibility="invisible"
+                                android:layout_marginRight="10dp"
+                                android:id="@+id/userOpenLink"
+                                android:src="@drawable/open_link"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="130dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center"
+                    android:layout_marginHorizontal="5dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:id="@+id/userIcon"/>
-
-                    <TextView
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/orange"
-                        android:layout_marginLeft="10dp"
-                        android:id="@+id/userName"
-                        android:textSize="25dp"
-                        android:text=""/>
+                        android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:gravity="right">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/headerInfo"
+                            android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="0"
-                            android:visibility="invisible"
-                            android:layout_marginRight="10dp"
-                            android:id="@+id/userOpenLink"
-                            android:src="@drawable/open_link"/>
 
-                    </LinearLayout>
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
 
 
                 </LinearLayout>
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginHorizontal="5dp">
-
-                <HorizontalScrollView
-                    android:layout_width="wrap_content"
+                <ScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/headerInfo"
-                        android:orientation="horizontal">
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FFFFFF"
+                            android:id="@+id/userContent"
+                            android:text=""/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/userLinksLayout"
+                            android:gravity="center"
+                            android:layout_marginTop="20dp"
+                            android:orientation="vertical">
+
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </HorizontalScrollView>
+
+
+                </ScrollView>
+
 
 
             </LinearLayout>
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:id="@+id/userContent"
-                        android:text=""/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/userLinksLayout"
-                        android:gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:orientation="vertical">
-
-
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-
-            </ScrollView>
-
 
 
         </LinearLayout>
-
-
 
     </LinearLayout>
 

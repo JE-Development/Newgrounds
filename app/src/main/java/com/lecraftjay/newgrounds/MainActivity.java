@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.applovin.sdk.AppLovinSdk;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.NewFeaturesActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
@@ -20,6 +22,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView closed;
@@ -29,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.webview_layout);
 
         //--------------------------------------------------
 
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
         String getter = sp1.getString("updateVersionCode", "0");
 
-        String updateCode = "7";
+        String updateCode = "8";
 
         if(getter.equals(updateCode)){
             startActivity(new Intent(MainActivity.this, AudioActivity.class));

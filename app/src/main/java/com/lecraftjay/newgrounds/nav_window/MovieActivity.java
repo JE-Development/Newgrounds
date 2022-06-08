@@ -17,13 +17,18 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.applovin.mediation.AppLovinExtras;
+import com.applovin.mediation.ApplovinAdapter;
+import com.applovin.sdk.AppLovinPrivacySettings;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
@@ -65,6 +70,9 @@ public class MovieActivity extends AppCompatActivity {
 
         //-------------------------------------------------------------------
 
+        IronSource.setConsent(true);
+        AppLovinPrivacySettings.setHasUserConsent(true, this);
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -81,7 +89,7 @@ public class MovieActivity extends AppCompatActivity {
                         if (scrollLayout.getChildAt(0).getBottom() <= (scrollLayout.getHeight() + scrollLayout.getScrollY())) {
                             if(einmal == false) {
                                 space.setVisibility(View.VISIBLE);
-                                getContent("https://www.newgrounds.com/movie/featured?offset=;;;pos;;;&amp;inner=1", true);
+                                getContent("https://www.newgrounds.com/movies/featured?offset=;;;pos;;;&amp;inner=1", true);
                                 einmal = true;
                             }
                         } else {
@@ -161,6 +169,7 @@ public class MovieActivity extends AppCompatActivity {
     protected void onResume() {
         //start handler as activity become visible
 
+        IronSource.onResume(this);
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
                 update();
@@ -176,6 +185,7 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         handler.removeCallbacks(runnable); //stop handler when activity not visible
+        IronSource.onPause(this);
         super.onPause();
     }
 
@@ -220,12 +230,20 @@ public class MovieActivity extends AppCompatActivity {
                 }
 
                 if(adCounter >= 3){
+                    Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
+
                     adCounter = 0;
                     AdView ad = new AdView(this);
                     ad.setAdUnitId("ca-app-pub-3904729559747077/1324825772");
+                    //ad.setAdUnitId("\tca-app-pub-3940256099942544/6300978111");
                     ad.setAdSize(AdSize.BANNER);
-                    root.addView(ad);
-                    AdRequest request = new AdRequest.Builder().build();
+
+                    View adLayout = LayoutInflater.from(MovieActivity.this).inflate(R.layout.ad_content_layout, null);
+                    LinearLayout lay = adLayout.findViewById(R.id.ad_content_linear_layout);
+                    lay.addView(ad);
+                    root.addView(adLayout);
+
+                    AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
                 adCounter++;

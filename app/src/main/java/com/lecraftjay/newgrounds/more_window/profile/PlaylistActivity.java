@@ -67,22 +67,48 @@ public class PlaylistActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String name = nameEdit.getText().toString();
-                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
-                        String getter = sp.getString("allPlaylist", "null");
-                        String fin = "";
-                        if(getter.equals("null")){
-                            fin = name;
-                        }else {
-                            fin = getter + ";;;" + name;
+                        String tester = name;
+                        boolean valide = false;
+                        while (tester.contains("  ")){
+                            tester = tester.replace("  ", " ");
                         }
-                        SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
-                        SharedPreferences.Editor editor = sh.edit();
-                        editor.putString("allPlaylist", fin);
-                        editor.apply();
+                        if(!tester.equals(" ")){
+                            tester = name;
+                            if(!tester.contains(";")){
+                                if(!tester.equals("")){
+                                    if(tester.length() <= 20){
+                                        valide = true;
+                                    }else{
+                                        Toast.makeText(PlaylistActivity.this, "the playlist name ist too long (20 characters allowed)", Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
+                                    Toast.makeText(PlaylistActivity.this, "The text field has no character", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                Toast.makeText(PlaylistActivity.this, "\";\" (semicolon) is not allowed to use", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(PlaylistActivity.this, "You can't use space as name", Toast.LENGTH_SHORT).show();
+                        }
 
-                        setContent();
+                        if(valide){
+                            SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+                            String getter = sp.getString("allPlaylist", "null");
+                            String fin = "";
+                            if(getter.equals("null")){
+                                fin = name;
+                            }else {
+                                fin = getter + ";;;" + name;
+                            }
+                            SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
+                            SharedPreferences.Editor editor = sh.edit();
+                            editor.putString("allPlaylist", fin);
+                            editor.apply();
 
-                        popup.dismiss();
+                            setContent();
+
+                            popup.dismiss();
+                        }
                     }
                 });
             }

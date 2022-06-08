@@ -46,6 +46,7 @@ public class UserActivity extends AppCompatActivity {
     LinearLayout linksLayout;
     ImageView openLink;
     ProgressBar progress;
+    TextView clickInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class UserActivity extends AppCompatActivity {
         linksLayout = findViewById(R.id.userLinksLayout);
         openLink = findViewById(R.id.userOpenLink);
         progress = findViewById(R.id.userProgress);
+        clickInfo = findViewById(R.id.clickInfo);
 
         //------------------------------------------------------------
 
@@ -178,6 +180,7 @@ public class UserActivity extends AppCompatActivity {
         if(Var.userUpdateOne){
             Var.userUpdateOne = false;
             progress.setVisibility(View.INVISIBLE);
+            clickInfo.setVisibility(View.VISIBLE);
 
             Picasso.get().load(Var.userBanner).into(banner);
             Picasso.get().load(Var.userIcon).into(icon);

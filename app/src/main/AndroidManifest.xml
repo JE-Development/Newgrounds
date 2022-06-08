@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:name="com.lecraftjay.newgrounds.classes.MyApplication"
         android:hardwareAccelerated="true"
+        android:configChanges="keyboardHidden|orientation|screenSize"
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
         <activity

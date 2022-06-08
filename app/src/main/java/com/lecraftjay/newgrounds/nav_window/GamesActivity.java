@@ -18,12 +18,16 @@ import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.applovin.mediation.AppLovinExtras;
+import com.applovin.mediation.ApplovinAdapter;
+import com.applovin.sdk.AppLovinPrivacySettings;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
@@ -64,6 +68,9 @@ public class GamesActivity extends AppCompatActivity {
         space = findViewById(R.id.gamesSpace);
 
         //-------------------------------------------------------------------
+
+        IronSource.setConsent(true);
+        AppLovinPrivacySettings.setHasUserConsent(true, this);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -190,12 +197,19 @@ public class GamesActivity extends AppCompatActivity {
                 }
 
                 if(adCounter >= 3){
+                    Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
+
                     adCounter = 0;
                     AdView ad = new AdView(this);
                     ad.setAdUnitId("ca-app-pub-3904729559747077/5483562637");
                     ad.setAdSize(AdSize.BANNER);
-                    root.addView(ad);
-                    AdRequest request = new AdRequest.Builder().build();
+
+                    View adLayout = LayoutInflater.from(GamesActivity.this).inflate(R.layout.ad_content_layout, null);
+                    LinearLayout lay = adLayout.findViewById(R.id.ad_content_linear_layout);
+                    lay.addView(ad);
+                    root.addView(adLayout);
+
+                    AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
                 adCounter++;
@@ -237,6 +251,7 @@ public class GamesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //start handler as activity become visible
+        IronSource.onResume(this);
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
@@ -253,6 +268,7 @@ public class GamesActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         handler.removeCallbacks(runnable); //stop handler when activity not visible
+        IronSource.onPause(this);
         super.onPause();
     }
 

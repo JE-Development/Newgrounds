@@ -28,7 +28,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- there is now a user window. When you click on a user (in the track or art window) a window will open where are all information about the user");
+        whatsNew.setText("- The scroll bug was fixed \n- the unlimited scroll is now working in \"movies\"\n- the feedback feature was officially removed because of abuse");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

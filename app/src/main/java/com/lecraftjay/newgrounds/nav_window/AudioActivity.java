@@ -25,6 +25,9 @@ import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.applovin.mediation.AppLovinExtras;
+import com.applovin.mediation.ApplovinAdapter;
+import com.applovin.sdk.AppLovinPrivacySettings;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -36,6 +39,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
+import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.classes.AppOpenManager;
 import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
@@ -75,7 +79,6 @@ public class AudioActivity extends AppCompatActivity {
     boolean einmal = false;
 
     ScrollView originalScroll;
-    Button feedback;
     AdView ad;
     Button patreon;
 
@@ -91,11 +94,13 @@ public class AudioActivity extends AppCompatActivity {
         scrollLayout = findViewById(R.id.scroll);
         originalScroll = findViewById(R.id.originalScroll);
         space = findViewById(R.id.space);
-        feedback = findViewById(R.id.feedback);
         ad = findViewById(R.id.adView);
         patreon = findViewById(R.id.patreon);
 
         //-----------------------------------------------------------------
+
+        IronSource.setConsent(true);
+        AppLovinPrivacySettings.setHasUserConsent(true, this);
 
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -104,7 +109,9 @@ public class AudioActivity extends AppCompatActivity {
 
             }
         });
-        AdRequest adRequest = new AdRequest.Builder().build();
+        Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
+
+        AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
         ad.loadAd(adRequest);
 
         AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
@@ -175,14 +182,6 @@ public class AudioActivity extends AppCompatActivity {
         TextView test = new TextView(this);
         test.setText("test");
         scrollLayout.addView(test);
-
-        feedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(new Intent(AudioActivity.this, FeedbackActivity.class));
-            }
-        });
 
         originalScroll.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -310,6 +309,7 @@ public class AudioActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //start handler as activity become visible
+        IronSource.onResume(this);
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
@@ -326,6 +326,7 @@ public class AudioActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         handler.removeCallbacks(runnable); //stop handler when activity not visible
+        IronSource.onPause(this);
         super.onPause();
     }
 
@@ -385,13 +386,20 @@ public class AudioActivity extends AppCompatActivity {
                 }
 
                 if(adCounter >= 8){
+                    Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
+
                     adCounter = 0;
                     AdView ad = new AdView(this);
                     //ad.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
                     ad.setAdUnitId("ca-app-pub-3904729559747077/5829965422");
                     ad.setAdSize(AdSize.BANNER);
-                    scrollLayout.addView(ad);
-                    AdRequest request = new AdRequest.Builder().build();
+
+                    View adLayout = LayoutInflater.from(AudioActivity.this).inflate(R.layout.ad_content_layout, null);
+                    LinearLayout lay = adLayout.findViewById(R.id.ad_content_linear_layout);
+                    lay.addView(ad);
+                    scrollLayout.addView(adLayout);
+
+                    AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
                 adCounter++;
