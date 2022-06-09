@@ -57,6 +57,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     SeekBar trackProgress;
     LinearLayout controlLayout;
     ProgressBar controlProgress;
+    TextView trackName;
+    ProgressBar loadingBar;
+
     ArrayList<String> sortLink = new ArrayList<>();
     ArrayList<String> siteLink = new ArrayList<>();
     ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
@@ -67,6 +70,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     int trackPos = 0;
     int trackDuration = 0;
+    int counterProgress = 1;
+
+    View currentView;
 
     boolean einmal = false;
     boolean playerReady = false;
@@ -95,10 +101,20 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         trackProgress = findViewById(R.id.trackProgressPlaylist);
         controlLayout = findViewById(R.id.audioControllerLayoutPlaylist);
         controlProgress = findViewById(R.id.controlProgressPlaylist);
+        trackName = findViewById(R.id.playerTrackName);
+        loadingBar = findViewById(R.id.controlProgressPlaylistBar);
 
         //------------------------------------------------------------
 
         title.setText(Var.playlistName);
+
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+        String getter = sp.getString(Var.playlistName, "null");
+        if(!getter.equals("null") && !getter.equals("")){
+            String[] splitter = getter.split(";;;");
+            loadingBar.setMax(splitter.length);
+            loadingBar.setMin(0);
+        }
 
         trackProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -115,6 +131,27 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Var.mediaPlayer.seekTo(seekBar.getProgress());
                 playAudio();
+            }
+        });
+
+        trackName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View vi) {
+                if(currentView != null) {
+                    TextView title = currentView.findViewById(R.id.cardText);
+                    TextView genre = currentView.findViewById(R.id.cardGenre);
+                    TextView desc = currentView.findViewById(R.id.cardDescription);
+                    TextView creator = currentView.findViewById(R.id.cardCreator);
+                    ImageView icon = currentView.findViewById(R.id.iconCard);
+                    Var.currentTitle = (String) title.getTag();
+                    Var.openLink = (String) currentView.getTag();
+                    Var.trackGenre = genre.getText().toString();
+                    Var.trackDescription = desc.getText().toString();
+                    Var.trackCreator = creator.getText().toString();
+                    Var.trackIcon = icon.getTag().toString();
+
+                    startActivity(new Intent(PlaylistTrackActivity.this, TrackActivity.class));
+                }
             }
         });
 
@@ -209,7 +246,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
         String getter = sp.getString(Var.playlistName, "null");
 
-        if(!getter.equals("null")){
+        if(!getter.equals("null") && !getter.equals("")){
             String[] splitter = getter.split(";;;");
 
             for(int i = 0; i < splitter.length; i++){
@@ -278,21 +315,17 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TextView title = v.findViewById(R.id.cardText);
-                        TextView genre = v.findViewById(R.id.cardGenre);
-                        TextView desc = v.findViewById(R.id.cardDescription);
-                        TextView creator = v.findViewById(R.id.cardCreator);
-                        ImageView icon = v.findViewById(R.id.iconCard);
-                        Var.currentTitle = (String) title.getTag();
-                        Var.openLink = (String) v.getTag();
-                        Var.trackGenre = genre.getText().toString();
-                        Var.trackDescription = desc.getText().toString();
-                        Var.trackCreator = creator.getText().toString();
-                        Var.trackIcon = icon.getTag().toString();
-
-                        Var.openFromPlaylist = true;
-
-                        startActivity(new Intent(PlaylistTrackActivity.this, TrackActivity.class));
+                        if(controlProgress.getVisibility() == View.INVISIBLE) {
+                            for (int i = 0; i < linkList.size(); i++) {
+                                String[] splitter = linkList.get(i).split(";;;");
+                                if (splitter[1].equals(v.getTag().toString())) {
+                                    trackPos = i;
+                                    play.setImageResource(R.drawable.pause);
+                                    play.setTag("isPlaying");
+                                    startAudio();
+                                }
+                            }
+                        }
                     }
                 });
 
@@ -338,8 +371,36 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         }
 
         Var.mediaPlayer = mediaLink.get(trackPos);
-
+        Var.mediaPlayer.seekTo(0);
         Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
+
+        Var.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+
+                if(loop.getTag().toString().equals("true")){
+                    Var.mediaPlayer.seekTo(0);
+                    Var.mediaPlayer.start();
+                }else{
+                    int check = trackPos;
+                    check++;
+                    if(check < linkList.size()){
+                        trackPos++;
+                        startAudio();
+                    }else{
+                        if(shuffle.getTag().toString().equals("random")) {
+                            Collections.shuffle(linkList);
+                        }else{
+                            //sortArrayList();
+                        }
+                        trackPos = 0;
+                        startAudio();
+                    }
+                }
+            }
+
+        });
 
         /*Thread t = new Thread(new Runnable() {
             public void run() {
@@ -409,6 +470,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 updateTrackProgress();
                 updateAudioController();
                 checkPlayer();
+                checkProgress();
 
                 handler.postDelayed(runnable, delay);
             }
@@ -426,6 +488,19 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         }
         super.onPause();
 
+    }
+
+    public void checkProgress(){
+        if(controlProgress.getVisibility() != View.INVISIBLE){
+            if(counterProgress <= loadingBar.getMax()){
+                loadingBar.setProgress(counterProgress);
+            }
+        }else{
+            if(einmal == false){
+                einmal = true;
+                loadingBar.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     public void checkPlayer(){
@@ -448,7 +523,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void updateAudioController(){
-        if(trackReady && scrollLayout.getChildCount() == linkList.size()){
+        if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
             trackReady = false;
             controlLayout.setVisibility(View.VISIBLE);
             controlProgress.setVisibility(View.INVISIBLE);
@@ -500,8 +575,12 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                             MediaPlayer mediaPlayer = new MediaPlayer();
                             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             mediaPlayer.setDataSource(createdLink);
+                            mediaPlayer.prepare();
 
                             mediaLink.add(mediaPlayer);
+
+                            counter++;
+                            counterProgress++;
                         }
                         String link = l.attr("abs:href");
                         if(link.contains("listen")) {
@@ -537,9 +616,12 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         for(int i = 0; i < scrollLayout.getChildCount(); i++){
             View v = scrollLayout.getChildAt(i);
             CardView card = v.findViewById(R.id.cardView);
+            TextView t = v.findViewById(R.id.cardText);
             String link = v.getTag().toString();
             if(link.equals(url)) {
                 card.getBackground().setTint(Color.rgb(0, 80, 0));
+                currentView = v;
+                trackName.setText(t.getText());
             }else{
                 card.getBackground().setTint(Color.parseColor("#111111"));
             }
