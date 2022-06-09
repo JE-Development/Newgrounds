@@ -59,6 +59,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     ProgressBar controlProgress;
     ArrayList<String> sortLink = new ArrayList<>();
     ArrayList<String> siteLink = new ArrayList<>();
+    ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
 
     int delay = 100;
     Handler handler = new Handler();
@@ -336,16 +337,11 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             getPlayingCard(split[1]);
         }
 
-        if(Var.mediaPlayer == null) {
-            Var.mediaPlayer = new MediaPlayer();
-        }else{
-            Var.mediaPlayer.stop();
-            Var.mediaPlayer = new MediaPlayer();
-        }
+        Var.mediaPlayer = mediaLink.get(trackPos);
 
         Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
 
-        Thread t = new Thread(new Runnable() {
+        /*Thread t = new Thread(new Runnable() {
             public void run() {
                 Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -358,28 +354,24 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 einmal = true;
             }
         });
-        t.start();
+        t.start();*/
 
         //when you press play there is no sound. player not working
 
-
+        startPlayer();
     }
 
     public void startPlayer(){
-        if(einmal){
-            einmal = false;
+        /*try {
+            Var.mediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        Var.mediaPlayer.start();
 
-            try {
-                Var.mediaPlayer.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Var.mediaPlayer.start();
-
-            trackProgress.setMax(Var.mediaPlayer.getDuration());
-            trackDuration = Var.mediaPlayer.getDuration();
-            playerReady = true;
-        }
+        trackProgress.setMax(Var.mediaPlayer.getDuration());
+        trackDuration = Var.mediaPlayer.getDuration();
+        playerReady = true;
     }
 
     public void updateTrackProgress(){
@@ -413,7 +405,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
-                startPlayer();
+                //startPlayer();
                 updateTrackProgress();
                 updateAudioController();
                 checkPlayer();
@@ -504,6 +496,12 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                                 }
                             }
                             linkList.add(createdLink + ";;;" + url);
+
+                            MediaPlayer mediaPlayer = new MediaPlayer();
+                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            mediaPlayer.setDataSource(createdLink);
+
+                            mediaLink.add(mediaPlayer);
                         }
                         String link = l.attr("abs:href");
                         if(link.contains("listen")) {

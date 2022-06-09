@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
         String getter = sp.getString("allPlaylist", "null");
-        if(!getter.equals("null")){
+        if(!getter.equals("null") && !getter.equals("")){
             String[] split = getter.split(";;;");
             String c = String.valueOf(split.length);
             count.setText(c);

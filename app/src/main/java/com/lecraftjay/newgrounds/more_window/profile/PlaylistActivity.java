@@ -66,6 +66,9 @@ public class PlaylistActivity extends AppCompatActivity {
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SharedPreferences sha = getApplicationContext().getSharedPreferences("Playlist", 0);
+                        String g = sha.getString("allPlaylist", "null");
+
                         String name = nameEdit.getText().toString();
                         String tester = name;
                         boolean valide = false;
@@ -77,9 +80,13 @@ public class PlaylistActivity extends AppCompatActivity {
                             if(!tester.contains(";")){
                                 if(!tester.equals("")){
                                     if(tester.length() <= 20){
-                                        valide = true;
+                                        if(!g.contains(tester)) {
+                                            valide = true;
+                                        }else{
+                                            Toast.makeText(PlaylistActivity.this, "Playlist with this name already exist", Toast.LENGTH_SHORT).show();
+                                        }
                                     }else{
-                                        Toast.makeText(PlaylistActivity.this, "the playlist name ist too long (20 characters allowed)", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(PlaylistActivity.this, "The playlist name ist too long (20 characters allowed)", Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
                                     Toast.makeText(PlaylistActivity.this, "The text field has no character", Toast.LENGTH_SHORT).show();
@@ -95,7 +102,7 @@ public class PlaylistActivity extends AppCompatActivity {
                             SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
                             String getter = sp.getString("allPlaylist", "null");
                             String fin = "";
-                            if(getter.equals("null")){
+                            if(getter.equals("null") || getter.equals("")){
                                 fin = name;
                             }else {
                                 fin = getter + ";;;" + name;
@@ -119,8 +126,9 @@ public class PlaylistActivity extends AppCompatActivity {
         SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
         String getter = sp.getString("allPlaylist", "null");
 
-        if(!getter.equals("null")){
-            content.removeAllViews();
+        content.removeAllViews();
+
+        if(!getter.equals("null") && !getter.equals("")){
             String[] split = getter.split(";;;");
             for(int i = 0; i < split.length; i++){
                 View view = LayoutInflater.from(PlaylistActivity.this).inflate(R.layout.playlist_card_layout, null);
@@ -148,11 +156,13 @@ public class PlaylistActivity extends AppCompatActivity {
                                         TextView text = v.findViewById(R.id.playlistName);
                                         String s = getter.replace(text.getText().toString(), "");
                                         s = s.replace(";;;;;;", ";;;");
-                                        if(s.charAt(0) == ';'){
-                                            s = s.substring(3, s.length());
-                                        }
-                                        if(s.charAt(s.length()-1) == ';'){
-                                            s = s.substring(0, s.length()-3);
+                                        if(!s.equals("")) {
+                                            if (s.charAt(0) == ';') {
+                                                s = s.substring(3, s.length());
+                                            }
+                                            if (s.charAt(s.length() - 1) == ';') {
+                                                s = s.substring(0, s.length() - 3);
+                                            }
                                         }
                                         SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
                                         SharedPreferences.Editor editor = sh.edit();
