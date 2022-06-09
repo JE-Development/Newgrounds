@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +60,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     ProgressBar controlProgress;
     TextView trackName;
     ProgressBar loadingBar;
+    Button skipLoading;
 
     ArrayList<String> sortLink = new ArrayList<>();
     ArrayList<String> siteLink = new ArrayList<>();
@@ -78,6 +80,8 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     boolean playerReady = false;
     boolean trackReady = false;
     boolean einmal1 = true;
+    boolean einmal2 = true;
+    boolean skiped = false;
 
     String audioUrl = "";
 
@@ -103,6 +107,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         controlProgress = findViewById(R.id.controlProgressPlaylist);
         trackName = findViewById(R.id.playerTrackName);
         loadingBar = findViewById(R.id.controlProgressPlaylistBar);
+        skipLoading = findViewById(R.id.playlistTrackSkipLoading);
 
         //------------------------------------------------------------
 
@@ -131,6 +136,13 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Var.mediaPlayer.seekTo(seekBar.getProgress());
                 playAudio();
+            }
+        });
+
+        skipLoading.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                skiped = true;
             }
         });
 
@@ -177,6 +189,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!skiped) {
+                    mediaLink.get(trackPos).stop();
+                }
                 int check = trackPos;
                 check++;
                 if(check < linkList.size()){
@@ -364,14 +379,27 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     public void startAudio() {
 
+        /*for(int i = 0; i < mediaLink.size(); i++){
+            mediaLink.get(i).stop();
+        }*/
+
         if(linkList.size() >= 1){
             String[] split = linkList.get(trackPos).split(";;;");
             audioUrl = split[0];
             getPlayingCard(split[1]);
         }
 
-        Var.mediaPlayer = mediaLink.get(trackPos);
-        Var.mediaPlayer.seekTo(0);
+        if(!skiped) {
+            Var.mediaPlayer = mediaLink.get(trackPos);
+            Var.mediaPlayer.seekTo(0);
+        }else{
+            if(Var.mediaPlayer == null) {
+                Var.mediaPlayer = new MediaPlayer();
+            }else{
+                Var.mediaPlayer.stop();
+                Var.mediaPlayer = new MediaPlayer();
+            }
+        }
         Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
 
         Var.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -402,37 +430,51 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
         });
 
-        /*Thread t = new Thread(new Runnable() {
-            public void run() {
-                Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if(skiped) {
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-                try {
-                    Var.mediaPlayer.setDataSource(audioUrl);
+                    try {
+                        Var.mediaPlayer.setDataSource(audioUrl);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    einmal2 = true;
                 }
-                einmal = true;
-            }
-        });
-        t.start();*/
+            });
+            t.start();
+        }
 
         //when you press play there is no sound. player not working
 
-        startPlayer();
+        if(!skiped) {
+            startPlayer();
+        }
     }
 
     public void startPlayer(){
-        /*try {
-            Var.mediaPlayer.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        Var.mediaPlayer.start();
+        if(!skiped) {
+            Var.mediaPlayer.start();
 
-        trackProgress.setMax(Var.mediaPlayer.getDuration());
-        trackDuration = Var.mediaPlayer.getDuration();
-        playerReady = true;
+            trackProgress.setMax(Var.mediaPlayer.getDuration());
+            trackDuration = Var.mediaPlayer.getDuration();
+            playerReady = true;
+        }else{
+            if(einmal2) {
+                try {
+                    Var.mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Var.mediaPlayer.start();
+
+                trackProgress.setMax(Var.mediaPlayer.getDuration());
+                trackDuration = Var.mediaPlayer.getDuration();
+                playerReady = true;
+            }
+        }
     }
 
     public void updateTrackProgress(){
@@ -523,14 +565,27 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void updateAudioController(){
-        if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
-            trackReady = false;
-            controlLayout.setVisibility(View.VISIBLE);
-            controlProgress.setVisibility(View.INVISIBLE);
-            if(shuffle.getTag().toString().equals("random")){
-                Collections.shuffle(linkList);
-            }else{
-                sortArrayList();
+        if(!skiped){
+            if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
+                trackReady = false;
+                controlLayout.setVisibility(View.VISIBLE);
+                controlProgress.setVisibility(View.INVISIBLE);
+                if(shuffle.getTag().toString().equals("random")){
+                    Collections.shuffle(linkList);
+                }else{
+                    sortArrayList();
+                }
+            }
+        }else{
+            if(trackReady && scrollLayout.getChildCount() == linkList.size()){
+                trackReady = false;
+                controlLayout.setVisibility(View.VISIBLE);
+                controlProgress.setVisibility(View.INVISIBLE);
+                if(shuffle.getTag().toString().equals("random")){
+                    Collections.shuffle(linkList);
+                }else{
+                    sortArrayList();
+                }
             }
         }
     }
