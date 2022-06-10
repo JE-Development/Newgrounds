@@ -56,5 +56,9 @@ public class Var {
    public static String trackIcon = "";
    public static boolean externalStart = false;
    public static boolean openFromPlaylist = false;
+   public static boolean trackReady = false;
+   public static ArrayList<String> linkList = new ArrayList<>();
+   public static ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
+   public static int counterProgress = 0;
 
 }

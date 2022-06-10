@@ -1,6 +1,7 @@
 package com.lecraftjay.newgrounds.nav_window;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
@@ -78,21 +79,6 @@ public class ArtActivity extends AppCompatActivity {
         space = findViewById(R.id.artSpace);
 
         //-------------------------------------------------------------------
-
-        String line = "";
-        try {
-            FileInputStream fis = openFileInput("hello.txt");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader bufferedReader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        Toast.makeText(this, "line: " + line, Toast.LENGTH_SHORT).show();
 
         Var.updateNow = false;
 
@@ -444,4 +430,5 @@ public class ArtActivity extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.applovin.sdk.AppLovinSdk;
+import com.lecraftjay.newgrounds.classes.LoadTrack;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.NewFeaturesActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
@@ -27,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +49,25 @@ public class MainActivity extends AppCompatActivity {
         root = findViewById(R.id.root);
 
         //--------------------------------------------------
+
+        SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
+        String pri = shared.getString("priority", "null");
+        if(!pri.equals("null")){
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
+            String getter = sp.getString(pri, "null");
+
+            if(!getter.equals("null")){
+                String[] trackLinks = getter.split(";;;");
+                ArrayList<String> tl = new ArrayList<>();
+                for(int i = 0; i < trackLinks.length; i++){
+                    String[] s = trackLinks[i].split(";");
+                    tl.add(s[0]);
+                }
+                System.out.println("jason back content: " + tl);
+                LoadTrack t = new LoadTrack(tl);
+                t.start();
+            }
+        }
 
 
 

@@ -64,7 +64,6 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     ArrayList<String> sortLink = new ArrayList<>();
     ArrayList<String> siteLink = new ArrayList<>();
-    ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
 
     int delay = 100;
     Handler handler = new Handler();
@@ -80,14 +79,11 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     boolean einmal = false;
     boolean playerReady = false;
-    boolean trackReady = false;
     boolean einmal1 = true;
     boolean einmal2 = false;
 
     String audioUrl = "";
     String progressString = "---";
-
-    ArrayList<String> linkList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,15 +181,15 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaLink.get(trackPos).stop();
+                Var.mediaLink.get(trackPos).stop();
                 int check = trackPos;
                 check++;
-                if(check < linkList.size()){
+                if(check < Var.linkList.size()){
                     trackPos++;
                     startAudio();
                 }else{
                     if(shuffle.getTag().toString().equals("random")) {
-                        Collections.shuffle(linkList);
+                        Collections.shuffle(Var.linkList);
                     }else{
                         //sortArrayList();
                     }
@@ -223,7 +219,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }else{
                     shuffle.setImageResource(R.drawable.shuffle);
                     shuffle.setTag("random");
-                    Collections.shuffle(linkList);
+                    Collections.shuffle(Var.linkList);
                 }
             }
         });
@@ -325,8 +321,8 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(controlProgress.getVisibility() == View.INVISIBLE) {
-                            for (int i = 0; i < linkList.size(); i++) {
-                                String[] splitter = linkList.get(i).split(";;;");
+                            for (int i = 0; i < Var.linkList.size(); i++) {
+                                String[] splitter = Var.linkList.get(i).split(";;;");
                                 if (splitter[1].equals(v.getTag().toString())) {
                                     trackPos = i;
                                     play.setImageResource(R.drawable.pause);
@@ -373,20 +369,20 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     public void startAudio() {
 
-        /*for(int i = 0; i < mediaLink.size(); i++){
-            mediaLink.get(i).stop();
+        /*for(int i = 0; i < Var.mediaLink.size(); i++){
+            Var.mediaLink.get(i).stop();
         }*/
 
-        if(linkList.size() >= 1){
-            String[] split = linkList.get(trackPos).split(";;;");
+        if(Var.linkList.size() >= 1){
+            String[] split = Var.linkList.get(trackPos).split(";;;");
             audioUrl = split[0];
             getPlayingCard(split[1]);
         }
 
-        Var.mediaPlayer = mediaLink.get(trackPos);
+        Var.mediaPlayer = Var.mediaLink.get(trackPos);
         Var.mediaPlayer.seekTo(0);
         /*if(!skiped) {
-            Var.mediaPlayer = mediaLink.get(trackPos);
+            Var.mediaPlayer = Var.mediaLink.get(trackPos);
             Var.mediaPlayer.seekTo(0);
         }else{
             if(Var.mediaPlayer == null) {
@@ -409,12 +405,12 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }else{
                     int check = trackPos;
                     check++;
-                    if(check < linkList.size()){
+                    if(check < Var.linkList.size()){
                         trackPos++;
                         startAudio();
                     }else{
                         if(shuffle.getTag().toString().equals("random")) {
-                            Collections.shuffle(linkList);
+                            Collections.shuffle(Var.linkList);
                         }else{
                             //sortArrayList();
                         }
@@ -564,35 +560,36 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void updateAudioController(){
-        if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
-            trackReady = false;
+        if(Var.trackReady && scrollLayout.getChildCount() == Var.mediaLink.size()){
+            System.out.println("jason background: test");
+            Var.trackReady = false;
             controlLayout.setVisibility(View.VISIBLE);
             controlProgress.setVisibility(View.INVISIBLE);
             if(shuffle.getTag().toString().equals("random")){
-                Collections.shuffle(linkList);
+                Collections.shuffle(Var.linkList);
             }else{
                 sortArrayList();
             }
         }
         /*
         if(!skiped){
-            if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
-                trackReady = false;
+            if(Var.trackReady && scrollLayout.getChildCount() == Var.mediaLink.size()){
+                Var.trackReady = false;
                 controlLayout.setVisibility(View.VISIBLE);
                 controlProgress.setVisibility(View.INVISIBLE);
                 if(shuffle.getTag().toString().equals("random")){
-                    Collections.shuffle(linkList);
+                    Collections.shuffle(Var.linkList);
                 }else{
                     sortArrayList();
                 }
             }
         }else{
-            if(trackReady && scrollLayout.getChildCount() == linkList.size()){
-                trackReady = false;
+            if(Var.trackReady && scrollLayout.getChildCount() == Var.linkList.size()){
+                Var.trackReady = false;
                 controlLayout.setVisibility(View.VISIBLE);
                 controlProgress.setVisibility(View.INVISIBLE);
                 if(shuffle.getTag().toString().equals("random")){
-                    Collections.shuffle(linkList);
+                    Collections.shuffle(Var.linkList);
                 }else{
                     sortArrayList();
                 }
@@ -601,70 +598,75 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void getTrack(){
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    for(int a = 0; a < siteLink.size(); a++){
-                        System.out.println("jason open: " + Var.openLink);
-                        Document doc = (Document) Jsoup
-                                .connect(siteLink.get(a))
-                                .userAgent(
-                                        "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
-                                .timeout(5000).followRedirects(true).execute().parse();
-                        Elements titles = doc.select(".entrytitle");
+        SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
+        String pri = shared.getString("priority", "null");
+        System.out.println("jason background: " + !pri.equals(Var.playlistName) + "   " + pri + "  " + Var.playlistName + "   " + Var.trackReady);
+        if(!pri.equals(Var.playlistName)) {
 
-                        // print all titles in main page
-                        for (Element e : titles) {
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        for (int a = 0; a < siteLink.size(); a++) {
+                            System.out.println("jason open: " + Var.openLink);
+                            Document doc = (Document) Jsoup
+                                    .connect(siteLink.get(a))
+                                    .userAgent(
+                                            "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
+                                    .timeout(5000).followRedirects(true).execute().parse();
+                            Elements titles = doc.select(".entrytitle");
 
-                        }
+                            // print all titles in main page
+                            for (Element e : titles) {
 
-                        // print all available links on page
-                        Elements links = doc.select("script");
+                            }
 
-                        int counter = 0;
-                        for (Element l : links) {
-                            progressString = counterProgress + "/" + trackCounter;
-                            String html = l.html();
-                            if(html.contains("var embed_controller")){
-                                html = html.replace("var embed_controller = new embedController([{\"url\":\"", "");
-                                char[] htmlChar = html.toCharArray();
-                                String createdLink = "";
-                                for(int i = 0; i < htmlChar.length; i++){
-                                    if(htmlChar[i] == '?'){
-                                        createdLink = createdLink.replace("\\", "");
-                                        break;
-                                    }else{
-                                        createdLink = createdLink + htmlChar[i];
+                            // print all available links on page
+                            Elements links = doc.select("script");
+
+                            int counter = 0;
+                            for (Element l : links) {
+                                progressString = counterProgress + "/" + trackCounter;
+                                String html = l.html();
+                                if (html.contains("var embed_controller")) {
+                                    html = html.replace("var embed_controller = new embedController([{\"url\":\"", "");
+                                    char[] htmlChar = html.toCharArray();
+                                    String createdLink = "";
+                                    for (int i = 0; i < htmlChar.length; i++) {
+                                        if (htmlChar[i] == '?') {
+                                            createdLink = createdLink.replace("\\", "");
+                                            break;
+                                        } else {
+                                            createdLink = createdLink + htmlChar[i];
+                                        }
                                     }
+                                    Var.linkList.add(createdLink + ";;;" + siteLink.get(a));
+
+                                    MediaPlayer mediaPlayer = new MediaPlayer();
+                                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                    mediaPlayer.setDataSource(createdLink);
+                                    mediaPlayer.prepare();
+
+                                    Var.mediaLink.add(mediaPlayer);
+
+                                    counter++;
+                                    counterProgress++;
                                 }
-                                linkList.add(createdLink + ";;;" + siteLink.get(a));
+                                String link = l.attr("abs:href");
+                                if (link.contains("listen")) {
+                                    counter++;
 
-                                MediaPlayer mediaPlayer = new MediaPlayer();
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                                mediaPlayer.setDataSource(createdLink);
-                                mediaPlayer.prepare();
-
-                                mediaLink.add(mediaPlayer);
-
-                                counter++;
-                                counterProgress++;
+                                }
                             }
-                            String link = l.attr("abs:href");
-                            if(link.contains("listen")) {
-                                counter++;
 
-                            }
+                            Var.trackReady = true;
                         }
-
-                        trackReady = true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(PlaylistTrackActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        t.start();
+            });
+            t.start();
+        }
     }
 
     public void pauseAudio(){
@@ -707,16 +709,16 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void sortArrayList(){
-        System.out.println("jason sort vorher: " + linkList.toString());
+        System.out.println("jason sort vorher: " + Var.linkList.toString());
         for(int i = 0; i < siteLink.size(); i++){
-            for(int j = 0; j < linkList.size(); j++){
-                String[] split = linkList.get(j).split(";;;");
+            for(int j = 0; j < Var.linkList.size(); j++){
+                String[] split = Var.linkList.get(j).split(";;;");
                 String link = split[1];
                 if(siteLink.get(i).equals(link)){
-                    sortLink.add(linkList.get(j));
+                    sortLink.add(Var.linkList.get(j));
                 }
             }
         }
-        linkList = sortLink;
+        Var.linkList = sortLink;
     }
 }

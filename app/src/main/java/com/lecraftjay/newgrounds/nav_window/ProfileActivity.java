@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.classes.LoadTrack;
+import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.profile.PlaylistActivity;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -31,6 +33,8 @@ public class ProfileActivity extends AppCompatActivity {
         count = findViewById(R.id.playlistCount);
 
         //-------------------------------------------------------
+
+
 
         SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
         String getter = sp.getString("allPlaylist", "null");
