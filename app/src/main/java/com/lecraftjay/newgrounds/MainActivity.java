@@ -2,6 +2,7 @@ package com.lecraftjay.newgrounds;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         root = findViewById(R.id.root);
 
         //--------------------------------------------------
+
+
+
 
         String hide = BuildConfig.HIDE_INFO;
         String[] split = hide.split(";;;");

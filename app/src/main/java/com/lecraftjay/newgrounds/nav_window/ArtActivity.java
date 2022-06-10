@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.applovin.mediation.AppLovinExtras;
 import com.applovin.mediation.ApplovinAdapter;
@@ -41,6 +42,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -73,6 +78,21 @@ public class ArtActivity extends AppCompatActivity {
         space = findViewById(R.id.artSpace);
 
         //-------------------------------------------------------------------
+
+        String line = "";
+        try {
+            FileInputStream fis = openFileInput("hello.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Toast.makeText(this, "line: " + line, Toast.LENGTH_SHORT).show();
 
         Var.updateNow = false;
 

@@ -57,10 +57,10 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     ImageButton loop;
     SeekBar trackProgress;
     LinearLayout controlLayout;
-    ProgressBar controlProgress;
+    LinearLayout controlProgress;
     TextView trackName;
     ProgressBar loadingBar;
-    Button skipLoading;
+    TextView progressText;
 
     ArrayList<String> sortLink = new ArrayList<>();
     ArrayList<String> siteLink = new ArrayList<>();
@@ -72,7 +72,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
     int trackPos = 0;
     int trackDuration = 0;
-    int counterProgress = 1;
+    int counterProgress = 0;
+    int trackCounter = 0;
+
 
     View currentView;
 
@@ -80,10 +82,10 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     boolean playerReady = false;
     boolean trackReady = false;
     boolean einmal1 = true;
-    boolean einmal2 = true;
-    boolean skiped = false;
+    boolean einmal2 = false;
 
     String audioUrl = "";
+    String progressString = "---";
 
     ArrayList<String> linkList = new ArrayList<>();
 
@@ -107,7 +109,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         controlProgress = findViewById(R.id.controlProgressPlaylist);
         trackName = findViewById(R.id.playerTrackName);
         loadingBar = findViewById(R.id.controlProgressPlaylistBar);
-        skipLoading = findViewById(R.id.playlistTrackSkipLoading);
+        progressText = findViewById(R.id.controlProgressText);
 
         //------------------------------------------------------------
 
@@ -117,7 +119,8 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         String getter = sp.getString(Var.playlistName, "null");
         if(!getter.equals("null") && !getter.equals("")){
             String[] splitter = getter.split(";;;");
-            loadingBar.setMax(splitter.length);
+            trackCounter = splitter.length;
+            loadingBar.setMax(trackCounter);
             loadingBar.setMin(0);
         }
 
@@ -136,13 +139,6 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Var.mediaPlayer.seekTo(seekBar.getProgress());
                 playAudio();
-            }
-        });
-
-        skipLoading.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                skiped = true;
             }
         });
 
@@ -189,9 +185,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!skiped) {
-                    mediaLink.get(trackPos).stop();
-                }
+                mediaLink.get(trackPos).stop();
                 int check = trackPos;
                 check++;
                 if(check < linkList.size()){
@@ -389,7 +383,9 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             getPlayingCard(split[1]);
         }
 
-        if(!skiped) {
+        Var.mediaPlayer = mediaLink.get(trackPos);
+        Var.mediaPlayer.seekTo(0);
+        /*if(!skiped) {
             Var.mediaPlayer = mediaLink.get(trackPos);
             Var.mediaPlayer.seekTo(0);
         }else{
@@ -399,7 +395,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 Var.mediaPlayer.stop();
                 Var.mediaPlayer = new MediaPlayer();
             }
-        }
+        }*/
         Var.mediaPlayer.setLooping(loop.getTag().equals("true") ? true : false);
 
         Var.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -430,7 +426,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
 
         });
 
-        if(skiped) {
+        /*if(skiped) {
             Thread t = new Thread(new Runnable() {
                 public void run() {
                     Var.mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -445,36 +441,32 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 }
             });
             t.start();
-        }
+        }*/
 
-        //when you press play there is no sound. player not working
-
-        if(!skiped) {
-            startPlayer();
-        }
+        startPlayerNoSkip();
     }
 
     public void startPlayer(){
-        if(!skiped) {
+        if(einmal2) {
+            try {
+                Var.mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Var.mediaPlayer.start();
 
             trackProgress.setMax(Var.mediaPlayer.getDuration());
             trackDuration = Var.mediaPlayer.getDuration();
             playerReady = true;
-        }else{
-            if(einmal2) {
-                try {
-                    Var.mediaPlayer.prepare();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Var.mediaPlayer.start();
-
-                trackProgress.setMax(Var.mediaPlayer.getDuration());
-                trackDuration = Var.mediaPlayer.getDuration();
-                playerReady = true;
-            }
         }
+    }
+
+    public void startPlayerNoSkip(){
+        Var.mediaPlayer.start();
+
+        trackProgress.setMax(Var.mediaPlayer.getDuration());
+        trackDuration = Var.mediaPlayer.getDuration();
+        playerReady = true;
     }
 
     public void updateTrackProgress(){
@@ -513,6 +505,7 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                 updateAudioController();
                 checkPlayer();
                 checkProgress();
+                setProgressText();
 
                 handler.postDelayed(runnable, delay);
             }
@@ -545,6 +538,12 @@ public class PlaylistTrackActivity extends AppCompatActivity {
         }
     }
 
+    public void setProgressText(){
+        if(controlProgress.getVisibility() == View.VISIBLE){
+            progressText.setText(progressString);
+        }
+    }
+
     public void checkPlayer(){
         if(Var.externalStart){
             if(einmal1){
@@ -565,6 +564,17 @@ public class PlaylistTrackActivity extends AppCompatActivity {
     }
 
     public void updateAudioController(){
+        if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
+            trackReady = false;
+            controlLayout.setVisibility(View.VISIBLE);
+            controlProgress.setVisibility(View.INVISIBLE);
+            if(shuffle.getTag().toString().equals("random")){
+                Collections.shuffle(linkList);
+            }else{
+                sortArrayList();
+            }
+        }
+        /*
         if(!skiped){
             if(trackReady && scrollLayout.getChildCount() == mediaLink.size()){
                 trackReady = false;
@@ -587,66 +597,70 @@ public class PlaylistTrackActivity extends AppCompatActivity {
                     sortArrayList();
                 }
             }
-        }
+        }*/
     }
 
-    public void getTrack(String url){
+    public void getTrack(){
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
-                    System.out.println("jason open: " + Var.openLink);
-                    Document doc = (Document) Jsoup
-                            .connect(url)
-                            .userAgent(
-                                    "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
-                            .timeout(5000).followRedirects(true).execute().parse();
-                    Elements titles = doc.select(".entrytitle");
+                    for(int a = 0; a < siteLink.size(); a++){
+                        System.out.println("jason open: " + Var.openLink);
+                        Document doc = (Document) Jsoup
+                                .connect(siteLink.get(a))
+                                .userAgent(
+                                        "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36").ignoreHttpErrors(true)
+                                .timeout(5000).followRedirects(true).execute().parse();
+                        Elements titles = doc.select(".entrytitle");
 
-                    // print all titles in main page
-                    for (Element e : titles) {
+                        // print all titles in main page
+                        for (Element e : titles) {
 
-                    }
+                        }
 
-                    // print all available links on page
-                    Elements links = doc.select("script");
+                        // print all available links on page
+                        Elements links = doc.select("script");
 
-                    int counter = 0;
-                    for (Element l : links) {
-                        String html = l.html();
-                        if(html.contains("var embed_controller")){
-                            html = html.replace("var embed_controller = new embedController([{\"url\":\"", "");
-                            char[] htmlChar = html.toCharArray();
-                            String createdLink = "";
-                            for(int i = 0; i < htmlChar.length; i++){
-                                if(htmlChar[i] == '?'){
-                                    createdLink = createdLink.replace("\\", "");
-                                    break;
-                                }else{
-                                    createdLink = createdLink + htmlChar[i];
+                        int counter = 0;
+                        for (Element l : links) {
+                            progressString = counterProgress + "/" + trackCounter;
+                            String html = l.html();
+                            if(html.contains("var embed_controller")){
+                                html = html.replace("var embed_controller = new embedController([{\"url\":\"", "");
+                                char[] htmlChar = html.toCharArray();
+                                String createdLink = "";
+                                for(int i = 0; i < htmlChar.length; i++){
+                                    if(htmlChar[i] == '?'){
+                                        createdLink = createdLink.replace("\\", "");
+                                        break;
+                                    }else{
+                                        createdLink = createdLink + htmlChar[i];
+                                    }
                                 }
+                                linkList.add(createdLink + ";;;" + siteLink.get(a));
+
+                                MediaPlayer mediaPlayer = new MediaPlayer();
+                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                                mediaPlayer.setDataSource(createdLink);
+                                mediaPlayer.prepare();
+
+                                mediaLink.add(mediaPlayer);
+
+                                counter++;
+                                counterProgress++;
                             }
-                            linkList.add(createdLink + ";;;" + url);
+                            String link = l.attr("abs:href");
+                            if(link.contains("listen")) {
+                                counter++;
 
-                            MediaPlayer mediaPlayer = new MediaPlayer();
-                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                            mediaPlayer.setDataSource(createdLink);
-                            mediaPlayer.prepare();
-
-                            mediaLink.add(mediaPlayer);
-
-                            counter++;
-                            counterProgress++;
+                            }
                         }
-                        String link = l.attr("abs:href");
-                        if(link.contains("listen")) {
-                            counter++;
 
-                        }
+                        trackReady = true;
                     }
-
-                    trackReady = true;
                 }catch (Exception e){
                     e.printStackTrace();
+                    Toast.makeText(PlaylistTrackActivity.this, "Unknown error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -688,8 +702,8 @@ public class PlaylistTrackActivity extends AppCompatActivity {
             View v = scrollLayout.getChildAt(i);
             String link = v.getTag().toString();
             siteLink.add(link);
-            getTrack(link);
         }
+        getTrack();
     }
 
     public void sortArrayList(){

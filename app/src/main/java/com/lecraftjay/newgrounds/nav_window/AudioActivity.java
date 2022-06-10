@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.applovin.mediation.AppLovinExtras;
 import com.applovin.mediation.ApplovinAdapter;
@@ -53,6 +55,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -98,6 +105,18 @@ public class AudioActivity extends AppCompatActivity {
         patreon = findViewById(R.id.patreon);
 
         //-----------------------------------------------------------------
+
+
+        try {
+            String text = "hello  there";
+            FileOutputStream fOut = this.openFileOutput("hello.txt", MODE_PRIVATE);
+            fOut.write(text.getBytes());
+            fOut.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
@@ -293,6 +312,7 @@ public class AudioActivity extends AppCompatActivity {
                     e.printStackTrace();
                     error = true;
                     Var.updateNow = true;
+                    Toast.makeText(AudioActivity.this, "socket timeout", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -180,8 +180,8 @@ public class TrackActivity extends AppCompatActivity {
                         });
                         builder.show();
                     }else{
-                        //Toast.makeText(TrackActivity.this, "there is no playlist", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(TrackActivity.this, "This feature is in progress", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TrackActivity.this, "there is no playlist", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(TrackActivity.this, "This feature is in progress", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     playlistIcon.setImageResource(R.drawable.playlist_add);
@@ -213,19 +213,6 @@ public class TrackActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(likeIcon.getTag().toString().equals("false")) {
-                    likeIcon.setImageResource(R.drawable.like_filled);
-                    likeIcon.setTag("true");
-                }else{
-                    likeIcon.setImageResource(R.drawable.like);
-                    likeIcon.setTag("false");
-                }
-            }
-        });*/
 
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
