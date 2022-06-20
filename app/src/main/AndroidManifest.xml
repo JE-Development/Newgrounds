@@ -35,7 +35,7 @@
             android:name=".more_window.movie.MovieContentActivity"
             android:exported="false" />
         <activity
-            android:name=".more_window.audio.SearchAudioActivity"
+            android:name=".more_window.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".more_window.art.ArtContentActivity"
@@ -59,7 +59,7 @@
             android:name=".nav_window.ArtActivity"
             android:exported="false" />
         <activity
-            android:name=".nav_window.MovieActivity"
+            android:name=".nav_window.MoviesActivity"
             android:exported="false" />
         <activity
             android:name=".nav_window.GamesActivity"

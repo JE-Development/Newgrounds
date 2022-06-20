@@ -1,7 +1,6 @@
 package com.lecraftjay.newgrounds.nav_window;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
@@ -9,44 +8,29 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.applovin.mediation.AppLovinExtras;
-import com.applovin.mediation.ApplovinAdapter;
-import com.applovin.sdk.AppLovinPrivacySettings;
 import com.chartboost.sdk.Chartboost;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.art.ArtContentActivity;
+import com.lecraftjay.newgrounds.more_window.SearchActivity;
 import com.squareup.picasso.Picasso;
-import com.vungle.mediation.VungleConsent;
-import com.vungle.mediation.VungleExtrasBuilder;
-import com.vungle.warren.Vungle;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
@@ -82,8 +66,10 @@ public class ArtActivity extends AppCompatActivity {
 
         Var.updateNow = false;
 
+        Var.currentWindow = "art";
 
-        IronSource.setConsent(true);
+
+        /*IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
 
 
@@ -93,7 +79,7 @@ public class ArtActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
 
             }
-        });
+        });*/
 
         scrollLayout.getViewTreeObserver()
                 .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -140,18 +126,26 @@ public class ArtActivity extends AppCompatActivity {
                         Elements title = l.select("h4");
                         Elements imgLink = l.getElementsByClass("item-icon");
                         Elements creator = l.select("span");
+                        Elements rating = l.getElementsByClass("rating");
 
                         String s = "---";
                         for(Element e : imgLink){
                             s = e.child(0).attr("abs:src");
                         }
 
+                        String r = "";
+                        for(Element e : rating){
+                            Element el = e.child(0);
+                            r = el.attr("class");
+                        }
+
                         String sLink = link.attr("abs:href");
                         String sTitle = title.html();
                         String sImgLink = s;
                         String sCreator = creator.html();
+                        String sRating = r;
 
-                        if(sLink.contains("art")) {
+                        if(sLink.contains("art") && !sRating.equals("nohue-ngicon-small-rated-a")) {
                             if(artContent.contains(sLink)){
 
                             }else {
@@ -219,7 +213,7 @@ public class ArtActivity extends AppCompatActivity {
                 l.addView(view);
                 row.addView(l);
 
-                if(adCounter >= 4){
+                /*if(adCounter >= 4){
                     Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
 
                     adCounter = 0;
@@ -235,7 +229,7 @@ public class ArtActivity extends AppCompatActivity {
                     AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
-                adCounter++;
+                adCounter++;*/
 
                 if(i++ < artContent.size()) {
 
@@ -406,7 +400,7 @@ public class ArtActivity extends AppCompatActivity {
         movie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ArtActivity.this, MovieActivity.class));
+                startActivity(new Intent(ArtActivity.this, MoviesActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -429,6 +423,26 @@ public class ArtActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.searchMenu:
+                startActivity(new Intent(ArtActivity.this, SearchActivity.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

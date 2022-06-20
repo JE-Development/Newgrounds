@@ -10,11 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.applovin.sdk.AppLovinPrivacySettings;
-import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
-import com.lecraftjay.newgrounds.classes.LoadTrack;
-import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.profile.PlaylistActivity;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -73,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         movie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProfileActivity.this, MovieActivity.class));
+                startActivity(new Intent(ProfileActivity.this, MoviesActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }

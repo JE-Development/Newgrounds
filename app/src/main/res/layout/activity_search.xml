@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".more_window.audio.SearchAudioActivity">
+    tools:context=".more_window.SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:id="@+id/searchText"
-            android:hint="Search Audio"
+            android:hint="search something"
             android:textColorHint="#FFFF00"
             android:backgroundTint="@color/orange"/>
 
@@ -27,6 +27,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/searchButton"
             android:text="Search"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchContent"
+            android:text="Search For: Audio"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -9,28 +9,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.applovin.mediation.AppLovinExtras;
-import com.applovin.mediation.ApplovinAdapter;
-import com.applovin.sdk.AppLovinPrivacySettings;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.SearchActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -41,7 +33,7 @@ import org.jsoup.select.Elements;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
-public class MovieActivity extends AppCompatActivity {
+public class MoviesActivity extends AppCompatActivity {
 
     int pos = 0;
     ArrayList<String> movieContent = new ArrayList<>();
@@ -70,7 +62,9 @@ public class MovieActivity extends AppCompatActivity {
 
         //-------------------------------------------------------------------
 
-        IronSource.setConsent(true);
+        Var.currentWindow = "movies";
+
+        /*IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -78,7 +72,7 @@ public class MovieActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
 
             }
-        });
+        });*/
         
         setNavigation();
 
@@ -125,6 +119,7 @@ public class MovieActivity extends AppCompatActivity {
                         Elements title = l.select("img");
                         Elements imgLink = l.getElementsByClass("card-img");
                         Elements creator = l.select("span");
+                        Elements rating = l.getElementsByClass("rating");
 
                         String s = "";
                         for(Element e : title){
@@ -136,12 +131,19 @@ public class MovieActivity extends AppCompatActivity {
                             s1 = e.attr("src");
                         }
 
+                        String r = "";
+                        for(Element e : rating){
+                            Element el = e.child(0);
+                            r = el.attr("class");
+                        }
+
                         String sLink = link.attr("abs:href");
                         String sTitle = s;
                         String sImgLink = s1;
                         String sCreator = creator.html();
+                        String sRating = r;
 
-                        if(sLink.contains("")) {
+                        if(sLink.contains("") && !sRating.equals("nohue-ngicon-small-rated-a")) {
                             if(movieContent.contains(sLink)){
 
                             }else {
@@ -205,7 +207,7 @@ public class MovieActivity extends AppCompatActivity {
             space.setVisibility(View.INVISIBLE);
             for (int i = 0; i < movieContent.size(); i++) {
 
-                View view = LayoutInflater.from(MovieActivity.this).inflate(R.layout.movie_card_layout, null);
+                View view = LayoutInflater.from(MoviesActivity.this).inflate(R.layout.movie_card_layout, null);
                 TextView cardTitle = view.findViewById(R.id.movieTitle);
                 ImageView image = view.findViewById(R.id.movieImage);
                 TextView user = view.findViewById(R.id.movieCreator);
@@ -226,10 +228,10 @@ public class MovieActivity extends AppCompatActivity {
                 String getter = sp.getString("alreadySeen", "");
 
                 if(getter.contains(splitter[0])){
-                    cardTitle.setTextColor(ContextCompat.getColor(MovieActivity.this, R.color.audioSeen));
+                    cardTitle.setTextColor(ContextCompat.getColor(MoviesActivity.this, R.color.audioSeen));
                 }
 
-                if(adCounter >= 3){
+                /*if(adCounter >= 3){
                     Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
 
                     adCounter = 0;
@@ -246,7 +248,7 @@ public class MovieActivity extends AppCompatActivity {
                     AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
-                adCounter++;
+                adCounter++;*/
 
                 //cardText.setText(title);
                 root.addView(view);
@@ -266,7 +268,7 @@ public class MovieActivity extends AppCompatActivity {
                         editor.putString("alreadySeen", getter + ";;;" + Var.movieOpenLink);
                         editor.apply();
 
-                        title.setTextColor(ContextCompat.getColor(MovieActivity.this, R.color.audioSeen));
+                        title.setTextColor(ContextCompat.getColor(MoviesActivity.this, R.color.audioSeen));
                         System.out.println("jason movie url: " + Var.movieOpenLink);
 
                         Uri uri = Uri.parse(Var.movieOpenLink); // missing 'http://' will cause crashed
@@ -294,7 +296,7 @@ public class MovieActivity extends AppCompatActivity {
         games.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MovieActivity.this, GamesActivity.class));
+                startActivity(new Intent(MoviesActivity.this, GamesActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -303,7 +305,7 @@ public class MovieActivity extends AppCompatActivity {
         audio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MovieActivity.this, AudioActivity.class));
+                startActivity(new Intent(MoviesActivity.this, AudioActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -312,7 +314,7 @@ public class MovieActivity extends AppCompatActivity {
         art.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MovieActivity.this, ArtActivity.class));
+                startActivity(new Intent(MoviesActivity.this, ArtActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -321,10 +323,29 @@ public class MovieActivity extends AppCompatActivity {
         community.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MovieActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MoviesActivity.this, ProfileActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         });
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.searchMenu:
+                startActivity(new Intent(MoviesActivity.this, SearchActivity.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

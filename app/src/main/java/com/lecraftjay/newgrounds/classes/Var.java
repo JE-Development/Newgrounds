@@ -60,5 +60,6 @@ public class Var {
    public static ArrayList<String> linkList = new ArrayList<>();
    public static ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
    public static int counterProgress = 0;
+   public static String currentWindow = "";
 
 }

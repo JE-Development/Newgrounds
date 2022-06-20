@@ -28,7 +28,7 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- The scroll bug was fixed \n- the unlimited scroll is now working in \"movies\"\n- the feedback feature was officially removed because of abuse");
+        whatsNew.setText("- Ads were removed\n- You can now search any kind of content");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

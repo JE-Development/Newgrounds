@@ -38,7 +38,7 @@ public class PlaylistActivity extends AppCompatActivity {
 
         //--------------------------------------------------
 
-        newPlaylist = findViewById(R.id.playlistNew);
+        /*newPlaylist = findViewById(R.id.playlistNew);
         content = findViewById(R.id.playlistContent);
         priority = findViewById(R.id.playlistPriority);
 
@@ -149,7 +149,7 @@ public class PlaylistActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 
     public void setContent(){

@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.google.android.gms.ads.AdView
+                <!-- <com.google.android.gms.ads.AdView
                     xmlns:ads="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/adView"
                     android:layout_width="match_parent"
@@ -29,13 +29,7 @@
                     android:layout_alignParentBottom="true"
                     ads:adSize="BANNER"
                     ads:adUnitId="ca-app-pub-3904729559747077/1186502664">
-                </com.google.android.gms.ads.AdView>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/patreon"
-                    android:text="Visit my Patreon"/>
+                </com.google.android.gms.ads.AdView>/!-->
 
                 <ScrollView
                     android:id="@+id/originalScroll"

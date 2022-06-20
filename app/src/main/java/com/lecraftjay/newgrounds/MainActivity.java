@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
         String getter = sp1.getString("updateVersionCode", "0");
 
-        String updateCode = "8";
+        String updateCode = "9";
 
         if(getter.equals(updateCode)){
             startActivity(new Intent(MainActivity.this, AudioActivity.class));

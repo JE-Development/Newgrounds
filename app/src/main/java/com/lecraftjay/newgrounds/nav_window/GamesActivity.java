@@ -9,27 +9,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
 
-import com.applovin.mediation.AppLovinExtras;
-import com.applovin.mediation.ApplovinAdapter;
-import com.applovin.sdk.AppLovinPrivacySettings;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.SearchActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -69,7 +62,9 @@ public class GamesActivity extends AppCompatActivity {
 
         //-------------------------------------------------------------------
 
-        IronSource.setConsent(true);
+        Var.currentWindow = "games";
+
+        /*IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -77,7 +72,7 @@ public class GamesActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
 
             }
-        });
+        });*/
 
         getContent("https://www.newgrounds.com/games", false);
 
@@ -124,6 +119,7 @@ public class GamesActivity extends AppCompatActivity {
                         Elements title = l.select("img");
                         Elements imgLink = l.getElementsByClass("card-img");
                         Elements creator = l.select("span");
+                        Elements rating = l.getElementsByClass("rating");
 
                         String s = "";
                         for(Element e : title){
@@ -135,12 +131,19 @@ public class GamesActivity extends AppCompatActivity {
                             s1 = e.attr("src");
                         }
 
+                        String r = "";
+                        for(Element e : rating){
+                            Element el = e.child(0);
+                            r = el.attr("class");
+                        }
+
                         String sLink = link.attr("abs:href");
                         String sTitle = s;
                         String sImgLink = s1;
                         String sCreator = creator.html();
+                        String sRating = r;
 
-                        if(sLink.contains("")) {
+                        if(sLink.contains("") && !sRating.equals("nohue-ngicon-small-rated-a")) {
                             if(gamesContent.contains(sLink)){
 
                             }else {
@@ -196,7 +199,7 @@ public class GamesActivity extends AppCompatActivity {
                     cardTitle.setTextColor(ContextCompat.getColor(GamesActivity.this, R.color.audioSeen));
                 }
 
-                if(adCounter >= 3){
+                /*if(adCounter >= 3){
                     Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
 
                     adCounter = 0;
@@ -212,7 +215,7 @@ public class GamesActivity extends AppCompatActivity {
                     AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
-                adCounter++;
+                adCounter++;*/
 
 
                 //cardText.setText(title);
@@ -301,7 +304,7 @@ public class GamesActivity extends AppCompatActivity {
         movie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GamesActivity.this, MovieActivity.class));
+                startActivity(new Intent(GamesActivity.this, MoviesActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -324,5 +327,24 @@ public class GamesActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.searchMenu:
+                startActivity(new Intent(GamesActivity.this, SearchActivity.class));
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

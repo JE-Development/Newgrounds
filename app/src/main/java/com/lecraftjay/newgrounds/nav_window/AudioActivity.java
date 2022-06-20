@@ -3,55 +3,29 @@ package com.lecraftjay.newgrounds.nav_window;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.applovin.mediation.AppLovinExtras;
-import com.applovin.mediation.ApplovinAdapter;
-import com.applovin.sdk.AppLovinPrivacySettings;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.ironsource.mediationsdk.IronSource;
-import com.lecraftjay.newgrounds.classes.AppOpenManager;
-import com.lecraftjay.newgrounds.more_window.FeedbackActivity;
 import com.lecraftjay.newgrounds.R;
-import com.lecraftjay.newgrounds.more_window.audio.SearchAudioActivity;
+import com.lecraftjay.newgrounds.more_window.SearchActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.squareup.picasso.Picasso;
@@ -61,16 +35,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -96,8 +64,7 @@ public class AudioActivity extends AppCompatActivity {
     boolean einmal = false;
 
     ScrollView originalScroll;
-    AdView ad;
-    Button patreon;
+    //AdView ad;
 
     
 
@@ -111,11 +78,11 @@ public class AudioActivity extends AppCompatActivity {
         scrollLayout = findViewById(R.id.scroll);
         originalScroll = findViewById(R.id.originalScroll);
         space = findViewById(R.id.space);
-        ad = findViewById(R.id.adView);
-        patreon = findViewById(R.id.patreon);
 
         //-----------------------------------------------------------------
 
+
+        Var.currentWindow = "audio";
 
         try {
             String text = "hello  there";
@@ -128,7 +95,7 @@ public class AudioActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        IronSource.setConsent(true);
+        /*IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
 
 
@@ -137,13 +104,13 @@ public class AudioActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
 
             }
-        });
-        Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
+        });*/
+        //Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
 
-        AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
-        ad.loadAd(adRequest);
+        //AdRequest adRequest = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
+        //ad.loadAd(adRequest);
 
-        AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
+        /*AdLoader adLoader = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/2247696110")
                 .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
                     @Override
                     public void onNativeAdLoaded(NativeAd NativeAd) {
@@ -189,17 +156,7 @@ public class AudioActivity extends AppCompatActivity {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
             }
-        });
-
-
-        patreon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.patreon.com/lcj_development");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
+        });*/
 
 
         ActionBar actionBar = getSupportActionBar();
@@ -415,7 +372,7 @@ public class AudioActivity extends AppCompatActivity {
                     cardText.setTextColor(ContextCompat.getColor(AudioActivity.this, R.color.audioSeen));
                 }
 
-                if(adCounter >= 8){
+                /*if(adCounter >= 8){
                     Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
 
                     adCounter = 0;
@@ -432,7 +389,7 @@ public class AudioActivity extends AppCompatActivity {
                     AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
                     ad.loadAd(request);
                 }
-                adCounter++;
+                adCounter++;*/
 
 
                 //cardText.setText(title);
@@ -491,7 +448,7 @@ public class AudioActivity extends AppCompatActivity {
         movie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AudioActivity.this, MovieActivity.class));
+                startActivity(new Intent(AudioActivity.this, MoviesActivity.class));
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
@@ -574,7 +531,7 @@ public class AudioActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.searchMenu:
-                startActivity(new Intent(AudioActivity.this, SearchAudioActivity.class));
+                startActivity(new Intent(AudioActivity.this, SearchActivity.class));
                 break;
             case R.id.filterMenu:
                 pickCategory();
