@@ -6,8 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,10 +43,95 @@ public class MainActivity extends AppCompatActivity {
     TextView reason;
     RelativeLayout root;
 
+    WebView webView;
+    Button htmlButton;
+    boolean durchlauf = true;
+
+    String h = "null";
+
+    Handler handlerForJavascriptInterface = new Handler();
+
+    /*class MyJavaScriptInterface
+    {
+        private Context ctx;
+
+        MyJavaScriptInterface(Context ctx)
+        {
+            this.ctx = ctx;
+        }
+
+        @JavascriptInterface
+        public void showHTML(String html)
+        {
+            h = html;
+            //code to use html content here
+            handlerForJavascriptInterface.post(new Runnable() {
+                @Override
+                public void run()
+                {
+                    Thread t = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                if(durchlauf) {
+                                    durchlauf = false;
+                                    //Toast toast = Toast.makeText(ctx, "Page has been loaded in webview. html content :" + h, Toast.LENGTH_LONG).show();
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+
+                                    System.out.println("jason html: " + h);
+
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+                                    System.out.println("---------------------------------------------------------------------");
+
+                                }
+                            }
+                        }
+                    });
+                    t.start();
+                }});
+        }
+    }*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.webview_layout);
+        setContentView(R.layout.activity_main);
+
+        /*htmlButton = findViewById(R.id.webHtml);
+
+        final WebView webview = (WebView) findViewById(R.id.web);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
+        webview.addJavascriptInterface(new MyJavaScriptInterface(MainActivity.this), "HtmlViewer");
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                 webview.loadUrl("javascript:window.HtmlViewer.showHTML('&lt;html&gt;'+document.getElementsByTagName('html')[0].innerHTML+'&lt;/html&gt;');");
+                }
+            }
+        );
+        webview.loadUrl("https://www.newgrounds.com/portal/view/847415");
+
+        htmlButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                durchlauf = true;
+            }
+        });*/
+
+
+
+
+
+
+
 
         //--------------------------------------------------
 

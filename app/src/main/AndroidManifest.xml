@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lecraftjay.newgrounds">
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,15 +9,27 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name="com.lecraftjay.newgrounds.classes.MyApplication"
         android:allowBackup="true"
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:name="com.lecraftjay.newgrounds.classes.MyApplication"
-        android:hardwareAccelerated="true"
-        android:configChanges="keyboardHidden|orientation|screenSize"
         android:supportsRtl="true"
         android:theme="@style/Theme.Newgrounds">
+        <activity
+            android:name=".more_window.movies.VideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".more_window.movies.StartMovieActivity"
+            android:exported="false" />
+        <activity
+            android:name=".more_window.FeedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".more_window.LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".more_window.profile.PlaylistTrackActivity"
             android:exported="false" />
@@ -66,8 +77,8 @@
             android:exported="false" />
         <activity
             android:name=".nav_window.AudioActivity"
-            android:hardwareAccelerated="true"
-            android:exported="false" />
+            android:exported="false"
+            android:hardwareAccelerated="true" />
         <activity
             android:name=".more_window.audio.TrackActivity"
             android:exported="false" />

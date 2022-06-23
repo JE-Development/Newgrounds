@@ -23,6 +23,7 @@ import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.SearchActivity;
+import com.lecraftjay.newgrounds.more_window.movies.StartMovieActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -271,9 +272,10 @@ public class MoviesActivity extends AppCompatActivity {
                         title.setTextColor(ContextCompat.getColor(MoviesActivity.this, R.color.audioSeen));
                         System.out.println("jason movie url: " + Var.movieOpenLink);
 
-                        Uri uri = Uri.parse(Var.movieOpenLink); // missing 'http://' will cause crashed
+                        /*Uri uri = Uri.parse(Var.movieOpenLink); // missing 'http://' will cause crashed
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        startActivity(intent);
+                        startActivity(intent);*/
+                        startActivity(new Intent(MoviesActivity.this, StartMovieActivity.class));
                     }
                 });
             }

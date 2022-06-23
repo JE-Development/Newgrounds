@@ -61,5 +61,7 @@ public class Var {
    public static ArrayList<MediaPlayer> mediaLink = new ArrayList<>();
    public static int counterProgress = 0;
    public static String currentWindow = "";
+   public static boolean isLogin = true;
+   public static String videoUrl = "";
 
 }

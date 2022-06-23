@@ -151,7 +151,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:layout_marginBottom="10dp"
-                        android:src="@drawable/playlist_play_black"/>
+                        android:src="@drawable/person"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginRight="6dp"
                         android:gravity="center|bottom"
-                        android:text="Playlist"/>
+                        android:text="Profile"/>
 
                 </RelativeLayout>
 

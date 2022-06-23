@@ -7,16 +7,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lecraftjay.newgrounds.R;
+import com.lecraftjay.newgrounds.classes.Var;
+import com.lecraftjay.newgrounds.more_window.FeedActivity;
+import com.lecraftjay.newgrounds.more_window.LoginActivity;
 import com.lecraftjay.newgrounds.more_window.profile.PlaylistActivity;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class ProfileActivity extends AppCompatActivity {
 
     CardView playlist;
+    CardView feed;
     TextView count;
+    Button login;
+    Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +39,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         playlist = findViewById(R.id.profilePlaylist);
         count = findViewById(R.id.playlistCount);
+        login = findViewById(R.id.profileLogin);
+        logout = findViewById(R.id.profileLogout);
+        feed = findViewById(R.id.profileYourFeed);
 
         //-------------------------------------------------------
-
-
 
         SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
         String getter = sp.getString("allPlaylist", "null");
@@ -39,6 +52,29 @@ public class ProfileActivity extends AppCompatActivity {
             String c = String.valueOf(split.length);
             count.setText(c);
         }
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Var.isLogin = true;
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Var.isLogin = true;
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            }
+        });
+
+        feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ProfileActivity.this, FeedActivity.class));
+            }
+        });
 
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
