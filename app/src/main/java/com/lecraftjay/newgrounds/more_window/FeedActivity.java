@@ -93,7 +93,7 @@ public class FeedActivity extends AppCompatActivity {
                  }
             }
         );
-        feed.loadUrl("https://www.newgrounds.com/portal/view/847551");
+        feed.loadUrl("https://www.newgrounds.com/social");
 
         
     }
@@ -136,12 +136,6 @@ public class FeedActivity extends AppCompatActivity {
     public void useDocument(){
         Document doc = (Document) Jsoup.parse(h);
         counter++;
-
-        if(doc.toString().contains("ungrounded")){
-            System.out.println("jason video true juhuuuuuuuuu");
-        }else{
-            System.out.println("jason video false    " + counter);
-        }
 
         Elements ele = doc.getElementsByClass("pod-body");
         for(Element tester : ele){
@@ -209,11 +203,11 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //start handler as activity become visible
-        IronSource.onResume(this);
+        //IronSource.onResume(this);
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
-                //update();
+                update();
                 checkLogin();
 
                 handler.postDelayed(runnable, delay);

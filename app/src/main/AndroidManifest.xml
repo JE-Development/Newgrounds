@@ -20,6 +20,7 @@
         android:theme="@style/Theme.Newgrounds">
         <activity
             android:name=".more_window.movies.VideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false" />
         <activity
             android:name=".more_window.movies.StartMovieActivity"
@@ -41,9 +42,6 @@
             android:exported="false" />
         <activity
             android:name=".more_window.UserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".more_window.movie.MovieContentActivity"
             android:exported="false" />
         <activity
             android:name=".more_window.SearchActivity"

@@ -300,7 +300,7 @@ public class AudioActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //start handler as activity become visible
-        IronSource.onResume(this);
+        //IronSource.onResume(this);
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
