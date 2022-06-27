@@ -54,12 +54,16 @@ public class VideoActivity extends AppCompatActivity {
     TextView description;
     LinearLayout creatorLayout;
     LinearLayout infoLayout;
+    ImageButton pPLay;
+    SeekBar pSeek;
 
+    String orientation = "P";
     String videoContent = "";
 
     Handler handler = new Handler();
     Runnable runnable;
     int delay = 100;
+    int max = 0;
 
     boolean finishGetting = false;
     boolean einmal = false;
@@ -86,6 +90,8 @@ public class VideoActivity extends AppCompatActivity {
         description = findViewById(R.id.videoDescription);
         creatorLayout = findViewById(R.id.videoCreatorLayoutLink);
         infoLayout = findViewById(R.id.videoInfos);
+        pPLay = findViewById(R.id.videoPortraitPlay);
+        pSeek = findViewById(R.id.videoPortraitProgress);
 
         //------------------------------------------------------------
 
@@ -98,15 +104,42 @@ public class VideoActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         video.setLayoutParams(new RelativeLayout.LayoutParams(metrics.widthPixels, metrics.heightPixels));
 
+        int orient = getResources().getConfiguration().orientation;
+        if(orient == Configuration.ORIENTATION_PORTRAIT){
+            orientation = "P";
+        }else{
+            orientation = "L";
+            infoLayout.setVisibility(View.INVISIBLE);
+        }
+
+        pPLay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pPLay.getTag().equals("true")){
+                    pPLay.setImageResource(R.drawable.play);
+                    pPLay.setTag("false");
+                    video.pause();
+                }else{
+                    pPLay.setImageResource(R.drawable.pause);
+                    pPLay.setTag("true");
+                    if(video != null){
+                        video.start();
+                    }
+                }
+            }
+        });
+
         touch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(controlShow){
-                    controlLayout.setVisibility(View.INVISIBLE);
-                    controlShow = false;
-                }else{
-                    controlLayout.setVisibility(View.VISIBLE);
-                    controlShow = true;
+                if(orientation.equals("L")) {
+                    if (controlShow) {
+                        controlLayout.setVisibility(View.INVISIBLE);
+                        controlShow = false;
+                    } else {
+                        controlLayout.setVisibility(View.VISIBLE);
+                        controlShow = true;
+                    }
                 }
             }
         });
@@ -132,6 +165,28 @@ public class VideoActivity extends AppCompatActivity {
         seek = controlLayout.findViewById(R.id.controlSeek);
         seek.setMax(video.getDuration());
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                video.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if(video != null){
+                    video.start();
+                    video.seekTo(seekBar.getProgress());
+                }
+            }
+        });
+
+        pSeek = controlLayout.findViewById(R.id.controlSeek);
+        pSeek.setMax(video.getDuration());
+        pSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -212,9 +267,15 @@ public class VideoActivity extends AppCompatActivity {
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
             infoLayout.setVisibility(View.INVISIBLE);
+            orientation = "L";
+            seek.setMax(max);
+            pSeek.setMax(max);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
             infoLayout.setVisibility(View.VISIBLE);
+            orientation = "P";
+            seek.setMax(max);
+            pSeek.setMax(max);
         }
     }
 
@@ -238,13 +299,16 @@ public class VideoActivity extends AppCompatActivity {
 
     public void update(){
         seek.setProgress(video.getCurrentPosition());
+        pSeek.setProgress(video.getCurrentPosition());
     }
 
     public void checkDuration(){
         int dur = video.getDuration();
         if(dur != -1 && !einmal){
             einmal = true;
-            seek.setMax(dur);
+            max = dur;
+            seek.setMax(max);
+            pSeek.setMax(max);
         }
     }
 
