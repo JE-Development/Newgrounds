@@ -564,7 +564,7 @@ public class TrackActivity extends AppCompatActivity {
             loop.setVisibility(View.VISIBLE);
             playProgress.setVisibility(View.INVISIBLE);
             creatorLink.setTag(Var.creatorLink);
-            creatorName.setText(Var.creatorName);
+            creatorName.setText(Html.fromHtml(Var.creatorName));
             try {
                 Picasso.get().load(Var.creatorIconLink).into(creatorIcon);
             }catch (Exception e){

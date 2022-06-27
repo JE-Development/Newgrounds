@@ -16,6 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
+                android:id="@+id/controlTitle"
                 android:gravity="center"
                 android:textColor="#FFFFFF"
                 android:text="video title"/>
@@ -43,6 +44,7 @@
                 <SeekBar
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/controlSeek"
                     style="@style/seekbar_design"/>
 
             </LinearLayout>
