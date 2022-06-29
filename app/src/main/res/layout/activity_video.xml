@@ -66,6 +66,12 @@
                     android:background="#111111"
                     android:src="@drawable/pause"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/orange"
+                    android:text="Rotate your phone to see this video in full screen."/>
+
             </LinearLayout>
 
             <LinearLayout

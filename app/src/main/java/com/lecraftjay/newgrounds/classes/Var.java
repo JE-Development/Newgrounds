@@ -63,5 +63,6 @@ public class Var {
    public static String currentWindow = "";
    public static boolean isLogin = true;
    public static String videoUrl = "";
+   public static int globalProgress = 0;
 
 }

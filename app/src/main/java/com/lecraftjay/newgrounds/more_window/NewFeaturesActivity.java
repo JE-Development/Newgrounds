@@ -28,7 +28,9 @@ public class NewFeaturesActivity extends AppCompatActivity {
 
         //----------------------------------------------------
 
-        whatsNew.setText("- Ads were removed\n- You can now search any kind of content");
+        whatsNew.setText("- Movies can now be played in this app\n- You can now login in this app to see your \"Your Feed\" " +
+                        "content (only audio available, more content comming soon). To find it go to the window \"Profile\" and then " +
+                        "you will find the \"Your Feed\" button but you have to be logged in in this app. You can login in the \"Profile\" window.");
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

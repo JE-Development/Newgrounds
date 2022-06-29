@@ -184,7 +184,6 @@ public class VideoActivity extends AppCompatActivity {
             }
         });
 
-        pSeek = controlLayout.findViewById(R.id.controlSeek);
         pSeek.setMax(video.getDuration());
         pSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -270,12 +269,18 @@ public class VideoActivity extends AppCompatActivity {
             orientation = "L";
             seek.setMax(max);
             pSeek.setMax(max);
+            if(Var.globalProgress != 0){
+                video.seekTo(Var.globalProgress);
+            }
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             //Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
             infoLayout.setVisibility(View.VISIBLE);
             orientation = "P";
             seek.setMax(max);
             pSeek.setMax(max);
+            if(Var.globalProgress != 0){
+                video.seekTo(Var.globalProgress);
+            }
         }
     }
 
@@ -300,6 +305,7 @@ public class VideoActivity extends AppCompatActivity {
     public void update(){
         seek.setProgress(video.getCurrentPosition());
         pSeek.setProgress(video.getCurrentPosition());
+        Var.globalProgress = video.getCurrentPosition();
     }
 
     public void checkDuration(){
@@ -321,6 +327,7 @@ public class VideoActivity extends AppCompatActivity {
             try{
 
                 videoTitle.setText(Html.fromHtml(trim(split[0], 28)));
+                title.setText(Html.fromHtml(split[0]));
                 videoTitle.setTag(split[0]);
                 videoTitle.setOnClickListener(new View.OnClickListener() {
                     @Override

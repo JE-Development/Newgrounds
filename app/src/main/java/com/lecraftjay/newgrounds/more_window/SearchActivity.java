@@ -27,6 +27,8 @@ import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.art.ArtContentActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
+import com.lecraftjay.newgrounds.more_window.movies.StartMovieActivity;
+import com.lecraftjay.newgrounds.nav_window.MoviesActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -576,9 +578,10 @@ public class SearchActivity extends AppCompatActivity {
                             title.setTextColor(ContextCompat.getColor(SearchActivity.this, R.color.audioSeen));
                             System.out.println("jason movie url: " + Var.movieOpenLink);
 
-                            Uri uri = Uri.parse(Var.movieOpenLink); // missing 'http://' will cause crashed
+                            /*Uri uri = Uri.parse(Var.movieOpenLink); // missing 'http://' will cause crashed
                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
+                            startActivity(intent);*/
+                            startActivity(new Intent(SearchActivity.this, StartMovieActivity.class));
                         }
                     });
                 }

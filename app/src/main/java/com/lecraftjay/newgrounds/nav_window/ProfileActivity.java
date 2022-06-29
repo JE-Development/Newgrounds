@@ -64,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Var.isLogin = true;
+                Var.isLogin = false;
                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             }
         });
