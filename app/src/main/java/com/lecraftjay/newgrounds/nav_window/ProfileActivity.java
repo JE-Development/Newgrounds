@@ -5,11 +5,16 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
@@ -22,6 +27,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+
 public class ProfileActivity extends AppCompatActivity {
 
     CardView playlist;
@@ -29,11 +42,20 @@ public class ProfileActivity extends AppCompatActivity {
     TextView count;
     Button login;
     Button logout;
+    TextView serverTextView;
+
+    int delay = 100;
+    Handler handler = new Handler();
+    Runnable runnable;
+
+    boolean serverTextReady = false;
+
+    String serverContent = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_community);
+        setContentView(R.layout.activity_profile);
 
         //-------------------------------------------------------
 
@@ -42,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         login = findViewById(R.id.profileLogin);
         logout = findViewById(R.id.profileLogout);
         feed = findViewById(R.id.profileYourFeed);
+        serverTextView = findViewById(R.id.profileServerText);
 
         //-------------------------------------------------------
 
@@ -52,6 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
             String c = String.valueOf(split.length);
             count.setText(c);
         }
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +152,98 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void getServerText(String url){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    URLConnection conn = new URL(url).openConnection();
+
+                    InputStream in = conn.getInputStream();
+                    String contents = convertStreamToString(in);
+                    serverContent  = contents;
+                    serverTextReady = true;
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+    }
+
+    private static String convertStreamToString(InputStream is) throws UnsupportedEncodingException {
+
+        BufferedReader reader = new BufferedReader(new
+                InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected void onResume() {
+        //start handler as activity become visible
+
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                update();
+
+                handler.postDelayed(runnable, delay);
+            }
+        }, delay);
+
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(runnable);
+        super.onPause();
+
+    }
+
+    public void update(){
+        if(serverTextReady){
+            serverTextReady = false;
+
+
+            if(serverContent.contains(";;;")){
+                String[] split = serverContent.split(";;;");
+                String con = split[0];
+                String clickable = split[1];
+                if(clickable.equals("false")){
+                    serverTextView.setText(con);
+                }else{
+                    if(split.length >= 4){
+                        serverTextView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //do stuff
+                            }
+                        });
+                    }
+                }
+            }
+        }
     }
 
 }
