@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Toast.makeText(this, "bool: " + b + "    " + folder.exists() + "    " + bb + "     " + file.exists(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "bool: " + b + "    " + folder.exists() + "    " + bb + "     " + file.exists(), Toast.LENGTH_SHORT).show();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

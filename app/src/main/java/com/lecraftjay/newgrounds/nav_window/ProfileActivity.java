@@ -42,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView count;
     Button login;
     Button logout;
-    TextView serverTextView;
+    TextView serverButton;
 
     int delay = 100;
     Handler handler = new Handler();
@@ -64,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         login = findViewById(R.id.profileLogin);
         logout = findViewById(R.id.profileLogout);
         feed = findViewById(R.id.profileYourFeed);
-        serverTextView = findViewById(R.id.profileServerText);
+        serverButton = findViewById(R.id.profileServerButton);
 
         //-------------------------------------------------------
 
@@ -75,6 +75,8 @@ public class ProfileActivity extends AppCompatActivity {
             String c = String.valueOf(split.length);
             count.setText(c);
         }
+
+        getServerText("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/profile_message");
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -228,20 +230,21 @@ public class ProfileActivity extends AppCompatActivity {
 
             if(serverContent.contains(";;;")){
                 String[] split = serverContent.split(";;;");
-                String con = split[0];
-                String clickable = split[1];
-                if(clickable.equals("false")){
-                    serverTextView.setText(con);
-                }else{
-                    if(split.length >= 4){
-                        serverTextView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //do stuff
-                            }
-                        });
+                String text = split[0];
+                String link = split[1];
+                serverButton.setText(text);
+                serverButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Uri uri = Uri.parse(link);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
                     }
-                }
+                });
+            }
+            if(serverContent.contains("null;;;null")){
+                serverButton.setVisibility(View.INVISIBLE);
+                serverButton.setText("null");
             }
         }
     }

@@ -23,14 +23,11 @@
                 android:layout_marginBottom="40dp"
                 android:gravity="bottom">
 
-                <TextView
+                <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/orange"
-                    android:gravity="center"
-                    android:id="@+id/profileServerText"
-                    android:textSize="17dp"
-                    android:text="null"/>
+                    android:id="@+id/profileServerButton"
+                    android:text=""/>
 
             </LinearLayout>
 
