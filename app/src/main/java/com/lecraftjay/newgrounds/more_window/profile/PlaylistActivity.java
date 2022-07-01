@@ -27,7 +27,6 @@ public class PlaylistActivity extends AppCompatActivity {
 
     Button newPlaylist;
     LinearLayout content;
-    Button priority;
 
     Dialog popup;
 
@@ -38,42 +37,14 @@ public class PlaylistActivity extends AppCompatActivity {
 
         //--------------------------------------------------
 
-        /*newPlaylist = findViewById(R.id.playlistNew);
+        newPlaylist = findViewById(R.id.playlistNew);
         content = findViewById(R.id.playlistContent);
-        priority = findViewById(R.id.playlistPriority);
 
         //--------------------------------------------------
 
         popup = new Dialog(this);
 
         setContent();
-
-        priority.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
-                String getter = sp.getString("allPlaylist", "null");
-                String[] split = getter.split(";;;");
-
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(PlaylistActivity.this);
-                builder.setTitle("Set priority (The playlist with priority loads fasster)");
-                builder.setItems(split, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String z = split[which];
-
-                        SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
-                        SharedPreferences.Editor editor = sh.edit();
-                        editor.putString("priority", z);
-                        editor.apply();
-
-                        priority.setText("Priority: " + z);
-
-                    }
-                });
-                builder.show();
-            }
-        });
 
         newPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +120,7 @@ public class PlaylistActivity extends AppCompatActivity {
                     }
                 });
             }
-        });*/
+        });
     }
 
     public void setContent(){
@@ -159,27 +130,11 @@ public class PlaylistActivity extends AppCompatActivity {
         content.removeAllViews();
 
         if(!getter.equals("null") && !getter.equals("")){
-            priority.setEnabled(true);
             String[] split = getter.split(";;;");
             for(int i = 0; i < split.length; i++){
                 View view = LayoutInflater.from(PlaylistActivity.this).inflate(R.layout.playlist_card_layout, null);
                 TextView name = view.findViewById(R.id.playlistName);
                 name.setText(split[i]);
-                if(i == 0){
-                    SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
-                    String pri = shared.getString("priority", "null");
-                    if(pri.equals("null")) {
-
-                        priority.setText("Priority: " + split[i]);
-
-                        SharedPreferences sh = getApplicationContext().getSharedPreferences("Playlist", 0);
-                        SharedPreferences.Editor editor = sh.edit();
-                        editor.putString("priority", split[i]);
-                        editor.apply();
-                    }else{
-                        priority.setText(pri);
-                    }
-                }
 
                 SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
                 String get = shared.getString(split[i], "null");

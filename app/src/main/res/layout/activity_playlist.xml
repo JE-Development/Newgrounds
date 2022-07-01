@@ -13,19 +13,12 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <!--<Button
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/playlistNew"
             android:enabled="true"
             android:text="create new playlist"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/playlistPriority"
-            android:enabled="false"
-            android:text=""/>
 
         <TextView
             android:layout_width="match_parent"
@@ -47,14 +40,8 @@
 
             </LinearLayout>
 
-        </ScrollView>/!-->
+        </ScrollView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFF00"
-            android:textSize="20dp"
-            android:text="this feature is almost done"/>
 
     </LinearLayout>
 
