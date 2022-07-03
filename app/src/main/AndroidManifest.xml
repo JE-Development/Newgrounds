@@ -14,10 +14,13 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Newgrounds"
-        android:requestLegacyExternalStorage="true">
+        android:theme="@style/Theme.Newgrounds">
+        <activity
+            android:name=".more_window.StartInfoActivity"
+            android:exported="false" />
         <activity
             android:name=".more_window.movies.VideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

@@ -161,15 +161,17 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-
                     URLConnection conn = new URL(url).openConnection();
-
+                    System.out.println("-----------------------------------------------------");
                     InputStream in = conn.getInputStream();
                     String contents = convertStreamToString(in);
                     serverContent  = contents;
                     serverTextReady = true;
+                    System.out.println("jason getText: " + contents);
+                    System.out.println("-----------------------------------------------------/");
 
                 }catch (Exception e){
+                    System.out.println("jason server error");
                     e.printStackTrace();
                 }
             }
@@ -225,7 +227,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void update(){
         if(serverTextReady){
+            System.out.println("jason profile");
             serverTextReady = false;
+
+            Toast.makeText(this, "server: " + serverContent, Toast.LENGTH_SHORT).show();
 
 
             if(serverContent.contains(";;;")){
