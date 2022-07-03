@@ -1,7 +1,5 @@
-package com.lecraftjay.newgrounds.more_window;
+package com.lecraftjay.newgrounds.more_window.profile;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -14,11 +12,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,7 +24,6 @@ import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
-import com.lecraftjay.newgrounds.nav_window.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -98,7 +92,7 @@ public class FeedActivity extends AppCompatActivity {
         
     }
 
-    class MyJavaScriptInterface {
+    public class MyJavaScriptInterface {
         private Context ctx;
 
         MyJavaScriptInterface(Context ctx)

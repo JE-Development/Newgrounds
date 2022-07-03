@@ -4,19 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".more_window.profile.LoginActivity">
+    android:background="#000000"
+    tools:context=".more_window.TesterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/loginLayout"
-        android:orientation="vertical"
-        android:background="#000000">
+        android:orientation="vertical">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="click"
+            android:id="@+id/testButton"/>
+
 
         <WebView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/loginWeb"/>
+            android:id="@+id/testWeb"/>
 
     </LinearLayout>
 

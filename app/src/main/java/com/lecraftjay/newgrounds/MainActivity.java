@@ -29,6 +29,7 @@ import com.applovin.sdk.AppLovinSdk;
 import com.lecraftjay.newgrounds.classes.LoadTrack;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.NewFeaturesActivity;
+import com.lecraftjay.newgrounds.more_window.TesterActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
 import com.parse.GetCallback;
 import com.parse.Parse;

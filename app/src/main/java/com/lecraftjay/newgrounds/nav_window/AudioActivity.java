@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -26,7 +25,6 @@ import android.widget.Toast;
 
 import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
-import com.lecraftjay.newgrounds.more_window.LoginActivity;
 import com.lecraftjay.newgrounds.more_window.SearchActivity;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
 import com.lecraftjay.newgrounds.classes.Var;

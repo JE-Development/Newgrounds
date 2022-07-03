@@ -5,8 +5,6 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,14 +16,9 @@ import android.widget.Toast;
 
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
-import com.lecraftjay.newgrounds.more_window.FeedActivity;
-import com.lecraftjay.newgrounds.more_window.LoginActivity;
+import com.lecraftjay.newgrounds.more_window.profile.FeedActivity;
+import com.lecraftjay.newgrounds.more_window.profile.LoginActivity;
 import com.lecraftjay.newgrounds.more_window.profile.PlaylistActivity;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.IOException;

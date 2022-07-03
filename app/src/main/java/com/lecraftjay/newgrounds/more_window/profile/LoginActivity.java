@@ -1,4 +1,4 @@
-package com.lecraftjay.newgrounds.more_window;
+package com.lecraftjay.newgrounds.more_window.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
