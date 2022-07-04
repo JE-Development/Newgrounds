@@ -64,5 +64,12 @@ public class Var {
    public static boolean isLogin = true;
    public static String videoUrl = "";
    public static int globalProgress = 0;
+   public static String startInfoTitle = "";
+   public static String startInfoText = "";
+   public static String startInfoId = "";
+   public static String popupInfoText = "";
+   public static String popupInfoWindow = "";
+   public static String popupInfoId = "";
+   public static boolean showPopupWindow = false;
 
 }

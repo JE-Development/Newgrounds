@@ -85,6 +85,7 @@ public class AudioActivity extends AppCompatActivity {
 
 
         Var.currentWindow = "audio";
+        checkPopup();
 
         try {
             String text = "hello  there";
@@ -543,6 +544,19 @@ public class AudioActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void checkPopup(){
+        if(Var.showPopupWindow){
+            if(Var.popupInfoWindow.equals("audio")){
+                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(AudioActivity.this)
+                        .setTitle(Var.popupInfoText)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //nothing
+                            }
+                        }).show();
+            }
+        }
+    }
 
 }

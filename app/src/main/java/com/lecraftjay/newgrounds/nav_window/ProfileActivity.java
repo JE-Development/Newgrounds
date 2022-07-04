@@ -3,6 +3,8 @@ package com.lecraftjay.newgrounds.nav_window;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -70,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         getServerText("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/profile_message");
+        checkPopup();
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    private static String convertStreamToString(InputStream is) throws UnsupportedEncodingException {
+    public String convertStreamToString(InputStream is) throws UnsupportedEncodingException {
 
         BufferedReader reader = new BufferedReader(new
                 InputStreamReader(is, "UTF-8"));
@@ -243,6 +246,21 @@ public class ProfileActivity extends AppCompatActivity {
             if(serverContent.contains("null;;;null")){
                 serverButton.setVisibility(View.INVISIBLE);
                 serverButton.setText("null");
+            }
+        }
+    }
+
+    public void checkPopup(){
+        if(Var.showPopupWindow){
+            if(Var.popupInfoWindow.equals("profile")){
+                AlertDialog alertDialog = new AlertDialog.Builder(ProfileActivity.this)
+                        .setTitle(Var.popupInfoText)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //nothing
+                            }
+                        }).show();
             }
         }
     }

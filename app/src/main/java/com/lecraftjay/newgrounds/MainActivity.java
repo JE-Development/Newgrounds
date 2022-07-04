@@ -29,6 +29,7 @@ import com.applovin.sdk.AppLovinSdk;
 import com.lecraftjay.newgrounds.classes.LoadTrack;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.NewFeaturesActivity;
+import com.lecraftjay.newgrounds.more_window.StartInfoActivity;
 import com.lecraftjay.newgrounds.more_window.TesterActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
 import com.parse.GetCallback;
@@ -39,14 +40,17 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -57,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
     TextView closed;
     TextView reason;
     RelativeLayout root;
+
+    int delay = 100;
+    Handler handler = new Handler();
+    Runnable runnable;
+
+    String serverContent = "";
+    String serverPopupContent = "";
+    boolean serverTextReady = false;
+    boolean serverPopupReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,30 +113,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        getServerText("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/start_message");
+        getPopupInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/popup_message");
 
-        String hide = BuildConfig.HIDE_INFO;
-        String[] split = hide.split(";;;");
-
-        Var.pass = split[0];
-        Var.toEmail = split[1];
-
-        SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
-        String getter = sp1.getString("updateVersionCode", "0");
-
-        String updateCode = "10";
-
-        if(getter.equals(updateCode)){
-            startActivity(new Intent(MainActivity.this, AudioActivity.class));
-            finish();
-        }else{
-            SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
-            SharedPreferences.Editor editor = spe.edit();
-            editor.putString("updateVersionCode", updateCode);
-            editor.apply();
-
-            startActivity(new Intent(MainActivity.this, NewFeaturesActivity.class));
-            finish();
-        }
     }
 
     @Override
@@ -166,5 +158,179 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         t.start();
+    }
+
+    @Override
+    protected void onResume() {
+        //start handler as activity become visible
+
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                update();
+
+                handler.postDelayed(runnable, delay);
+            }
+        }, delay);
+
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(runnable);
+        super.onPause();
+
+    }
+
+    public void update(){
+        if(serverTextReady && serverPopupReady){
+            serverTextReady = false;
+            serverPopupReady = false;
+
+            analysePopup();
+/*
+            String hide = BuildConfig.HIDE_INFO;
+            String[] split = hide.split(";;;");
+
+            Var.pass = split[0];
+            Var.toEmail = split[1];*/
+
+            SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
+            String getter = sp1.getString("updateVersionCode", "0");
+
+            String updateCode = "10";
+
+            if(getter.equals(updateCode)){
+                if(serverContent.equals("null;;;null;;;null")){
+                    startActivity(new Intent(MainActivity.this, AudioActivity.class));
+                    finish();
+                }else{
+
+                    SharedPreferences sp2 = getApplicationContext().getSharedPreferences("Info", 0);
+                    String getter2 = sp2.getString("startInfoVersionCode", "0");
+
+                    String[] split = serverContent.split(";;;");
+                    Var.startInfoTitle = split[0];
+                    Var.startInfoText = split[1];
+                    Var.startInfoId = split[2];
+
+                    if(getter2.equals(Var.startInfoId)){
+                        startActivity(new Intent(MainActivity.this, AudioActivity.class));
+                        finish();
+                    }else{
+                        SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                        SharedPreferences.Editor editor = spe.edit();
+                        editor.putString("startInfoVersionCode", Var.startInfoId);
+                        editor.apply();
+
+                        startActivity(new Intent(MainActivity.this, StartInfoActivity.class));
+                        finish();
+                    }
+                }
+            }else{
+                SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                SharedPreferences.Editor editor = spe.edit();
+                editor.putString("updateVersionCode", updateCode);
+                editor.apply();
+
+                startActivity(new Intent(MainActivity.this, NewFeaturesActivity.class));
+                finish();
+            }
+        }
+    }
+
+    public void getServerText(String url){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URLConnection conn = new URL(url).openConnection();
+                    System.out.println("-----------------------------------------------------");
+                    InputStream in = conn.getInputStream();
+                    String contents = convertStreamToString(in);
+                    serverContent  = contents;
+                    serverTextReady = true;
+                    System.out.println("jason getText: " + contents);
+                    System.out.println("-----------------------------------------------------/");
+
+                }catch (Exception e){
+                    System.out.println("jason server error");
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+    }
+
+    public String convertStreamToString(InputStream is) throws UnsupportedEncodingException {
+
+        BufferedReader reader = new BufferedReader(new
+                InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
+    public void getPopupInfos(String url){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URLConnection conn = new URL(url).openConnection();
+                    System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+                    InputStream in = conn.getInputStream();
+                    String contents = convertStreamToString(in);
+                    serverPopupContent  = contents;
+                    serverPopupReady = true;
+                    System.out.println("jason getText: " + contents);
+                    System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::/");
+
+                }catch (Exception e){
+                    System.out.println("jason server error");
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void analysePopup(){
+        String[] split = serverPopupContent.split(";;;");
+        Var.popupInfoText = split[0];
+        Var.popupInfoWindow = split[1];
+        Var.popupInfoId = split[2];
+
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("Info", 0);
+        String getter = sp.getString("popupVersionCode", "0");
+
+        if(Var.popupInfoText.equals("null;;;null;;;null")){
+            Var.showPopupWindow = false;
+        }else{
+            if(getter.equals(Var.popupInfoId)){
+                Var.showPopupWindow = false;
+            }else{
+                SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                SharedPreferences.Editor editor = spe.edit();
+                editor.putString("popupVersionCode", Var.popupInfoId);
+                editor.apply();
+
+                Var.showPopupWindow = true;
+            }
+        }
     }
 }

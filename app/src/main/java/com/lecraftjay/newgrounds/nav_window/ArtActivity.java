@@ -3,6 +3,8 @@ package com.lecraftjay.newgrounds.nav_window;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.art.ArtContentActivity;
 import com.lecraftjay.newgrounds.more_window.SearchActivity;
+import com.lecraftjay.newgrounds.more_window.profile.PlaylistTrackActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -63,6 +66,8 @@ public class ArtActivity extends AppCompatActivity {
         space = findViewById(R.id.artSpace);
 
         //-------------------------------------------------------------------
+
+        checkPopup();
 
         Var.updateNow = false;
 
@@ -443,6 +448,21 @@ public class ArtActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkPopup(){
+        if(Var.showPopupWindow){
+            if(Var.popupInfoWindow.equals("art")){
+                AlertDialog alertDialog = new AlertDialog.Builder(ArtActivity.this)
+                        .setTitle(Var.popupInfoText)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //nothing
+                            }
+                        }).show();
+            }
+        }
     }
 
 }

@@ -3,6 +3,8 @@ package com.lecraftjay.newgrounds.nav_window;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -64,6 +66,7 @@ public class MoviesActivity extends AppCompatActivity {
         //-------------------------------------------------------------------
 
         Var.currentWindow = "movies";
+        checkPopup();
 
         /*IronSource.setConsent(true);
         AppLovinPrivacySettings.setHasUserConsent(true, this);
@@ -349,5 +352,20 @@ public class MoviesActivity extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkPopup(){
+        if(Var.showPopupWindow){
+            if(Var.popupInfoWindow.equals("movies")){
+                AlertDialog alertDialog = new AlertDialog.Builder(MoviesActivity.this)
+                        .setTitle(Var.popupInfoText)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //nothing
+                            }
+                        }).show();
+            }
+        }
     }
 }
