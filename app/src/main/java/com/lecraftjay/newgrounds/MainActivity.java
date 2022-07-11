@@ -4,57 +4,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.applovin.sdk.AppLovinSdk;
 import com.lecraftjay.newgrounds.classes.LoadTrack;
 import com.lecraftjay.newgrounds.classes.Var;
-import com.lecraftjay.newgrounds.more_window.NewFeaturesActivity;
-import com.lecraftjay.newgrounds.more_window.StartInfoActivity;
-import com.lecraftjay.newgrounds.more_window.TesterActivity;
+import com.lecraftjay.newgrounds.more_window.infos.NewFeaturesActivity;
+import com.lecraftjay.newgrounds.more_window.infos.StartInfoActivity;
+import com.lecraftjay.newgrounds.more_window.infos.UpdateInfoActivity;
 import com.lecraftjay.newgrounds.nav_window.AudioActivity;
-import com.parse.GetCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,8 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     String serverContent = "";
     String serverPopupContent = "";
+    String serverUpdateContent = "";
     boolean serverTextReady = false;
     boolean serverPopupReady = false;
+    boolean serverUpdateReady = false;
+
+    boolean goAhead = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,24 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         //--------------------------------------------------
 
-        SharedPreferences shared = getApplicationContext().getSharedPreferences("Playlist", 0);
-        String pri = shared.getString("priority", "null");
-        if(!pri.equals("null")){
-            SharedPreferences sp = getApplicationContext().getSharedPreferences("Playlist", 0);
-            String getter = sp.getString(pri, "null");
-
-            if(!getter.equals("null")){
-                String[] trackLinks = getter.split(";;;");
-                ArrayList<String> tl = new ArrayList<>();
-                for(int i = 0; i < trackLinks.length; i++){
-                    String[] s = trackLinks[i].split(";");
-                    tl.add(s[0]);
-                }
-                System.out.println("jason back content: " + tl);
-                LoadTrack t = new LoadTrack(tl);
-                t.start();
-            }
-        }
+        /*
 
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -110,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
             writer();
         }else{
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-        }
+        }*/
 
 
         getServerText("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/start_message");
         getPopupInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/popup_message");
+        getUpdateInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/update_message");
 
     }
 
@@ -184,9 +149,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void update(){
-        if(serverTextReady && serverPopupReady){
+        if(serverTextReady && serverPopupReady && serverUpdateReady){
             serverTextReady = false;
             serverPopupReady = false;
+            serverUpdateReady = false;
 
             analysePopup();
 /*
@@ -199,12 +165,14 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sp1 = getApplicationContext().getSharedPreferences("Info", 0);
             String getter = sp1.getString("updateVersionCode", "0");
 
-            String updateCode = "10";
+            String updateCode = "11";
+            //String updateCode = "10";
 
             if(getter.equals(updateCode)){
                 if(serverContent.equals("null;;;null;;;null")){
-                    startActivity(new Intent(MainActivity.this, AudioActivity.class));
-                    finish();
+
+                    checkUpdateInfo();
+
                 }else{
 
                     SharedPreferences sp2 = getApplicationContext().getSharedPreferences("Info", 0);
@@ -216,18 +184,29 @@ public class MainActivity extends AppCompatActivity {
                     Var.startInfoId = split[2];
 
                     if(getter2.equals(Var.startInfoId)){
-                        startActivity(new Intent(MainActivity.this, AudioActivity.class));
-                        finish();
+                        checkUpdateInfo();
+
                     }else{
+
+
                         SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
                         SharedPreferences.Editor editor = spe.edit();
                         editor.putString("startInfoVersionCode", Var.startInfoId);
                         editor.apply();
 
+                        goAhead = false;
+
                         startActivity(new Intent(MainActivity.this, StartInfoActivity.class));
                         finish();
                     }
                 }
+
+                if(goAhead) {
+
+                    startActivity(new Intent(MainActivity.this, AudioActivity.class));
+                    finish();
+                }
+
             }else{
                 SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
                 SharedPreferences.Editor editor = spe.edit();
@@ -309,6 +288,26 @@ public class MainActivity extends AppCompatActivity {
         t.start();
     }
 
+    public void getUpdateInfos(String url){
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URLConnection conn = new URL(url).openConnection();
+                    InputStream in = conn.getInputStream();
+                    String contents = convertStreamToString(in);
+                    serverUpdateContent  = contents;
+                    serverUpdateReady = true;
+
+                }catch (Exception e){
+                    System.out.println("jason server error");
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
     public void analysePopup(){
         String[] split = serverPopupContent.split(";;;");
         Var.popupInfoText = split[0];
@@ -330,6 +329,43 @@ public class MainActivity extends AppCompatActivity {
                 editor.apply();
 
                 Var.showPopupWindow = true;
+            }
+        }
+    }
+
+    public void checkUpdateInfo(){
+        if(serverUpdateContent.equals("null;;;null")){
+            startActivity(new Intent(MainActivity.this, AudioActivity.class));
+            finish();
+        }else{
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("Info", 0);
+            String getter = sp.getString("updateAvailableVersionCode", "0");
+
+            String[] split = serverUpdateContent.split(";;;");
+
+            Var.updateInfoTitle = split[0];
+            Var.updateInfoText = split[1];
+            Var.updateInfoPlaystoreLink = split[2];
+            int buildVersionCode =  Integer.parseInt(split[3]);
+            String updateInfoId = split[4];
+
+            if(!getter.equals(updateInfoId)){
+
+                if(BuildConfig.VERSION_CODE <= buildVersionCode){
+
+                    SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                    SharedPreferences.Editor editor = spe.edit();
+                    editor.putString("updateAvailableVersionCode", updateInfoId);
+                    editor.apply();
+
+                    goAhead = false;
+
+                    startActivity(new Intent(MainActivity.this, UpdateInfoActivity.class));
+                    finish();
+                }else{
+                    startActivity(new Intent(MainActivity.this, AudioActivity.class));
+                    finish();
+                }
             }
         }
     }

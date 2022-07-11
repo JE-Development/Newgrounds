@@ -71,5 +71,8 @@ public class Var {
    public static String popupInfoWindow = "";
    public static String popupInfoId = "";
    public static boolean showPopupWindow = false;
+   public static String updateInfoTitle = "";
+   public static String updateInfoText = "";
+   public static String updateInfoPlaystoreLink = "";
 
 }

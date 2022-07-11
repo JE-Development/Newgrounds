@@ -34,7 +34,7 @@ public class PlaylistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
-
+/*
         //--------------------------------------------------
 
         newPlaylist = findViewById(R.id.playlistNew);
@@ -120,7 +120,7 @@ public class PlaylistActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 
     public void setContent(){

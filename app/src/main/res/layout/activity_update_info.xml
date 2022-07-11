@@ -18,7 +18,8 @@
             android:gravity="center"
             android:textColor="@color/orange"
             android:textSize="30dp"
-            android:text="Whats new?"/>
+            android:id="@+id/updateInfoTitle"
+            android:text=""/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -30,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:layout_margin="10dp"
-                android:id="@+id/newFeaturesText"
+                android:id="@+id/updateInfoText"
                 android:textSize="20dp"
                 android:text=""
                 />
@@ -42,14 +43,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom">
+        android:layout_height="match_parent">
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/newOk"
-            android:text="OK"/>
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/updateInfoOk"
+                android:text="OK"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/updateInfoPlaystore"
+                android:text="download update"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

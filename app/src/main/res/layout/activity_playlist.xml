@@ -13,6 +13,8 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
+        <!--
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +27,14 @@
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:text="hold to remove a playlist"/>
+
+            /!-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/orange"
+            android:text="this feature is still in progress (nearly finished)"/>
 
         <ScrollView
             android:layout_width="match_parent"

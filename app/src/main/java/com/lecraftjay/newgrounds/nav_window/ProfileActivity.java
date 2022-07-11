@@ -226,8 +226,6 @@ public class ProfileActivity extends AppCompatActivity {
             System.out.println("jason profile");
             serverTextReady = false;
 
-            Toast.makeText(this, "server: " + serverContent, Toast.LENGTH_SHORT).show();
-
 
             if(serverContent.contains(";;;")){
                 String[] split = serverContent.split(";;;");
