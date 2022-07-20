@@ -24,6 +24,10 @@ import com.ironsource.mediationsdk.IronSource;
 import com.lecraftjay.newgrounds.R;
 import com.lecraftjay.newgrounds.classes.Var;
 import com.lecraftjay.newgrounds.more_window.audio.TrackActivity;
+import com.lecraftjay.newgrounds.nav_window.ArtActivity;
+import com.lecraftjay.newgrounds.nav_window.AudioActivity;
+import com.lecraftjay.newgrounds.nav_window.GamesActivity;
+import com.lecraftjay.newgrounds.nav_window.MoviesActivity;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -50,6 +54,7 @@ public class FeedActivity extends AppCompatActivity {
     boolean noLoggin = false;
 
     String h = "null";
+    String kind = "null";
 
     Handler handler = new Handler();
     Runnable runnable;
@@ -58,6 +63,16 @@ public class FeedActivity extends AppCompatActivity {
     boolean durchlauf = false;
     
     ArrayList<String> audioList = new ArrayList<>();
+    ArrayList<String> artList = new ArrayList<>();
+    ArrayList<String> gameList = new ArrayList<>();
+    ArrayList<String> movieList = new ArrayList<>();
+
+    ArrayList<String> series = new ArrayList<>();
+
+    int audioPos = 0;
+    int artPos = 0;
+    int gamePos = 0;
+    int moviePos = 0;
 
     Handler handlerForJavascriptInterface = new Handler();
 
@@ -131,8 +146,128 @@ public class FeedActivity extends AppCompatActivity {
         Document doc = (Document) Jsoup.parse(h);
         counter++;
 
-        Elements ele = doc.getElementsByClass("pod-body");
-        for(Element tester : ele){
+        Elements ele = doc.getElementsByClass("noicon");
+        for(Element l : ele){
+            String contentKind = l.ownText();
+            if(contentKind.contains("audio")){
+                kind = "audio";
+                series.add("audio");
+
+                Elements iconLink = l.getElementsByClass("item-icon");
+                Elements creatorText = l.select("strong");
+                Elements genre = l.getElementsByClass("detail-description");
+                Elements title = l.select("h4");
+                Elements url = l.select("a");
+                Elements time = l.getElementsByClass("notation-small");
+
+                String sIconLink = "";
+                String sCreatorText = creatorText.html();
+                String sGenreText = genre.html();
+                String sTitleString = title.html();
+                String sLink = url.attr("abs:href");
+                String sTime = "";
+
+                for(Element e : iconLink){
+                    Elements iLink = iconLink.select("img");
+                    sIconLink = iLink.attr("abs:src");
+                }
+
+
+
+                for(Element e : time){
+                    Element el = e.child(0);
+                    sTime = el.html();
+                }
+
+                String toAdd = sLink + ";;;" + sTitleString + ";;;" + sIconLink + ";;;" +
+                        sCreatorText + ";;;" + sGenreText + ";;;" + sTime;
+                audioList.add(toAdd);
+
+            }else if(contentKind.contains("art")){
+                kind = "art";
+                series.add("art");
+
+                Elements contentLink = l.getElementsByClass("pod-body");
+                Elements title = l.getElementsByClass("portal-feed-large-title");
+                Elements image = l.select("img");
+                Elements creator = l.getElementsByClass("noicon");
+
+                String sContentLink = "";
+                String sTitle = title.html();
+                String sImage = image.attr("data-smartload-src");
+                String sCreator = "";
+
+                for(Element e : creator){
+                    sCreator = e.child(1).html();
+                }
+
+                for(Element e : contentLink){
+                    sContentLink = e.child(0).child(0).attr("href");
+                }
+
+                String toAdd = sContentLink + ";;;" + sTitle + ";;;" + sImage + ";;;" + sCreator;
+                artList.add(toAdd);
+
+            }else if(contentKind.contains("game")){
+                kind = "game";
+                series.add("game");
+
+                Elements contentLink = l.getElementsByClass("item-portalsubmission");
+                Elements image = l.getElementsByClass("item-icon");
+                Elements creator = l.getElementsByClass("noicon");
+
+                String sContentLink = contentLink.attr("href");
+                String sTitle = "";
+                String sImage = "";
+                String sCreator = "";
+
+                for(Element e : image){
+                    Elements img = e.select("img");
+                    for(Element el : img){
+                        sTitle = el.attr("alt");
+                        sImage = el.attr("src");
+                    }
+                }
+
+                for(Element e : creator){
+                    sCreator = e.child(1).html();
+                }
+
+                String toAdd = sContentLink + ";;;" + sTitle + ";;;" + sImage + ";;;" + sCreator;
+                gameList.add(toAdd);
+
+            }else if(contentKind.contains("movie")){
+                kind = "movie";
+                series.add("movie");
+
+                Elements contentLink = l.getElementsByClass("item-portalsubmission");
+                Elements image = l.getElementsByClass("item-icon");
+                Elements creator = l.getElementsByClass("noicon");
+
+                String sContentLink = contentLink.attr("href");
+                String sTitle = "";
+                String sImage = "";
+                String sCreator = "";
+
+                for(Element e : image){
+                    Elements img = e.select("img");
+                    for(Element el : img){
+                        sTitle = el.attr("alt");
+                        sImage = el.attr("src");
+                    }
+                }
+
+                for(Element e : creator){
+                    sCreator = e.child(1).html();
+                }
+
+                String toAdd = sContentLink + ";;;" + sTitle + ";;;" + sImage + ";;;" + sCreator;
+                movieList.add(toAdd);
+
+            }
+        }
+
+        /*for(Element tester : ele){
             Element c = tester.child(0);
             if(c.className().equals("itemlist alternating")){
                 for(Element l : ele){
@@ -189,7 +324,7 @@ public class FeedActivity extends AppCompatActivity {
                     noLoggin = true;
                 }
             }
-        }
+        }*/
 
         
     }
@@ -201,7 +336,11 @@ public class FeedActivity extends AppCompatActivity {
 
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
-                update();
+                try {
+                    update();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 checkLogin();
 
                 handler.postDelayed(runnable, delay);
@@ -227,105 +366,142 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
-    public void update(){
-        if(scrollLayout.getChildCount() < audioList.size() || Var.updateNow) {
+    public void update() throws ArrayIndexOutOfBoundsException{
+        if(scrollLayout.getChildCount() < series.size() || Var.updateNow) {
 
+            for(String str : series){
+                if(str.equals("audio")){
 
-            Var.updateNow = false;
-            scrollLayout.removeAllViews();
-            space.setVisibility(View.INVISIBLE);
-            for (int i = 0; i < audioList.size(); i++) {
-                /*TextView text = new TextView(MainActivity.this);
-                text.setText(audioList.get(i));
-                scrollLayout.addView(text);*/
+                    String audio = audioList.get(audioPos);
 
-                View view = LayoutInflater.from(FeedActivity.this).inflate(R.layout.track_layout, null);
-                //CardView card = view.findViewById(R.id.cardView);
-                TextView cardText = view.findViewById(R.id.cardText);
-                CircleImageView icon = view.findViewById(R.id.iconCard);
-                TextView creator = view.findViewById(R.id.cardCreator);
-                TextView description = view.findViewById(R.id.cardDescription);
-                TextView genre = view.findViewById(R.id.cardGenre);
+                    String[] split = audio.split(";;;");
 
-                String title = audioList.get(i);
-                String[] splitter = title.split(";;;");
+                    View view = LayoutInflater.from(FeedActivity.this).inflate(R.layout.track_layout, null);
+                    TextView cardText = view.findViewById(R.id.cardText);
+                    CircleImageView icon = view.findViewById(R.id.iconCard);
+                    TextView creator = view.findViewById(R.id.cardCreator);
+                    TextView description = view.findViewById(R.id.cardDescription);
+                    TextView genre = view.findViewById(R.id.cardGenre);
 
-                try {
-                    view.setTag(splitter[0]);
-                    cardText.setText(Html.fromHtml(trim(splitter[1], 28)));
-                    cardText.setTag(splitter[1]);
-                    Picasso.get().load(splitter[2]).into(icon);
-                    icon.setTag(splitter[2]);
-                    creator.setText(splitter[3]);
-                    genre.setText(splitter[4]);
-                    description.setText(splitter[5]);
-                }catch (ArrayIndexOutOfBoundsException e){
-                    e.printStackTrace();
-                    System.out.println(Arrays.toString(splitter));
-                    System.out.println(title);
-                }
-
-                SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
-                String getter = sp.getString("alreadySeen", "");
-
-                if(getter.contains(splitter[0])){
-                    cardText.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
-                }
-
-                /*if(adCounter >= 8){
-                    Bundle extras = new AppLovinExtras.Builder().setMuteAudio(true).build();
-
-                    adCounter = 0;
-                    AdView ad = new AdView(this);
-                    //ad.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-                    ad.setAdUnitId("ca-app-pub-3904729559747077/5829965422");
-                    ad.setAdSize(AdSize.BANNER);
-
-                    View adLayout = LayoutInflater.from(FeedActivity.this).inflate(R.layout.ad_content_layout, null);
-                    LinearLayout lay = adLayout.findViewById(R.id.ad_content_linear_layout);
-                    lay.addView(ad);
-                    scrollLayout.addView(adLayout);
-
-                    AdRequest request = new AdRequest.Builder().addNetworkExtrasBundle(ApplovinAdapter.class, extras).build();
-                    ad.loadAd(request);
-                }
-                adCounter++;*/
-
-
-                //cardText.setText(title);
-                scrollLayout.addView(view);
-
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TextView title = view.findViewById(R.id.cardText);
-                        TextView genre = view.findViewById(R.id.cardGenre);
-                        TextView desc = view.findViewById(R.id.cardDescription);
-                        TextView creator = view.findViewById(R.id.cardCreator);
-                        ImageView icon = view.findViewById(R.id.iconCard);
-                        Var.currentTitle = (String) title.getTag();
-                        Var.openLink = (String) view.getTag();
-                        System.out.println("jason check: " + Var.openLink);
-                        Var.trackGenre = genre.getText().toString();
-                        Var.trackDescription = desc.getText().toString();
-                        Var.trackCreator = creator.getText().toString();
-                        Var.trackIcon = icon.getTag().toString();
-
-                        SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
-                        String getter = sp.getString("alreadySeen", "");
-
-                        SharedPreferences liste = getApplicationContext().getSharedPreferences("Audio", 0);
-                        SharedPreferences.Editor editor = liste.edit();
-                        editor.putString("alreadySeen", getter + ";;;" + Var.openLink);
-                        editor.apply();
-
-                        title.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
-
-                        startActivity(new Intent(FeedActivity.this, TrackActivity.class));
+                    try{
+                        view.setTag(split[0]);
+                        cardText.setText(Html.fromHtml(trim(split[1], 28)));
+                        cardText.setTag(split[1]);
+                        Picasso.get().load(split[2]).into(icon);
+                        icon.setTag(split[2]);
+                        creator.setText(split[3]);
+                        description.setText(trim(split[4], 40));
+                        genre.setText(split[5]);
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                });
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Audio", 0);
+                    String getter = sp.getString("alreadySeen", "");
+
+                    if(getter.contains(split[0])){
+                        cardText.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
+                    }
+
+                    scrollLayout.addView(view);
+
+                    audioPos++;
+
+                }else if(str.equals("art")){
+
+                    View view = LayoutInflater.from(FeedActivity.this).inflate(R.layout.art_card_layout, null);
+                    TextView cardTitle = view.findViewById(R.id.artTitle);
+                    ImageView image = view.findViewById(R.id.artImage);
+                    TextView user = view.findViewById(R.id.artCreator);
+
+                    String title = artList.get(artPos);
+                    String[] splitter = title.split(";;;");
+
+
+
+                    try {
+                        view.setTag(title);
+                        cardTitle.setText(trim(splitter[1], 12));
+                        Picasso.get().load(splitter[2]).into(image);
+                        user.setText(splitter[3]);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Art", 0);
+                    String getter = sp.getString("alreadySeen", "");
+
+                    if(getter.contains(splitter[0])){
+                        cardTitle.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
+                    }
+
+                    scrollLayout.addView(view);
+
+                    artPos++;
+
+                }else if(str.equals("movie")){
+
+                    View view = LayoutInflater.from(FeedActivity.this).inflate(R.layout.movie_card_layout, null);
+                    TextView cardTitle = view.findViewById(R.id.movieTitle);
+                    ImageView image = view.findViewById(R.id.movieImage);
+                    TextView user = view.findViewById(R.id.movieCreator);
+
+                    String title = movieList.get(moviePos);
+                    String[] splitter = title.split(";;;");
+
+                    try {
+                        view.setTag(splitter[0]);
+                        cardTitle.setText(trim(splitter[1], 25));
+                        Picasso.get().load(splitter[2]).into(image);
+                        user.setText(splitter[3]);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Movie", 0);
+                    String getter = sp.getString("alreadySeen", "");
+
+                    if(getter.contains(splitter[0])){
+                        cardTitle.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
+                    }
+
+                    scrollLayout.addView(view);
+
+                    moviePos++;
+
+                }else if(str.equals("game")){
+
+                    View view = LayoutInflater.from(FeedActivity.this).inflate(R.layout.games_card_layout, null);
+                    TextView cardTitle = view.findViewById(R.id.gamesTitle);
+                    ImageView image = view.findViewById(R.id.gamesImage);
+                    TextView user = view.findViewById(R.id.gamesCreator);
+
+                    String title = gameList.get(gamePos);
+                    String[] splitter = title.split(";;;");
+
+                    try {
+                        cardTitle.setTag(splitter[0]);
+                        cardTitle.setText(trim(splitter[1], 25));
+                        Picasso.get().load(splitter[2]).into(image);
+                        user.setText(splitter[3]);
+                    }catch (ArrayIndexOutOfBoundsException e){
+                        e.printStackTrace();
+                    }
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("Games", 0);
+                    String getter = sp.getString("alreadySeen", "");
+
+                    if(getter.contains(splitter[0])){
+                        cardTitle.setTextColor(ContextCompat.getColor(FeedActivity.this, R.color.audioSeen));
+                    }
+
+                    scrollLayout.addView(view);
+
+                    gamePos++;
+
+                }
             }
-            scrollLayout.addView(space);
+
         }
     }
 
