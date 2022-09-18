@@ -35,10 +35,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -214,6 +218,8 @@ public class AudioActivity extends AppCompatActivity {
 
                     Elements ele = doc.getElementsByClass("audio-wrapper");
                     Elements select = doc.getElementsByClass("select-wrapper");
+
+                    System.out.println("jason dc debug: " + doc.toString());
 
                     int c = 0;
                     for(Element l : select){

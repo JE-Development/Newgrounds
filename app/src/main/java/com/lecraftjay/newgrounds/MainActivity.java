@@ -76,10 +76,13 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         }*/
 
-
+/*
         getServerText("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/start_message");
         getPopupInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/popup_message");
-        getUpdateInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/update_message");
+        getUpdateInfos("https://newgrounds-worker.jason-apps.workers.dev/android/newgrounds_mobile/update_message");*/
+
+        startActivity(new Intent(MainActivity.this, AudioActivity.class));
+        finish();
 
     }
 
@@ -174,30 +177,32 @@ public class MainActivity extends AppCompatActivity {
                     checkUpdateInfo();
 
                 }else{
+                    if(serverContent.contains(";;;")) {
 
-                    SharedPreferences sp2 = getApplicationContext().getSharedPreferences("Info", 0);
-                    String getter2 = sp2.getString("startInfoVersionCode", "0");
+                        SharedPreferences sp2 = getApplicationContext().getSharedPreferences("Info", 0);
+                        String getter2 = sp2.getString("startInfoVersionCode", "0");
 
-                    String[] split = serverContent.split(";;;");
-                    Var.startInfoTitle = split[0];
-                    Var.startInfoText = split[1];
-                    Var.startInfoId = split[2];
+                        String[] split = serverContent.split(";;;");
+                        Var.startInfoTitle = split[0];
+                        Var.startInfoText = split[1];
+                        Var.startInfoId = split[2];
 
-                    if(getter2.equals(Var.startInfoId)){
-                        checkUpdateInfo();
+                        if (getter2.equals(Var.startInfoId)) {
+                            checkUpdateInfo();
 
-                    }else{
+                        } else {
 
 
-                        SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
-                        SharedPreferences.Editor editor = spe.edit();
-                        editor.putString("startInfoVersionCode", Var.startInfoId);
-                        editor.apply();
+                            SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                            SharedPreferences.Editor editor = spe.edit();
+                            editor.putString("startInfoVersionCode", Var.startInfoId);
+                            editor.apply();
 
-                        goAhead = false;
+                            goAhead = false;
 
-                        startActivity(new Intent(MainActivity.this, StartInfoActivity.class));
-                        finish();
+                            startActivity(new Intent(MainActivity.this, StartInfoActivity.class));
+                            finish();
+                        }
                     }
                 }
 
@@ -309,26 +314,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void analysePopup(){
-        String[] split = serverPopupContent.split(";;;");
-        Var.popupInfoText = split[0];
-        Var.popupInfoWindow = split[1];
-        Var.popupInfoId = split[2];
+        if(serverPopupContent.contains(";;;")) {
+            String[] split = serverPopupContent.split(";;;");
+            Var.popupInfoText = split[0];
+            Var.popupInfoWindow = split[1];
+            Var.popupInfoId = split[2];
 
-        SharedPreferences sp = getApplicationContext().getSharedPreferences("Info", 0);
-        String getter = sp.getString("popupVersionCode", "0");
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("Info", 0);
+            String getter = sp.getString("popupVersionCode", "0");
 
-        if(Var.popupInfoText.equals("null;;;null;;;null")){
-            Var.showPopupWindow = false;
-        }else{
-            if(getter.equals(Var.popupInfoId)){
+            if (Var.popupInfoText.equals("null;;;null;;;null")) {
                 Var.showPopupWindow = false;
-            }else{
-                SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
-                SharedPreferences.Editor editor = spe.edit();
-                editor.putString("popupVersionCode", Var.popupInfoId);
-                editor.apply();
+            } else {
+                if (getter.equals(Var.popupInfoId)) {
+                    Var.showPopupWindow = false;
+                } else {
+                    SharedPreferences spe = getApplicationContext().getSharedPreferences("Info", 0);
+                    SharedPreferences.Editor editor = spe.edit();
+                    editor.putString("popupVersionCode", Var.popupInfoId);
+                    editor.apply();
 
-                Var.showPopupWindow = true;
+                    Var.showPopupWindow = true;
+                }
             }
         }
     }
